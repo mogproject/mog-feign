@@ -18,6 +18,7 @@ const ja = {
 
   // Form options.
   create_label: '"{{name}}" を作成',
+  no_options: '"{{name}}" は既に含まれています',
 
   // Colors.
   colors: {

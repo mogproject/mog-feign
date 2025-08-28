@@ -17,7 +17,6 @@ interface CreatableMultiSelectProps {
 const CreatableMultiSelect: React.FC<CreatableMultiSelectProps> = ({ initialOptions }) => {
   const { t: translate } = useTranslation('translation');
   const t = translate as (s: string, o?: Record<string, string | boolean>) => string;
-  const [options, setOptions] = React.useState<OptionType[]>(initialOptions.map(createOption));
   const [selectedOptions, setSelectedOptions] = React.useState<OptionType[]>([]);
 
   return (
@@ -25,15 +24,12 @@ const CreatableMultiSelect: React.FC<CreatableMultiSelectProps> = ({ initialOpti
       isMulti
       isClearable
       placeholder={t('group')}
-      onCreateOption={(inputValue: string) => {
-        const newOption = createOption(inputValue);
-        setOptions([...options, newOption]);
-        setSelectedOptions([...selectedOptions, newOption]);
-      }}
-      onChange={setSelectedOptions}
       formatCreateLabel={(s: string) => t('create_label', { name: s })}
-      options={options}
+      noOptionsMessage={(obj: { inputValue: string }) => t('no_options', { name: obj.inputValue })}
+      options={initialOptions.map(createOption)}
       value={selectedOptions}
+      onCreateOption={(v: string) => setSelectedOptions([...selectedOptions, createOption(v)])}
+      onChange={setSelectedOptions}
     />
   );
 };

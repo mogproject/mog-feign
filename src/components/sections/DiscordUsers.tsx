@@ -42,8 +42,8 @@ function DiscordUsers() {
   // Define header.
   const head: HeadType = {
     cells: [
-      { key: 'name', content: tt('name'), isSortable: true, width: 12 },
-      { key: 'id', content: 'ID', isSortable: true, width: 14 },
+      { key: 'name', content: tt('name'), isSortable: true, width: 14 },
+      { key: 'id', content: 'ID', isSortable: true, width: 18 },
       { key: 'groups', content: tt('group'), isSortable: true },
       { key: 'action', content: '', isSortable: false },
     ],
@@ -62,11 +62,11 @@ function DiscordUsers() {
       {
         key: user.groups.join('|'),
         content: (
-          <Fragment>
+          <Inline space="space.100">
             {user.groups.map((group) => (
               <Lozenge key={group}>{group}</Lozenge>
             ))}
-          </Fragment>
+          </Inline>
         ),
       },
     ],

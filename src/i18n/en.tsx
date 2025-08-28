@@ -18,6 +18,7 @@ const en = {
 
   // Form options.
   create_label: 'Create "{{name}}"',
+  no_options: 'No options',
 
   // Colors.
   colors: {
