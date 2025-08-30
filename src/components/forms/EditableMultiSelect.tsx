@@ -9,12 +9,7 @@ import Lozenge from '@atlaskit/lozenge';
 
 // Note: Importing from '@atlaskit/select' breaks creatable select.
 import CreatableSelect from '@atlaskit/select/CreatableSelect';
-
-const createOption = (label: string) =>
-  ({
-    label: label,
-    value: label.toLowerCase().replace(/\W/g, ''),
-  } as OptionType);
+import { createOption } from './selectHelper';
 
 const readViewContainerStyles = xcss({
   font: token('font.body'),

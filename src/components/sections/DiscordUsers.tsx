@@ -11,13 +11,16 @@ import { Box, Inline, xcss } from '@atlaskit/primitives';
 
 import { DiscordUser } from '../../models/DiscordUser';
 import { token } from '@atlaskit/tokens';
-import CreatableMultiSelect from '../forms/CreatableMultiSelect';
 import EditableText from '../forms/EditableText';
 import EditableMultiSelect from '../forms/EditableMultiSelect';
 import { OptionType, ValueType } from '@atlaskit/select';
 import DeleteIcon from '@atlaskit/icon/core/delete';
+import ErrorIcon from '@atlaskit/icon/glyph/error';
 import Modal, { ModalBody, ModalFooter, ModalHeader, ModalTitle, ModalTransition } from '@atlaskit/modal-dialog';
 
+// Note: Importing from '@atlaskit/select' breaks creatable select.
+import CreatableSelect from '@atlaskit/select/CreatableSelect';
+import { createOption } from '../forms/selectHelper';
 const initialUsers: DiscordUser[] = [
   {
     id: '12345678901234',
@@ -45,13 +48,19 @@ function findDiscordGroups(users: DiscordUser[]) {
   return Array.from(new Set(users.flatMap((u) => u.groups))).sort();
 }
 
+type FormValues = {
+  name: string;
+  id: string;
+  groups: ValueType<OptionType, true>;
+};
+
 function DiscordUsers() {
   const { t: translate } = useTranslation('translation', {
     keyPrefix: 'settings.discord',
   });
   const t = translate as (s: string, o?: Record<string, string | boolean>) => string;
-  const tt = (k: string) => {
-    return t(k, { keyPrefix: '' });
+  const tt = (k: string, o?: Record<string, string | boolean>) => {
+    return t(k, { ...o, keyPrefix: '' });
   };
 
   const [discordUsers, setDiscordUsers] = React.useState<DiscordUser[]>(initialUsers);
@@ -85,8 +94,10 @@ function DiscordUsers() {
   };
 
   // Validations.
-  const validateName = (editName: string, index: number) => {
-    if (editName == '') {
+  const validateName = (editName: string, index: number, checkEmpty: boolean) => {
+    if (!checkEmpty && editName === '') {
+      return undefined;
+    } else if (checkEmpty && editName === '') {
       return t('name_placeholder');
     } else if (discordUsers.some((x, i) => i !== index && x.name === editName)) {
       return t('already_exists');
@@ -95,8 +106,10 @@ function DiscordUsers() {
     }
   };
 
-  const validateId = (editId: string, index: number) => {
-    if (editId == '') {
+  const validateId = (editId: string, index: number, checkEmpty: boolean) => {
+    if (!checkEmpty && editId === '') {
+      return undefined;
+    } else if (editId === '') {
       return t('id_placeholder');
     } else if (!/^[0-9]+$/.test(editId)) {
       return t('number_only');
@@ -112,8 +125,8 @@ function DiscordUsers() {
     cells: [
       { key: 'name', content: tt('name'), isSortable: true, width: 14 },
       { key: 'id', content: 'ID', isSortable: true, width: 18 },
-      { key: 'groups', content: tt('groups'), isSortable: true },
-      { key: 'action', content: tt('remove'), isSortable: false },
+      { key: 'groups', content: tt('groups'), isSortable: true, width: 30 },
+      { key: 'action', content: tt('remove'), isSortable: false, width: 4 },
     ],
   };
 
@@ -129,11 +142,11 @@ function DiscordUsers() {
           <EditableText
             defaultValue={user.name}
             readView={() => <Box xcss={readViewContainerStyles}>{user.name}</Box>}
-            validate={(name) => validateName(name, index)}
+            validate={(name) => validateName(name, index, true)}
             onConfirm={(value) => setEditValue(index, 'name', value)}
           />
         ),
-        className: 'editable-table-cell',
+        // className: 'editable-table-cell',
       },
 
       //------------------------------------------------------------------------
@@ -145,11 +158,11 @@ function DiscordUsers() {
           <EditableText
             defaultValue={user.id}
             readView={() => <Box xcss={xcss({ ...readViewContainerStyles, color: 'color.text.subtlest' })}>{user.id}</Box>}
-            validate={(id) => validateId(id, index)}
+            validate={(id) => validateId(id, index, true)}
             onConfirm={(value) => setEditValue(index, 'id', value)}
           />
         ),
-        className: 'editable-table-cell',
+        // className: 'editable-table-cell',
       },
       //------------------------------------------------------------------------
       //    Groups
@@ -186,16 +199,15 @@ function DiscordUsers() {
     paddingInline: 'space.200', // left & right padding
   });
 
-  const wrapperStyles = xcss({
-    overflowX: 'auto',
+  const errorIconContainerStyles = xcss({
+    paddingInlineEnd: 'space.075',
+    // eslint-disable-next-line @atlaskit/ui-styling-standard/no-unsafe-values
+    lineHeight: '100%' as any,
   });
 
   //----------------------------------------------------------------------------
   //    Actions
   //----------------------------------------------------------------------------
-  function handleNewEntry(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-  }
 
   //----------------------------------------------------------------------------
   //    Components
@@ -237,41 +249,87 @@ function DiscordUsers() {
 
   const newEntryField = (
     <Fragment>
-      <Form key="discord-user-new" onSubmit={handleNewEntry}>
+      <Form<FormValues>
+        key="discord-user-new"
+        onSubmit={(data, form) => {
+          // console.log('Data:', data);
+          const name = data.name.trim();
+          const id = data.id.trim();
+          const groups = Array.from(new Set(data.groups.map((opt) => opt.label.trim()).filter((s) => s !== '')));
+
+          const newUsers = [...discordUsers, { name: name, id: id, groups: groups }];
+          setDiscordUsers(newUsers);
+          setDiscordGroups(findDiscordGroups(newUsers));
+
+          form.reset(); // clear all fields
+        }}
+      >
         {({ formProps }) => (
           <form {...formProps}>
-            <Inline space="space.200" alignInline="center" alignBlock="center" shouldWrap>
+            <Inline space="space.100" alignInline="center" alignBlock="center" shouldWrap>
               {/* name */}
-              <Field name="name" isRequired>
-                {({ fieldProps }) => (
+              <Field<string> name="name" isRequired validate={(value) => validateName(value || '', -1, false)} defaultValue="">
+                {({ fieldProps, error }) => (
                   <Box xcss={{ width: '120px' }}>
-                    <TextField {...fieldProps} placeholder={t('name_placeholder')} />
+                    <TextField
+                      {...fieldProps}
+                      placeholder={t('name_placeholder')}
+                      elemAfterInput={
+                        fieldProps.isInvalid && (
+                          <Box xcss={errorIconContainerStyles}>
+                            <ErrorIcon label="error" primaryColor={token('color.icon.danger')} />
+                          </Box>
+                        )
+                      }
+                    />
+                    {error && <div style={{ color: 'red' }}>{error}</div>}
                   </Box>
                 )}
               </Field>
 
               {/* ID */}
-              <Field name="id" isRequired>
-                {({ fieldProps }) => (
+              <Field<string> name="id" isRequired validate={(value) => validateId(value || '', -1, false)} defaultValue="">
+                {({ fieldProps, error }) => (
                   <Box xcss={{ width: '150px' }}>
-                    <TextField {...fieldProps} placeholder={t('id_placeholder')} />
+                    <TextField
+                      {...fieldProps}
+                      placeholder={t('id_placeholder')}
+                      elemAfterInput={
+                        fieldProps.isInvalid && (
+                          <Box xcss={errorIconContainerStyles}>
+                            <ErrorIcon label="error" primaryColor={token('color.icon.danger')} />
+                          </Box>
+                        )
+                      }
+                    />
+                    {error && <div style={{ color: 'red' }}>{error}</div>}
                   </Box>
                 )}
               </Field>
 
-              {/* group */}
-              <div style={{ flex: 1, minWidth: 200 }}>
-                <Field name="group">
-                  {({ fieldProps }) => <CreatableMultiSelect options={discordGroups} placeholder={t('group_placeholder')} />}
+              {/* groups */}
+              <Box xcss={xcss({ flex: 1 })}>
+                <Field<ValueType<OptionType, true>> name="groups" defaultValue={[]}>
+                  {({ fieldProps }) => (
+                    <CreatableSelect
+                      {...fieldProps}
+                      isMulti
+                      isClearable
+                      placeholder={t('group_placeholder')}
+                      formatCreateLabel={(s: string) => tt('create_label', { name: s })}
+                      noOptionsMessage={(obj: { inputValue: string }) => t('no_options', { name: obj.inputValue })}
+                      options={discordGroups.map(createOption)}
+                      autoFocus={false}
+                      openMenuOnFocus={false}
+                    />
+                  )}
                 </Field>
-              </div>
+              </Box>
 
               {/* add button */}
-              <div style={{ height: '48px' }}>
-                <Button type="submit" appearance="primary">
-                  {tt('add')}
-                </Button>
-              </div>
+              <Button type="submit" appearance="primary">
+                {tt('add')}
+              </Button>
             </Inline>
           </form>
         )}
@@ -285,7 +343,7 @@ function DiscordUsers() {
   return (
     <Box xcss={containerStyles}>
       <p>{t('description')}</p>
-      <Box xcss={wrapperStyles}>
+      <Box>
         <DynamicTable
           caption=""
           head={head}
