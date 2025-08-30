@@ -6,7 +6,7 @@ import TextField from '@atlaskit/textfield';
 import { token } from '@atlaskit/tokens';
 import ErrorIcon from '@atlaskit/icon/glyph/error';
 
-interface VerifiableInlineEditProps {
+interface EditableTextProps {
   defaultValue: string;
   readView: () => React.ReactNode;
   validate: (value: string) => string | undefined;
@@ -19,7 +19,7 @@ const errorIconContainerStyles = xcss({
   lineHeight: '100%' as any,
 });
 
-const VerifiableInlineEdit: React.FC<VerifiableInlineEditProps> = ({ defaultValue, readView, validate, onConfirm }) => {
+const EditableText: React.FC<EditableTextProps> = ({ defaultValue, readView, validate, onConfirm }) => {
   const [editVersion, setEditVersion] = React.useState(0);
   let validateTimeoutId: number | undefined;
 
@@ -84,4 +84,4 @@ const VerifiableInlineEdit: React.FC<VerifiableInlineEditProps> = ({ defaultValu
   );
 };
 
-export default VerifiableInlineEdit;
+export default EditableText;

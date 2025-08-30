@@ -7,13 +7,14 @@ import TextField from '@atlaskit/textfield';
 import Button from '@atlaskit/button/new';
 // import DynamicTable from "@atlaskit/dynamic-table/components/stateless";
 import { HeadType, RowType } from '@atlaskit/dynamic-table/types';
-import Lozenge from '@atlaskit/lozenge';
 import { Box, Inline, xcss } from '@atlaskit/primitives';
 
 import { DiscordUser } from '../../models/DiscordUser';
 import { token } from '@atlaskit/tokens';
 import CreatableMultiSelect from '../forms/CreatableMultiSelect';
-import VerifiableInlineEdit from '../forms/VerifiableInlineEdit';
+import EditableText from '../forms/EditableText';
+import EditableMultiSelect from '../forms/EditableMultiSelect';
+import { OptionType, ValueType } from '@atlaskit/select';
 
 const initialUsers: DiscordUser[] = [
   {
@@ -24,7 +25,7 @@ const initialUsers: DiscordUser[] = [
   { id: '98765432109876', name: 'Bob', groups: ['Member'] },
   { id: '11112222333344', name: 'Charlie', groups: ['Moderator', 'VIP'] },
   { id: '11112222333345', name: 'Charlie 1', groups: ['Moderator', 'VIP'] },
-  { id: '11112222333346', name: 'Charlie 2', groups: ['VIP'] },
+  { id: '11112222333346', name: 'Charlie 2', groups: [] },
   { id: '11112222333347', name: 'Charlie 3', groups: ['Member', 'VIP'] },
 ];
 
@@ -54,7 +55,14 @@ function DiscordUsers() {
   const [discordGroups, setDiscordGroups] = React.useState<string[]>(findDiscordGroups(discordUsers));
 
   const setEditValue = (index: number, key: string, value: string) => {
-    const newUsers = discordUsers.map((user: DiscordUser, i: number) => (i == index ? { ...user, [key]: value.trim() } : user));
+    const newUsers = discordUsers.map((user: DiscordUser, i: number) => (i == index ? { ...user, [key]: value } : user));
+    setDiscordUsers(newUsers);
+  };
+
+  const setEditGroups = (index: number, value: ValueType<OptionType, true>) => {
+    const newUsers = discordUsers.map((user: DiscordUser, i: number) =>
+      i == index ? { ...user, groups: value.map((opt) => opt.label) } : user
+    );
     setDiscordUsers(newUsers);
     setDiscordGroups(findDiscordGroups(newUsers));
   };
@@ -101,7 +109,7 @@ function DiscordUsers() {
       {
         key: user.name,
         content: (
-          <VerifiableInlineEdit
+          <EditableText
             defaultValue={user.name}
             readView={() => <Box xcss={readViewContainerStyles}>{user.name}</Box>}
             validate={(name) => validateName(name, index)}
@@ -117,7 +125,7 @@ function DiscordUsers() {
       {
         key: user.id,
         content: (
-          <VerifiableInlineEdit
+          <EditableText
             defaultValue={user.id}
             readView={() => <Box xcss={xcss({ ...readViewContainerStyles, color: 'color.text.subtlest' })}>{user.id}</Box>}
             validate={(id) => validateId(id, index)}
@@ -126,15 +134,13 @@ function DiscordUsers() {
         ),
         className: 'editable-table-cell',
       },
-      // groups
+      //------------------------------------------------------------------------
+      //    Groups
+      //------------------------------------------------------------------------
       {
         key: user.groups.join('|'),
         content: (
-          <Inline space="space.100">
-            {user.groups.map((group) => (
-              <Lozenge key={group}>{group}</Lozenge>
-            ))}
-          </Inline>
+          <EditableMultiSelect defaultValue={user.groups} options={discordGroups} onConfirm={(value) => setEditGroups(index, value)} />
         ),
       },
     ],
@@ -187,7 +193,7 @@ function DiscordUsers() {
               {/* group */}
               <div style={{ flex: 1, minWidth: 200 }}>
                 <Field name="group">
-                  {({ fieldProps }) => <CreatableMultiSelect initialOptions={discordGroups} placeholder={t('group_placeholder')} />}
+                  {({ fieldProps }) => <CreatableMultiSelect options={discordGroups} placeholder={t('group_placeholder')} />}
                 </Field>
               </div>
 

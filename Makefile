@@ -4,6 +4,9 @@ build:
 install:
 	npm install --force
 
+clean:
+	rm -rf ./node_modules
+
 watch:
 	npm run dev
 
@@ -13,7 +16,7 @@ open:
 publish: build
 	rm -rf docs
 	mv -f build docs
-	/bin/echo -n 'feign.mogproject.com' > docs/CNAME
+	/bin/echo -n 'feignv1.mogproject.com' > docs/CNAME
 
-.PHONY: build install watch open publish
+.PHONY: build install clean watch open publish
 
