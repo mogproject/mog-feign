@@ -12,6 +12,7 @@ const en = {
   show: 'Show',
   color: 'Color',
   group: 'Group',
+  groups: 'Groups',
   action: 'Action',
 
   app_title: 'mog-feign',
@@ -75,6 +76,7 @@ const en = {
       number_only: 'ID must be a number',
       name_placeholder: 'Enter name',
       id_placeholder: 'Enter Discord ID',
+      group_placeholder: 'Enter groups',
       removal: 'Removing Discord User',
       confirm_removal: 'Do you want to remove the following user?',
     },

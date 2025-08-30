@@ -12,6 +12,7 @@ const ja = {
   show: '表示',
   color: '色',
   group: 'グループ',
+  groups: 'グループ',
   action: 'アクション',
 
   app_title: 'もぐぷろふぇいん',
@@ -75,6 +76,7 @@ const ja = {
       number_only: 'ID には数字のみ含まれます',
       name_placeholder: '名前を入力',
       id_placeholder: 'Discord ID を入力',
+      group_placeholder: 'グループを入力',
       removal: 'Discord ユーザーの削除',
       confirm_removal: '以下のユーザーを削除します。よろしいですか?',
     },

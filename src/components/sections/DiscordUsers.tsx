@@ -1,17 +1,19 @@
 import React, { Fragment } from 'react';
+import { useTranslation } from 'react-i18next';
+
 import DynamicTable from '@atlaskit/dynamic-table';
-import Form, { Field, FormFooter } from '@atlaskit/form';
+import Form, { Field } from '@atlaskit/form';
 import TextField from '@atlaskit/textfield';
 import Button from '@atlaskit/button/new';
 // import DynamicTable from "@atlaskit/dynamic-table/components/stateless";
 import { HeadType, RowType } from '@atlaskit/dynamic-table/types';
 import Lozenge from '@atlaskit/lozenge';
-import { DiscordUser } from '../../models/DiscordUser';
 import { Box, Inline, xcss } from '@atlaskit/primitives';
-import { useTranslation } from 'react-i18next';
 
+import { DiscordUser } from '../../models/DiscordUser';
 import { token } from '@atlaskit/tokens';
 import CreatableMultiSelect from '../forms/CreatableMultiSelect';
+import VerifiableInlineEdit from '../forms/VerifiableInlineEdit';
 
 const initialUsers: DiscordUser[] = [
   {
@@ -21,7 +23,19 @@ const initialUsers: DiscordUser[] = [
   },
   { id: '98765432109876', name: 'Bob', groups: ['Member'] },
   { id: '11112222333344', name: 'Charlie', groups: ['Moderator', 'VIP'] },
+  { id: '11112222333345', name: 'Charlie 1', groups: ['Moderator', 'VIP'] },
+  { id: '11112222333346', name: 'Charlie 2', groups: ['VIP'] },
+  { id: '11112222333347', name: 'Charlie 3', groups: ['Member', 'VIP'] },
 ];
+
+const readViewContainerStyles = xcss({
+  display: 'flex',
+  font: token('font.body'),
+  maxWidth: '100%',
+  paddingBlock: 'space.100',
+  paddingInline: 'space.075',
+  wordBreak: `break-word`,
+});
 
 function findDiscordGroups(users: DiscordUser[]) {
   return Array.from(new Set(users.flatMap((u) => u.groups))).sort();
@@ -39,6 +53,35 @@ function DiscordUsers() {
   const [discordUsers, setDiscordUsers] = React.useState<DiscordUser[]>(initialUsers);
   const [discordGroups, setDiscordGroups] = React.useState<string[]>(findDiscordGroups(discordUsers));
 
+  const setEditValue = (index: number, key: string, value: string) => {
+    const newUsers = discordUsers.map((user: DiscordUser, i: number) => (i == index ? { ...user, [key]: value.trim() } : user));
+    setDiscordUsers(newUsers);
+    setDiscordGroups(findDiscordGroups(newUsers));
+  };
+
+  // Validations.
+  const validateName = (editName: string, index: number) => {
+    if (editName == '') {
+      return t('name_placeholder');
+    } else if (discordUsers.some((x, i) => i !== index && x.name === editName)) {
+      return t('already_exists');
+    } else {
+      return undefined;
+    }
+  };
+
+  const validateId = (editId: string, index: number) => {
+    if (editId == '') {
+      return t('id_placeholder');
+    } else if (!/^[0-9]+$/.test(editId)) {
+      return t('number_only');
+    } else if (discordUsers.some((x, i) => i !== index && x.id === editId)) {
+      return t('already_exists');
+    } else {
+      return undefined;
+    }
+  };
+
   // Define header.
   const head: HeadType = {
     cells: [
@@ -50,14 +93,39 @@ function DiscordUsers() {
   };
 
   const rows: RowType[] = discordUsers.map((user, index) => ({
-    key: user.id,
+    key: index.toString(),
     cells: [
-      // name
-      { key: user.name, content: <div style={{ color: token('color.text') }}>{user.name}</div> },
+      //------------------------------------------------------------------------
+      //    Name
+      //------------------------------------------------------------------------
+      {
+        key: user.name,
+        content: (
+          <VerifiableInlineEdit
+            defaultValue={user.name}
+            readView={() => <Box xcss={readViewContainerStyles}>{user.name}</Box>}
+            validate={(name) => validateName(name, index)}
+            onConfirm={(value) => setEditValue(index, 'name', value)}
+          />
+        ),
+        className: 'editable-table-cell',
+      },
 
-      // id
-      { key: user.id, content: <div style={{ color: token('color.text.subtlest') }}>{user.id}</div> },
-
+      //------------------------------------------------------------------------
+      //    ID
+      //------------------------------------------------------------------------
+      {
+        key: user.id,
+        content: (
+          <VerifiableInlineEdit
+            defaultValue={user.id}
+            readView={() => <Box xcss={xcss({ ...readViewContainerStyles, color: 'color.text.subtlest' })}>{user.id}</Box>}
+            validate={(id) => validateId(id, index)}
+            onConfirm={(value) => setEditValue(index, 'id', value)}
+          />
+        ),
+        className: 'editable-table-cell',
+      },
       // groups
       {
         key: user.groups.join('|'),
@@ -102,7 +170,7 @@ function DiscordUsers() {
               <Field name="name" isRequired>
                 {({ fieldProps }) => (
                   <Box xcss={{ width: '120px' }}>
-                    <TextField {...fieldProps} placeholder={tt('name')} />
+                    <TextField {...fieldProps} placeholder={t('name_placeholder')} />
                   </Box>
                 )}
               </Field>
@@ -111,14 +179,16 @@ function DiscordUsers() {
               <Field name="id" isRequired>
                 {({ fieldProps }) => (
                   <Box xcss={{ width: '150px' }}>
-                    <TextField {...fieldProps} placeholder="ID" />
+                    <TextField {...fieldProps} placeholder={t('id_placeholder')} />
                   </Box>
                 )}
               </Field>
 
               {/* group */}
               <div style={{ flex: 1, minWidth: 200 }}>
-                <Field name="group">{({ fieldProps }) => <CreatableMultiSelect initialOptions={discordGroups} />}</Field>
+                <Field name="group">
+                  {({ fieldProps }) => <CreatableMultiSelect initialOptions={discordGroups} placeholder={t('group_placeholder')} />}
+                </Field>
               </div>
 
               {/* add button */}
@@ -140,18 +210,18 @@ function DiscordUsers() {
   return (
     <Box xcss={containerStyles}>
       <p>{t('description')}</p>
-      <div css={wrapperStyles}>
+      <Box xcss={wrapperStyles}>
         <DynamicTable
           caption=""
           head={head}
           rows={rows}
-          rowsPerPage={15}
+          rowsPerPage={5}
           defaultPage={1}
           loadingSpinnerSize="large"
           isRankable
           isFixedSize
         />
-      </div>
+      </Box>
       {newEntryField}
     </Box>
   );

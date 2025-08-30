@@ -13,6 +13,7 @@
     "@atlaskit/ds-lib": "5.0.0",
     "@atlaskit/dynamic-table": "^18.0.1",
     "@atlaskit/form": "^12.2.1",
+    "@atlaskit/inline-edit": "^15.3.5",
     "@atlaskit/lozenge": "13.0.5",
     "@atlaskit/platform-feature-flags": "latest",
     "@atlaskit/pragmatic-drag-and-drop": "1.7.4",
@@ -40,7 +41,6 @@
     "react-scripts": "^5.0.1"
   },
   "devDependencies": {
-    "@types/jquery": "^3.5.33",
     "@types/react": "^19.0.2",
     "@types/react-dom": "^19.0.2",
     "@types/wicg-file-system-access": "^2023.10.5",
