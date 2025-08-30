@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import DynamicTable from '@atlaskit/dynamic-table';
 import Form, { Field } from '@atlaskit/form';
 import TextField from '@atlaskit/textfield';
-import Button from '@atlaskit/button/new';
+import Button, { IconButton } from '@atlaskit/button/new';
 // import DynamicTable from "@atlaskit/dynamic-table/components/stateless";
 import { HeadType, RowType } from '@atlaskit/dynamic-table/types';
 import { Box, Inline, xcss } from '@atlaskit/primitives';
@@ -15,6 +15,8 @@ import CreatableMultiSelect from '../forms/CreatableMultiSelect';
 import EditableText from '../forms/EditableText';
 import EditableMultiSelect from '../forms/EditableMultiSelect';
 import { OptionType, ValueType } from '@atlaskit/select';
+import DeleteIcon from '@atlaskit/icon/core/delete';
+import Modal, { ModalBody, ModalFooter, ModalHeader, ModalTitle, ModalTransition } from '@atlaskit/modal-dialog';
 
 const initialUsers: DiscordUser[] = [
   {
@@ -27,6 +29,7 @@ const initialUsers: DiscordUser[] = [
   { id: '11112222333345', name: 'Charlie 1', groups: ['Moderator', 'VIP'] },
   { id: '11112222333346', name: 'Charlie 2', groups: [] },
   { id: '11112222333347', name: 'Charlie 3', groups: ['Member', 'VIP'] },
+  { id: '11112222333348', name: 'Charlie 4', groups: ['Member', 'VIP'] },
 ];
 
 const readViewContainerStyles = xcss({
@@ -54,6 +57,11 @@ function DiscordUsers() {
   const [discordUsers, setDiscordUsers] = React.useState<DiscordUser[]>(initialUsers);
   const [discordGroups, setDiscordGroups] = React.useState<string[]>(findDiscordGroups(discordUsers));
 
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [removeIndex, setRemoveIndex] = React.useState(-1);
+  const openModal = React.useCallback(() => setIsModalOpen(true), []);
+  const closeModal = React.useCallback(() => setIsModalOpen(false), []);
+
   const setEditValue = (index: number, key: string, value: string) => {
     const newUsers = discordUsers.map((user: DiscordUser, i: number) => (i == index ? { ...user, [key]: value } : user));
     setDiscordUsers(newUsers);
@@ -63,6 +71,15 @@ function DiscordUsers() {
     const newUsers = discordUsers.map((user: DiscordUser, i: number) =>
       i == index ? { ...user, groups: value.map((opt) => opt.label) } : user
     );
+    setDiscordUsers(newUsers);
+    setDiscordGroups(findDiscordGroups(newUsers));
+  };
+
+  const removeDiscordUser = () => {
+    if (removeIndex < 0) return;
+
+    const newUsers = discordUsers.filter((_, index) => index !== removeIndex);
+    setRemoveIndex(-1);
     setDiscordUsers(newUsers);
     setDiscordGroups(findDiscordGroups(newUsers));
   };
@@ -95,8 +112,8 @@ function DiscordUsers() {
     cells: [
       { key: 'name', content: tt('name'), isSortable: true, width: 14 },
       { key: 'id', content: 'ID', isSortable: true, width: 18 },
-      { key: 'groups', content: tt('group'), isSortable: true },
-      { key: 'action', content: '', isSortable: false },
+      { key: 'groups', content: tt('groups'), isSortable: true },
+      { key: 'action', content: tt('remove'), isSortable: false },
     ],
   };
 
@@ -143,6 +160,23 @@ function DiscordUsers() {
           <EditableMultiSelect defaultValue={user.groups} options={discordGroups} onConfirm={(value) => setEditGroups(index, value)} />
         ),
       },
+      //------------------------------------------------------------------------
+      //    Groups
+      //------------------------------------------------------------------------
+      {
+        content: (
+          <IconButton
+            icon={DeleteIcon}
+            label={tt('remove')}
+            appearance="subtle"
+            isTooltipDisabled={true}
+            onClick={() => {
+              setRemoveIndex(index);
+              openModal();
+            }}
+          />
+        ),
+      },
     ],
   }));
 
@@ -166,6 +200,41 @@ function DiscordUsers() {
   //----------------------------------------------------------------------------
   //    Components
   //----------------------------------------------------------------------------
+  const deletionModal = (
+    <ModalTransition>
+      {isModalOpen && (
+        <Modal onClose={closeModal}>
+          <ModalHeader hasCloseButton>
+            <ModalTitle>{t('removal')}</ModalTitle>
+          </ModalHeader>
+          <ModalBody>
+            <p>{t('confirm_removal')}</p>
+            <ul>
+              <li>
+                {tt('name')}: {discordUsers[removeIndex].name}
+              </li>
+              <li>ID: {discordUsers[removeIndex].id}</li>
+            </ul>
+          </ModalBody>
+          <ModalFooter>
+            <Button appearance="subtle" onClick={closeModal}>
+              {tt('cancel')}
+            </Button>
+            <Button
+              appearance="danger"
+              onClick={() => {
+                removeDiscordUser();
+                closeModal();
+              }}
+            >
+              {tt('remove')}
+            </Button>
+          </ModalFooter>
+        </Modal>
+      )}
+    </ModalTransition>
+  );
+
   const newEntryField = (
     <Fragment>
       <Form key="discord-user-new" onSubmit={handleNewEntry}>
@@ -226,9 +295,20 @@ function DiscordUsers() {
           loadingSpinnerSize="large"
           isRankable
           isFixedSize
+          onRankEnd={({ sourceIndex, destination }) => {
+            if (destination === undefined) return;
+            if (sourceIndex == destination.index) return;
+
+            // console.log([sourceIndex, destination.index]);
+            const updated = Array.from(discordUsers);
+            const [moved] = updated.splice(sourceIndex, 1);
+            updated.splice(destination.index, 0, moved);
+            setDiscordUsers(updated);
+          }}
         />
       </Box>
       {newEntryField}
+      {deletionModal}
     </Box>
   );
 }

@@ -15,6 +15,7 @@
     "@atlaskit/form": "^12.2.1",
     "@atlaskit/inline-edit": "^15.3.5",
     "@atlaskit/lozenge": "13.0.5",
+    "@atlaskit/modal-dialog": "^14.3.6",
     "@atlaskit/platform-feature-flags": "latest",
     "@atlaskit/pragmatic-drag-and-drop": "1.7.4",
     "@atlaskit/pragmatic-drag-and-drop-docs": "1.4.3",
