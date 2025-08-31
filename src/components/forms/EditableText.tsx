@@ -11,6 +11,7 @@ interface EditableTextProps {
   readView: () => React.ReactNode;
   validate: (value: string) => string | undefined;
   onConfirm: (value: string) => void;
+  keyPrefix: string;
 }
 
 const errorIconContainerStyles = xcss({
@@ -19,7 +20,7 @@ const errorIconContainerStyles = xcss({
   lineHeight: '100%' as any,
 });
 
-const EditableText: React.FC<EditableTextProps> = ({ defaultValue, readView, validate, onConfirm }) => {
+const EditableText: React.FC<EditableTextProps> = ({ defaultValue, readView, validate, onConfirm, keyPrefix }) => {
   const [editVersion, setEditVersion] = React.useState(0);
   let validateTimeoutId: number | undefined;
 
@@ -61,7 +62,7 @@ const EditableText: React.FC<EditableTextProps> = ({ defaultValue, readView, val
     <InlineEdit
       hideActionButtons={false}
       defaultValue={defaultValue}
-      key={editVersion}
+      key={`${keyPrefix}-${editVersion}`}
       editView={({ errorMessage, ...fieldProps }) => (
         <InlineDialog isOpen={fieldProps.isInvalid} content={<Box>{errorMessage}</Box>} placement="right">
           <TextField

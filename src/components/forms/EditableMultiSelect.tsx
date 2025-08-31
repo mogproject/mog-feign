@@ -22,9 +22,10 @@ interface EditableMultiSelectProps {
   defaultValue: string[];
   options: string[];
   onConfirm: (value: ValueType<OptionType, true>) => void;
+  keyPrefix: string;
 }
 
-const EditableMultiSelect: React.FC<EditableMultiSelectProps> = ({ defaultValue, options, onConfirm }) => {
+const EditableMultiSelect: React.FC<EditableMultiSelectProps> = ({ defaultValue, options, onConfirm, keyPrefix }) => {
   const { t: translate } = useTranslation('translation');
   const t = translate as (s: string, o?: Record<string, string | boolean>) => string;
   const [editVersion, setEditVersion] = React.useState(0);
@@ -40,7 +41,7 @@ const EditableMultiSelect: React.FC<EditableMultiSelectProps> = ({ defaultValue,
     <InlineEdit<ValueType<OptionType, true>>
       hideActionButtons={false}
       defaultValue={defaultValue.map(createOption)}
-      key={editVersion}
+      key={`${keyPrefix}-${editVersion}`}
       editView={({ ...fieldProps }) => (
         <CreatableSelect
           {...fieldProps}
