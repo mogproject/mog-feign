@@ -1,11 +1,9 @@
 import React, { Fragment } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import DynamicTable from '@atlaskit/dynamic-table';
 import Form, { ErrorMessage, Field, MessageWrapper } from '@atlaskit/form';
 import TextField from '@atlaskit/textfield';
 import Button, { IconButton } from '@atlaskit/button/new';
-// import DynamicTable from "@atlaskit/dynamic-table/components/stateless";
 import { HeadType, RowType } from '@atlaskit/dynamic-table/types';
 import { Box, Inline, xcss } from '@atlaskit/primitives';
 
@@ -15,13 +13,13 @@ import EditableText from '../forms/EditableText';
 import EditableMultiSelect from '../forms/EditableMultiSelect';
 import { OptionType, ValueType } from '@atlaskit/select';
 import DeleteIcon from '@atlaskit/icon/core/delete';
-import ErrorIcon from '@atlaskit/icon/glyph/error';
 import Modal, { ModalBody, ModalFooter, ModalHeader, ModalTitle, ModalTransition } from '@atlaskit/modal-dialog';
 
 // Note: Importing from '@atlaskit/select' breaks creatable select.
 import CreatableSelect from '@atlaskit/select/CreatableSelect';
-import { createOption } from '../forms/selectHelper';
-import { css } from '@compiled/react';
+import { createOption } from '../forms/select-helper';
+import CompactTable, { CompactTableSettings, defaultCompactTableSettings } from '../forms/CompactTable';
+
 const initialUsers: DiscordUser[] = [
   {
     id: '12345678901234',
@@ -40,7 +38,17 @@ const readViewContainerStyles = xcss({
   display: 'flex',
   font: token('font.body'),
   maxWidth: '100%',
-  paddingBlock: 'space.100',
+  paddingBlock: 'space.050',
+  paddingInline: 'space.075',
+  wordBreak: `break-word`,
+});
+
+const readViewContainerStylesForId = xcss({
+  display: 'flex',
+  font: token('font.body'),
+  color: 'color.text.subtlest',
+  maxWidth: '100%',
+  paddingBlock: 'space.050',
   paddingInline: 'space.075',
   wordBreak: `break-word`,
 });
@@ -62,22 +70,9 @@ const compactSelectStyles = {
   }),
 };
 
-// const compactButton = css({
-//   height: '32px',
-//   lineHeight: '32px',
-//   padding: '0 8px',
-//   fontSize: '14px',
-// });
-
 function findDiscordGroups(users: DiscordUser[]) {
   return Array.from(new Set(users.flatMap((u) => u.groups))).sort();
 }
-
-type FormValues = {
-  name: string;
-  id: string;
-  groups: ValueType<OptionType, true>;
-};
 
 function DiscordUsers() {
   const { t: translate } = useTranslation('translation', {
@@ -157,6 +152,7 @@ function DiscordUsers() {
 
   const rows: RowType[] = discordUsers.map((user, index) => ({
     key: index.toString(),
+    className: 'compact-table-row',
     cells: [
       //------------------------------------------------------------------------
       //    Name
@@ -172,7 +168,6 @@ function DiscordUsers() {
             keyPrefix={`table-name-${index}`}
           />
         ),
-        // className: 'editable-table-cell',
       },
 
       //------------------------------------------------------------------------
@@ -183,13 +178,12 @@ function DiscordUsers() {
         content: (
           <EditableText
             defaultValue={user.id}
-            readView={() => <Box xcss={xcss({ ...readViewContainerStyles, color: 'color.text.subtlest' })}>{user.id}</Box>}
+            readView={() => <Box xcss={readViewContainerStylesForId}>{user.id}</Box>}
             validate={(id) => validateId(id, index, true)}
             onConfirm={(value) => setEditValue(index, 'id', value)}
             keyPrefix={`table-id-${index}`}
           />
         ),
-        // className: 'editable-table-cell',
       },
       //------------------------------------------------------------------------
       //    Groups
@@ -206,7 +200,7 @@ function DiscordUsers() {
         ),
       },
       //------------------------------------------------------------------------
-      //    Groups
+      //    Remove
       //------------------------------------------------------------------------
       {
         content: (
@@ -229,12 +223,6 @@ function DiscordUsers() {
     maxWidth: '1200px',
     marginInline: 'auto', // centering
     paddingInline: 'space.200', // left & right padding
-  });
-
-  const errorIconContainerStyles = xcss({
-    paddingInlineEnd: 'space.075',
-    // eslint-disable-next-line @atlaskit/ui-styling-standard/no-unsafe-values
-    lineHeight: '100%' as any,
   });
 
   //----------------------------------------------------------------------------
@@ -279,6 +267,15 @@ function DiscordUsers() {
     </ModalTransition>
   );
 
+  //----------------------------------------------------------------------------
+  //    Managing new entries
+  //----------------------------------------------------------------------------
+  type FormValues = {
+    name: string;
+    id: string;
+    groups: ValueType<OptionType, true>;
+  };
+
   const newEntryField = (
     <Fragment>
       <Form<FormValues>
@@ -302,7 +299,7 @@ function DiscordUsers() {
               {/* name */}
               <Field<string> name="name" isRequired validate={(value) => validateName(value || '', -1, false)} defaultValue="">
                 {({ fieldProps, error }) => (
-                  <Box xcss={xcss({ width: '120px', marginTop: 'space.0' })}>
+                  <Box xcss={xcss({ width: '144px' })}>
                     <TextField {...fieldProps} className="compact-textfield" placeholder={t('name_placeholder')} />
                     <MessageWrapper>{error && <ErrorMessage>{error}</ErrorMessage>}</MessageWrapper>
                   </Box>
@@ -312,7 +309,7 @@ function DiscordUsers() {
               {/* ID */}
               <Field<string> name="id" isRequired validate={(value) => validateId(value || '', -1, false)} defaultValue="">
                 {({ fieldProps, error }) => (
-                  <Box xcss={xcss({ width: '150px' })}>
+                  <Box xcss={xcss({ width: '144px' })}>
                     <TextField {...fieldProps} className="compact-textfield" placeholder={t('id_placeholder')} />
                     <MessageWrapper>{error && <ErrorMessage>{error}</ErrorMessage>}</MessageWrapper>
                   </Box>
@@ -355,31 +352,25 @@ function DiscordUsers() {
   //----------------------------------------------------------------------------
   //    Output
   //----------------------------------------------------------------------------
+  const [discordUsersTableSettings, setDiscordUsersTableSettings] = React.useState<CompactTableSettings>(defaultCompactTableSettings);
+
   return (
     <Box xcss={containerStyles}>
       <p>{t('description')}</p>
-      <Box>
-        <DynamicTable
-          caption=""
-          head={head}
-          rows={rows}
-          rowsPerPage={5}
-          defaultPage={1}
-          loadingSpinnerSize="large"
-          isRankable
-          isFixedSize
-          onRankEnd={({ sourceIndex, destination }) => {
-            if (destination === undefined) return;
-            if (sourceIndex == destination.index) return;
-
-            // console.log([sourceIndex, destination.index]);
-            const updated = Array.from(discordUsers);
-            const [moved] = updated.splice(sourceIndex, 1);
-            updated.splice(destination.index, 0, moved);
-            setDiscordUsers(updated);
-          }}
-        />
-      </Box>
+      <CompactTable
+        settings={discordUsersTableSettings}
+        onSettingsChange={(updated) => {
+          setDiscordUsersTableSettings({ ...discordUsersTableSettings, ...updated });
+        }}
+        head={head}
+        rows={rows}
+        onRankEnd={(sourceIndex, destinationIndex) => {
+          const updated = Array.from(discordUsers);
+          const [moved] = updated.splice(sourceIndex, 1);
+          updated.splice(destinationIndex, 0, moved);
+          setDiscordUsers(updated);
+        }}
+      />
       {newEntryField}
       {deletionModal}
     </Box>

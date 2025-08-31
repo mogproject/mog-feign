@@ -9,13 +9,32 @@ import Lozenge from '@atlaskit/lozenge';
 
 // Note: Importing from '@atlaskit/select' breaks creatable select.
 import CreatableSelect from '@atlaskit/select/CreatableSelect';
-import { createOption } from './selectHelper';
+import { createOption } from './select-helper';
+
+const compactSelectHeight = '32px';
+
+const compactSelectStyles = {
+  control: (base: any) => ({
+    ...base,
+    minHeight: compactSelectHeight,
+    height: compactSelectHeight,
+  }),
+  valueContainer: (base: any) => ({
+    ...base,
+    paddingTop: 0,
+    paddingBottom: 0,
+  }),
+  indicatorsContainer: (base: any) => ({
+    ...base,
+    height: compactSelectHeight,
+  }),
+};
 
 const readViewContainerStyles = xcss({
   font: token('font.body'),
   color: 'color.text.subtlest',
-  paddingBlock: 'space.100',
-  paddingInline: 'space.075',
+  paddingBlock: 'space.0',
+  paddingInline: 'space.0',
 });
 
 interface EditableMultiSelectProps {
@@ -45,6 +64,7 @@ const EditableMultiSelect: React.FC<EditableMultiSelectProps> = ({ defaultValue,
       editView={({ ...fieldProps }) => (
         <CreatableSelect
           {...fieldProps}
+          styles={compactSelectStyles}
           isMulti
           isClearable
           placeholder=""

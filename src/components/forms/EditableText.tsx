@@ -67,6 +67,7 @@ const EditableText: React.FC<EditableTextProps> = ({ defaultValue, readView, val
         <InlineDialog isOpen={fieldProps.isInvalid} content={<Box>{errorMessage}</Box>} placement="right">
           <TextField
             {...fieldProps}
+            className="table-textfield"
             elemAfterInput={
               fieldProps.isInvalid && (
                 <Box xcss={errorIconContainerStyles}>
