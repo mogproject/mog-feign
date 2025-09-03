@@ -19,6 +19,7 @@
     "@atlaskit/modal-dialog": "^14.3.6",
     "@atlaskit/platform-feature-flags": "latest",
     "@atlaskit/pragmatic-drag-and-drop": "1.7.4",
+    "@atlaskit/pragmatic-drag-and-drop-auto-scroll": "^2.1.1",
     "@atlaskit/pragmatic-drag-and-drop-docs": "1.4.3",
     "@atlaskit/pragmatic-drag-and-drop-flourish": "2.0.4",
     "@atlaskit/pragmatic-drag-and-drop-hitbox": "1.1.0",

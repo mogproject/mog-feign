@@ -7,6 +7,7 @@ import DiscordUsers from './components/sections/DiscordUsers';
 import './i18n/config'; // Set up i18n.
 
 import './styles/table.css';
+import './styles/rankable-table.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(

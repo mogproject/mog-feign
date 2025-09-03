@@ -19,6 +19,7 @@ import Modal, { ModalBody, ModalFooter, ModalHeader, ModalTitle, ModalTransition
 import CreatableSelect from '@atlaskit/select/CreatableSelect';
 import { createOption } from '../forms/select-helper';
 import CompactTable, { CompactTableSettings, defaultCompactTableSettings } from '../forms/CompactTable';
+import RankableTable from '../forms/rankable-table/rankable-table';
 
 const initialUsers: DiscordUser[] = [
   {
@@ -354,10 +355,65 @@ function DiscordUsers() {
   //----------------------------------------------------------------------------
   const [discordUsersTableSettings, setDiscordUsersTableSettings] = React.useState<CompactTableSettings>(defaultCompactTableSettings);
 
+  const myHead = {
+    cells: [
+      { key: 'name', content: tt('name'), isSortable: true },
+      { key: 'id', content: 'ID', isSortable: true },
+      { key: 'groups', content: tt('groups'), isSortable: true },
+      { key: 'action', content: tt('remove'), isSortable: false },
+    ],
+  };
+
+  const myRows: RowType[] = discordUsers.map((user, index) => ({
+    // key: index.toString(),
+    // className: 'compact-table-row',
+    cells: [
+      //------------------------------------------------------------------------
+      //    Name
+      //------------------------------------------------------------------------
+      {
+        key: user.name,
+        content: user.name,
+      },
+
+      //------------------------------------------------------------------------
+      //    ID
+      //------------------------------------------------------------------------
+      {
+        key: Number(user.id), // Compare as a number.
+        content: user.id,
+      },
+      //------------------------------------------------------------------------
+      //    Groups
+      //------------------------------------------------------------------------
+      {
+        key: user.groups.join('|'),
+        content: user.groups.join('|'),
+      },
+      //------------------------------------------------------------------------
+      //    Remove
+      //------------------------------------------------------------------------
+      {
+        content: (
+          <IconButton
+            icon={DeleteIcon}
+            label={tt('remove')}
+            appearance="subtle"
+            isTooltipDisabled={true}
+            onClick={() => {
+              setRemoveIndex(index);
+              openModal();
+            }}
+          />
+        ),
+      },
+    ],
+  }));
+
   return (
     <Box xcss={containerStyles}>
       <p>{t('description')}</p>
-      <CompactTable
+      {/* <CompactTable
         settings={discordUsersTableSettings}
         onSettingsChange={(updated) => {
           setDiscordUsersTableSettings({ ...discordUsersTableSettings, ...updated });
@@ -370,8 +426,19 @@ function DiscordUsers() {
           updated.splice(destinationIndex, 0, moved);
           setDiscordUsers(updated);
         }}
-      />
+      /> */}
       {newEntryField}
+      <hr />
+      <RankableTable
+        head={myHead}
+        rows={myRows}
+        onRankEnd={(sourceIndex, destinationIndex) => {
+          const updated = Array.from(discordUsers);
+          const [moved] = updated.splice(sourceIndex, 1);
+          updated.splice(destinationIndex, 0, moved);
+          setDiscordUsers(updated);
+        }}
+      />
       {deletionModal}
     </Box>
   );
