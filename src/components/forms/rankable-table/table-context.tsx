@@ -9,13 +9,12 @@ export type TableContextValue = {
   // register: (args: ItemRegistration) => UnregisterFn;
   instanceId: symbol | null;
   numberOfRows: number;
+  sortKey: string | null;
 };
 
 export const TableContext = createContext<TableContextValue>({
   reorderItem: () => {},
-  // register: function register() {
-  //   return function unregister() {};
-  // },
   instanceId: null,
   numberOfRows: 0,
+  sortKey: null,
 });

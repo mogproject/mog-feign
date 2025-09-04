@@ -172,7 +172,7 @@ const RankableTable: React.FC<RankableTableProps> = (props) => {
       instanceId,
       reorderItem,
       numberOfRows: props.rows.length,
-      // register,
+      sortKey: props.sortKey ?? null,
     };
   }, [instanceId, reorderItem, props.rows.length]);
   // }, [reorderItem, register, instanceId]);
@@ -190,7 +190,7 @@ const RankableTable: React.FC<RankableTableProps> = (props) => {
           </Box>
           <tbody ref={tbodyRef}>
             {props.rows.map((row, rowIndex) => (
-              <Row cells={row.cells} rowIndex={rowIndex} isDraggable={props.sortKey === undefined} />
+              <Row cells={row.cells} rowIndex={rowIndex} />
             ))}
           </tbody>
         </table>

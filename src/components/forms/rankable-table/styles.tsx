@@ -6,6 +6,7 @@ export const scrollableStyles = xcss({
   height: '50vh',
   overflowY: 'scroll',
   overflowX: 'visible',
+  paddingLeft: 'space.050', // add space for DropIndicator
 });
 
 export const tableStyles = css({
@@ -29,18 +30,31 @@ export const tableHeaderStyles = xcss({
   // borderBottom: '0px solid',
   position: 'sticky',
   top: 'space.0',
-  // zIndex: 2 is needed so that the sticky header will sit on top of our
-  // row items, which need to have `position:relative` applied so they can render
-  // the drop indicators
-  // Using zIndex:2 rather than zIndex: 1 as our drop indicator uses zIndex: 1
-  // and we want the header to always be on top of the drop indicator
-  zIndex: 'card',  // use 100 instead of 2
+  zIndex: '1',
 });
 
 export const rowStyles = css({
-  // Needed for our drop indicator
   position: 'relative',
   '&:hover': {
     background: token('color.background.input.hovered', 'red'),
   },
+});
+
+export const fadedRowStyles = xcss({
+  opacity: 0.4,
+});
+
+export const rowDataStyles = xcss({
+  borderWidth: 'border.width.0',
+  borderBottomWidth: token('border.width', '1px'),
+  borderStyle: 'solid',
+  borderColor: 'color.border',
+});
+
+export const textOverflowStyles = xcss({
+  width: '100%',
+  height: '100%',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
 });

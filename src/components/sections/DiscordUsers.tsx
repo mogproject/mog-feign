@@ -20,6 +20,7 @@ import CreatableSelect from '@atlaskit/select/CreatableSelect';
 import { createOption } from '../forms/select-helper';
 import CompactTable, { CompactTableSettings, defaultCompactTableSettings } from '../forms/CompactTable';
 import RankableTable from '../forms/rankable-table/rankable-table';
+import { reorder } from '@atlaskit/pragmatic-drag-and-drop/reorder';
 
 const initialUsers: DiscordUser[] = [
   {
@@ -431,12 +432,10 @@ function DiscordUsers() {
       <hr />
       <RankableTable
         head={myHead}
-        rows={myRows}
+        rows={rows}
         onRankEnd={(sourceIndex, destinationIndex) => {
-          const updated = Array.from(discordUsers);
-          const [moved] = updated.splice(sourceIndex, 1);
-          updated.splice(destinationIndex, 0, moved);
-          setDiscordUsers(updated);
+          // console.log('RankEnd: ', sourceIndex, destinationIndex);
+          setDiscordUsers((users) => reorder({ list: users, startIndex: sourceIndex, finishIndex: destinationIndex }));
         }}
       />
       {deletionModal}
