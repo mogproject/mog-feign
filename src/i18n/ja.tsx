@@ -21,6 +21,13 @@ const ja = {
   create_label: '"{{name}}" を作成',
   no_options: '"{{name}}" は既に含まれています',
 
+  // Table options.
+  table: {
+    move_to_top: '先頭に移動',
+    move_up: '上に移動',
+    move_down: '下に移動',
+    move_to_bottom: '最後に移動',
+  },
   // Colors.
   colors: {
     white: '白',

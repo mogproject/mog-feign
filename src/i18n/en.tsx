@@ -21,6 +21,13 @@ const en = {
   create_label: 'Create "{{name}}"',
   no_options: 'No options',
 
+  // Table options.
+  table: {
+    move_to_top: 'Move to top',
+    move_up: 'Move up',
+    move_down: 'Move down',
+    move_to_bottom: 'Move to bottom',
+  },
   // Colors.
   colors: {
     white: 'White',
