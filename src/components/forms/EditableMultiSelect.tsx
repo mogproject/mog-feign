@@ -33,7 +33,7 @@ const compactSelectStyles = {
 const readViewContainerStyles = xcss({
   font: token('font.body'),
   color: 'color.text.subtlest',
-  paddingBlock: 'space.0',
+  paddingBlock: 'space.075',
   paddingInline: 'space.0',
   overflow: 'hidden',
 });

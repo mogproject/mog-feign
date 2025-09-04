@@ -204,6 +204,7 @@ function DiscordUsers() {
             icon={DeleteIcon}
             label={tt('remove')}
             appearance="subtle"
+            spacing="compact"
             isTooltipDisabled={true}
             onClick={() => {
               setRemoveIndex(index);
