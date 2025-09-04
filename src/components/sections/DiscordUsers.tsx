@@ -1,19 +1,26 @@
 import React, { Fragment } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import DynamicTable from '@atlaskit/dynamic-table';
-import Form, { Field } from '@atlaskit/form';
+import Form, { ErrorMessage, Field, MessageWrapper } from '@atlaskit/form';
 import TextField from '@atlaskit/textfield';
-import Button from '@atlaskit/button/new';
-// import DynamicTable from "@atlaskit/dynamic-table/components/stateless";
-import { HeadType, RowType } from '@atlaskit/dynamic-table/types';
-import Lozenge from '@atlaskit/lozenge';
+import Button, { IconButton } from '@atlaskit/button/new';
+import { HeadType, RowType } from '../forms/rankable-table/types';
 import { Box, Inline, xcss } from '@atlaskit/primitives';
 
 import { DiscordUser } from '../../models/DiscordUser';
 import { token } from '@atlaskit/tokens';
-import CreatableMultiSelect from '../forms/CreatableMultiSelect';
-import VerifiableInlineEdit from '../forms/VerifiableInlineEdit';
+import EditableText from '../forms/EditableText';
+import EditableMultiSelect from '../forms/EditableMultiSelect';
+import { OptionType, ValueType } from '@atlaskit/select';
+import DeleteIcon from '@atlaskit/icon/core/delete';
+import Modal, { ModalBody, ModalFooter, ModalHeader, ModalTitle, ModalTransition } from '@atlaskit/modal-dialog';
+
+// Note: Importing from '@atlaskit/select' breaks creatable select.
+import CreatableSelect from '@atlaskit/select/CreatableSelect';
+import { createOption } from '../forms/select-helper';
+// import CompactTable, { CompactTableSettings, defaultCompactTableSettings } from '../forms/CompactTable';
+import RankableTable from '../forms/rankable-table/rankable-table';
+import { reorder } from '@atlaskit/pragmatic-drag-and-drop/reorder';
 
 const initialUsers: DiscordUser[] = [
   {
@@ -24,18 +31,40 @@ const initialUsers: DiscordUser[] = [
   { id: '98765432109876', name: 'Bob', groups: ['Member'] },
   { id: '11112222333344', name: 'Charlie', groups: ['Moderator', 'VIP'] },
   { id: '11112222333345', name: 'Charlie 1', groups: ['Moderator', 'VIP'] },
-  { id: '11112222333346', name: 'Charlie 2', groups: ['VIP'] },
+  { id: '11112222333346', name: 'Charlie 2', groups: [] },
   { id: '11112222333347', name: 'Charlie 3', groups: ['Member', 'VIP'] },
+  { id: '11112222333348', name: 'Charlie 4', groups: ['Member', 'VIP'] },
 ];
 
 const readViewContainerStyles = xcss({
   display: 'flex',
   font: token('font.body'),
   maxWidth: '100%',
-  paddingBlock: 'space.100',
+  paddingBlock: 'space.0',
   paddingInline: 'space.075',
-  wordBreak: `break-word`,
+  wordBreak: 'break-word',
+  overflowX: 'hidden',
 });
+
+const readViewContainerStylesForId = xcss({
+  color: 'color.text.subtlest',
+});
+
+const compactSelectStyles = {
+  control: (base: any) => ({
+    ...base,
+    minHeight: '32px',
+  }),
+  valueContainer: (base: any) => ({
+    ...base,
+    paddingTop: 0,
+    paddingBottom: 0,
+  }),
+  indicatorsContainer: (base: any) => ({
+    ...base,
+    height: '28px',
+  }),
+};
 
 function findDiscordGroups(users: DiscordUser[]) {
   return Array.from(new Set(users.flatMap((u) => u.groups))).sort();
@@ -46,22 +75,45 @@ function DiscordUsers() {
     keyPrefix: 'settings.discord',
   });
   const t = translate as (s: string, o?: Record<string, string | boolean>) => string;
-  const tt = (k: string) => {
-    return t(k, { keyPrefix: '' });
+  const tt = (k: string, o?: Record<string, string | boolean>) => {
+    return t(k, { ...o, keyPrefix: '' });
   };
 
   const [discordUsers, setDiscordUsers] = React.useState<DiscordUser[]>(initialUsers);
   const [discordGroups, setDiscordGroups] = React.useState<string[]>(findDiscordGroups(discordUsers));
 
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [removeIndex, setRemoveIndex] = React.useState(-1);
+  const openModal = React.useCallback(() => setIsModalOpen(true), []);
+  const closeModal = React.useCallback(() => setIsModalOpen(false), []);
+
   const setEditValue = (index: number, key: string, value: string) => {
-    const newUsers = discordUsers.map((user: DiscordUser, i: number) => (i == index ? { ...user, [key]: value.trim() } : user));
+    const newUsers = discordUsers.map((user: DiscordUser, i: number) => (i == index ? { ...user, [key]: value } : user));
+    setDiscordUsers(newUsers);
+  };
+
+  const setEditGroups = (index: number, value: ValueType<OptionType, true>) => {
+    const newUsers = discordUsers.map((user: DiscordUser, i: number) =>
+      i == index ? { ...user, groups: value.map((opt) => opt.label) } : user
+    );
+    setDiscordUsers(newUsers);
+    setDiscordGroups(findDiscordGroups(newUsers));
+  };
+
+  const removeDiscordUser = () => {
+    if (removeIndex < 0) return;
+
+    const newUsers = discordUsers.filter((_, index) => index !== removeIndex);
+    setRemoveIndex(-1);
     setDiscordUsers(newUsers);
     setDiscordGroups(findDiscordGroups(newUsers));
   };
 
   // Validations.
-  const validateName = (editName: string, index: number) => {
-    if (editName == '') {
+  const validateName = (editName: string, index: number, checkEmpty: boolean) => {
+    if (!checkEmpty && editName === '') {
+      return undefined;
+    } else if (checkEmpty && editName === '') {
       return t('name_placeholder');
     } else if (discordUsers.some((x, i) => i !== index && x.name === editName)) {
       return t('already_exists');
@@ -70,8 +122,10 @@ function DiscordUsers() {
     }
   };
 
-  const validateId = (editId: string, index: number) => {
-    if (editId == '') {
+  const validateId = (editId: string, index: number, checkEmpty: boolean) => {
+    if (!checkEmpty && editId === '') {
+      return undefined;
+    } else if (editId === '') {
       return t('id_placeholder');
     } else if (!/^[0-9]+$/.test(editId)) {
       return t('number_only');
@@ -85,15 +139,16 @@ function DiscordUsers() {
   // Define header.
   const head: HeadType = {
     cells: [
-      { key: 'name', content: tt('name'), isSortable: true, width: 14 },
-      { key: 'id', content: 'ID', isSortable: true, width: 18 },
-      { key: 'groups', content: tt('group'), isSortable: true },
-      { key: 'action', content: '', isSortable: false },
+      { key: 'name', content: <Box xcss={xcss({ paddingLeft: 'space.100' })}>{tt('name')}</Box>, isSortable: true },
+      { key: 'id', content: <Box xcss={xcss({ paddingLeft: 'space.100' })}>{'ID'}</Box>, isSortable: true },
+      { key: 'groups', content: tt('groups'), isSortable: true },
+      { key: 'action', content: tt('remove'), isSortable: false },
     ],
   };
 
   const rows: RowType[] = discordUsers.map((user, index) => ({
     key: index.toString(),
+    className: 'compact-table-row',
     cells: [
       //------------------------------------------------------------------------
       //    Name
@@ -101,40 +156,60 @@ function DiscordUsers() {
       {
         key: user.name,
         content: (
-          <VerifiableInlineEdit
+          <EditableText
             defaultValue={user.name}
             readView={() => <Box xcss={readViewContainerStyles}>{user.name}</Box>}
-            validate={(name) => validateName(name, index)}
+            validate={(name) => validateName(name, index, true)}
             onConfirm={(value) => setEditValue(index, 'name', value)}
+            keyPrefix={`table-name-${index}`}
           />
         ),
-        className: 'editable-table-cell',
       },
 
       //------------------------------------------------------------------------
       //    ID
       //------------------------------------------------------------------------
       {
-        key: user.id,
+        key: Number(user.id), // Compare as a number.
         content: (
-          <VerifiableInlineEdit
+          <EditableText
             defaultValue={user.id}
-            readView={() => <Box xcss={xcss({ ...readViewContainerStyles, color: 'color.text.subtlest' })}>{user.id}</Box>}
-            validate={(id) => validateId(id, index)}
+            readView={() => <Box xcss={[readViewContainerStyles, readViewContainerStylesForId]}>{user.id}</Box>}
+            validate={(id) => validateId(id, index, true)}
             onConfirm={(value) => setEditValue(index, 'id', value)}
+            keyPrefix={`table-id-${index}`}
           />
         ),
-        className: 'editable-table-cell',
       },
-      // groups
+      //------------------------------------------------------------------------
+      //    Groups
+      //------------------------------------------------------------------------
       {
         key: user.groups.join('|'),
         content: (
-          <Inline space="space.100">
-            {user.groups.map((group) => (
-              <Lozenge key={group}>{group}</Lozenge>
-            ))}
-          </Inline>
+          <EditableMultiSelect
+            defaultValue={user.groups}
+            options={discordGroups}
+            onConfirm={(value) => setEditGroups(index, value)}
+            keyPrefix={`table-groups-${index}`}
+          />
+        ),
+      },
+      //------------------------------------------------------------------------
+      //    Remove
+      //------------------------------------------------------------------------
+      {
+        content: (
+          <IconButton
+            icon={DeleteIcon}
+            label={tt('remove')}
+            appearance="subtle"
+            isTooltipDisabled={true}
+            onClick={() => {
+              setRemoveIndex(index);
+              openModal();
+            }}
+          />
         ),
       },
     ],
@@ -146,57 +221,123 @@ function DiscordUsers() {
     paddingInline: 'space.200', // left & right padding
   });
 
-  const wrapperStyles = xcss({
-    overflowX: 'auto',
-  });
-
   //----------------------------------------------------------------------------
   //    Actions
   //----------------------------------------------------------------------------
-  function handleNewEntry(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-  }
 
   //----------------------------------------------------------------------------
   //    Components
   //----------------------------------------------------------------------------
+  const deletionModal = (
+    <ModalTransition>
+      {isModalOpen && (
+        <Modal onClose={closeModal}>
+          <ModalHeader hasCloseButton>
+            <ModalTitle>{t('removal')}</ModalTitle>
+          </ModalHeader>
+          <ModalBody>
+            <p>{t('confirm_removal')}</p>
+            <ul>
+              <li>
+                {tt('name')}: {discordUsers[removeIndex].name}
+              </li>
+              <li>ID: {discordUsers[removeIndex].id}</li>
+            </ul>
+          </ModalBody>
+          <ModalFooter>
+            <Button appearance="subtle" onClick={closeModal}>
+              {tt('cancel')}
+            </Button>
+            <Button
+              appearance="danger"
+              onClick={() => {
+                removeDiscordUser();
+                closeModal();
+              }}
+            >
+              {tt('remove')}
+            </Button>
+          </ModalFooter>
+        </Modal>
+      )}
+    </ModalTransition>
+  );
+
+  //----------------------------------------------------------------------------
+  //    Managing new entries
+  //----------------------------------------------------------------------------
+  type FormValues = {
+    name: string;
+    id: string;
+    groups: ValueType<OptionType, true>;
+  };
+
   const newEntryField = (
     <Fragment>
-      <Form key="discord-user-new" onSubmit={handleNewEntry}>
+      <Form<FormValues>
+        key="discord-user-new"
+        onSubmit={(data, form) => {
+          // console.log('Data:', data);
+          const name = data.name.trim();
+          const id = data.id.trim();
+          const groups = Array.from(new Set(data.groups.map((opt) => opt.label.trim()).filter((s) => s !== '')));
+
+          const newUsers = [...discordUsers, { name: name, id: id, groups: groups }];
+          setDiscordUsers(newUsers);
+          setDiscordGroups(findDiscordGroups(newUsers));
+
+          form.reset(); // clear all fields
+        }}
+      >
         {({ formProps }) => (
           <form {...formProps}>
-            <Inline space="space.200" alignInline="center" alignBlock="center" shouldWrap>
+            <Inline space="space.100" alignInline="center" alignBlock="start" shouldWrap>
               {/* name */}
-              <Field name="name" isRequired>
-                {({ fieldProps }) => (
-                  <Box xcss={{ width: '120px' }}>
-                    <TextField {...fieldProps} placeholder={t('name_placeholder')} />
+              <Field<string> name="name" isRequired validate={(value) => validateName(value || '', -1, false)} defaultValue="">
+                {({ fieldProps, error }) => (
+                  <Box xcss={xcss({ width: '144px' })}>
+                    <TextField {...fieldProps} className="compact-textfield" placeholder={t('name_placeholder')} />
+                    <MessageWrapper>{error && <ErrorMessage>{error}</ErrorMessage>}</MessageWrapper>
                   </Box>
                 )}
               </Field>
 
               {/* ID */}
-              <Field name="id" isRequired>
-                {({ fieldProps }) => (
-                  <Box xcss={{ width: '150px' }}>
-                    <TextField {...fieldProps} placeholder={t('id_placeholder')} />
+              <Field<string> name="id" isRequired validate={(value) => validateId(value || '', -1, false)} defaultValue="">
+                {({ fieldProps, error }) => (
+                  <Box xcss={xcss({ width: '144px' })}>
+                    <TextField {...fieldProps} className="compact-textfield" placeholder={t('id_placeholder')} />
+                    <MessageWrapper>{error && <ErrorMessage>{error}</ErrorMessage>}</MessageWrapper>
                   </Box>
                 )}
               </Field>
 
-              {/* group */}
-              <div style={{ flex: 1, minWidth: 200 }}>
-                <Field name="group">
-                  {({ fieldProps }) => <CreatableMultiSelect initialOptions={discordGroups} placeholder={t('group_placeholder')} />}
+              {/* groups */}
+              <Box xcss={xcss({ flex: 1 })}>
+                <Field<ValueType<OptionType, true>> name="groups" defaultValue={[]}>
+                  {({ fieldProps }) => (
+                    <CreatableSelect
+                      {...fieldProps}
+                      styles={compactSelectStyles}
+                      isMulti
+                      isClearable
+                      placeholder={t('group_placeholder')}
+                      formatCreateLabel={(s: string) => tt('create_label', { name: s })}
+                      noOptionsMessage={(obj: { inputValue: string }) => t('no_options', { name: obj.inputValue })}
+                      options={discordGroups.map(createOption)}
+                      autoFocus={false}
+                      openMenuOnFocus={false}
+                    />
+                  )}
                 </Field>
-              </div>
+              </Box>
 
               {/* add button */}
-              <div style={{ height: '48px' }}>
-                <Button type="submit" appearance="primary">
+              <Box xcss={xcss({ marginTop: 'space.100' })}>
+                <Button type="submit" appearance="primary" spacing="default">
                   {tt('add')}
                 </Button>
-              </div>
+              </Box>
             </Inline>
           </form>
         )}
@@ -207,22 +348,21 @@ function DiscordUsers() {
   //----------------------------------------------------------------------------
   //    Output
   //----------------------------------------------------------------------------
+  // const [discordUsersTableSettings, setDiscordUsersTableSettings] = React.useState<CompactTableSettings>(defaultCompactTableSettings);
+
   return (
     <Box xcss={containerStyles}>
       <p>{t('description')}</p>
-      <Box xcss={wrapperStyles}>
-        <DynamicTable
-          caption=""
-          head={head}
-          rows={rows}
-          rowsPerPage={5}
-          defaultPage={1}
-          loadingSpinnerSize="large"
-          isRankable
-          isFixedSize
-        />
-      </Box>
+      <RankableTable
+        head={head}
+        rows={rows}
+        onRankEnd={(sourceIndex, destinationIndex) => {
+          // console.log('RankEnd: ', sourceIndex, destinationIndex);
+          setDiscordUsers((users) => reorder({ list: users, startIndex: sourceIndex, finishIndex: destinationIndex }));
+        }}
+      />
       {newEntryField}
+      {deletionModal}
     </Box>
   );
 }

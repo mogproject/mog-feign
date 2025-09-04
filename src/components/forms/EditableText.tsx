@@ -5,12 +5,20 @@ import InlineDialog from '@atlaskit/inline-dialog';
 import TextField from '@atlaskit/textfield';
 import { token } from '@atlaskit/tokens';
 import ErrorIcon from '@atlaskit/icon/glyph/error';
+import { css } from '@emotion/react';
 
-interface VerifiableInlineEditProps {
+const compactTextFieldStyles = css({
+  height: '24px !important',
+  margin: '0',
+  padding: '0 0 0 1px',
+});
+
+interface EditableTextProps {
   defaultValue: string;
   readView: () => React.ReactNode;
   validate: (value: string) => string | undefined;
   onConfirm: (value: string) => void;
+  keyPrefix: string;
 }
 
 const errorIconContainerStyles = xcss({
@@ -19,7 +27,7 @@ const errorIconContainerStyles = xcss({
   lineHeight: '100%' as any,
 });
 
-const VerifiableInlineEdit: React.FC<VerifiableInlineEditProps> = ({ defaultValue, readView, validate, onConfirm }) => {
+const EditableText: React.FC<EditableTextProps> = ({ defaultValue, readView, validate, onConfirm, keyPrefix }) => {
   const [editVersion, setEditVersion] = React.useState(0);
   let validateTimeoutId: number | undefined;
 
@@ -58,30 +66,33 @@ const VerifiableInlineEdit: React.FC<VerifiableInlineEditProps> = ({ defaultValu
   };
 
   return (
-    <InlineEdit
-      hideActionButtons={false}
-      defaultValue={defaultValue}
-      key={editVersion}
-      editView={({ errorMessage, ...fieldProps }) => (
-        <InlineDialog isOpen={fieldProps.isInvalid} content={<Box>{errorMessage}</Box>} placement="right">
-          <TextField
-            {...fieldProps}
-            elemAfterInput={
-              fieldProps.isInvalid && (
-                <Box xcss={errorIconContainerStyles}>
-                  <ErrorIcon label="error" primaryColor={token('color.icon.danger')} />
-                </Box>
-              )
-            }
-            autoFocus
-          />
-        </InlineDialog>
-      )}
-      readView={readView}
-      validate={validateWrapper}
-      onConfirm={onConfirmWrapper}
-    />
+    <div css={css({ marginTop: '-8px' })}>
+      <InlineEdit
+        hideActionButtons={false}
+        defaultValue={defaultValue}
+        key={`${keyPrefix}-${editVersion}`}
+        editView={({ errorMessage, ...fieldProps }) => (
+          <InlineDialog isOpen={fieldProps.isInvalid} content={<Box>{errorMessage}</Box>} placement="right">
+            <TextField
+              {...fieldProps}
+              css={compactTextFieldStyles}
+              elemAfterInput={
+                fieldProps.isInvalid && (
+                  <Box xcss={errorIconContainerStyles}>
+                    <ErrorIcon label="error" primaryColor={token('color.icon.danger')} />
+                  </Box>
+                )
+              }
+              autoFocus
+            />
+          </InlineDialog>
+        )}
+        readView={readView}
+        validate={validateWrapper}
+        onConfirm={onConfirmWrapper}
+      />
+    </div>
   );
 };
 
-export default VerifiableInlineEdit;
+export default EditableText;
