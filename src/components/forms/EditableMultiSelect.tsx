@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { css } from '@emotion/react';
 
 import InlineEdit from '@atlaskit/inline-edit';
 import { Box, Inline, xcss } from '@atlaskit/primitives';
@@ -11,13 +12,12 @@ import Lozenge from '@atlaskit/lozenge';
 import CreatableSelect from '@atlaskit/select/CreatableSelect';
 import { createOption } from './select-helper';
 
-const compactSelectHeight = '32px';
+const compactSelectHeight = '28px';
 
 const compactSelectStyles = {
   control: (base: any) => ({
     ...base,
     minHeight: compactSelectHeight,
-    height: compactSelectHeight,
   }),
   valueContainer: (base: any) => ({
     ...base,
@@ -35,6 +35,7 @@ const readViewContainerStyles = xcss({
   color: 'color.text.subtlest',
   paddingBlock: 'space.0',
   paddingInline: 'space.0',
+  overflow: 'hidden',
 });
 
 interface EditableMultiSelectProps {
@@ -57,37 +58,39 @@ const EditableMultiSelect: React.FC<EditableMultiSelectProps> = ({ defaultValue,
   };
 
   return (
-    <InlineEdit<ValueType<OptionType, true>>
-      hideActionButtons={false}
-      defaultValue={defaultValue.map(createOption)}
-      key={`${keyPrefix}-${editVersion}`}
-      editView={({ ...fieldProps }) => (
-        <CreatableSelect
-          {...fieldProps}
-          styles={compactSelectStyles}
-          isMulti
-          isClearable
-          placeholder=""
-          formatCreateLabel={(s: string) => t('create_label', { name: s })}
-          noOptionsMessage={(obj: { inputValue: string }) => t('no_options', { name: obj.inputValue })}
-          options={options.map(createOption)}
-          autoFocus
-          openMenuOnFocus
-        />
-      )}
-      readView={() =>
-        defaultValue && defaultValue.length === 0 ? (
-          <Box xcss={readViewContainerStyles}>{emptyGroup}</Box>
-        ) : (
-          <Inline space="space.100">
-            {defaultValue.map((opt: string) => (
-              <Lozenge key={opt}>{opt}</Lozenge>
-            ))}
-          </Inline>
-        )
-      }
-      onConfirm={onConfirmWrapper}
-    />
+    <div css={css({ marginTop: '-8px' })}>
+      <InlineEdit<ValueType<OptionType, true>>
+        hideActionButtons={false}
+        defaultValue={defaultValue.map(createOption)}
+        key={`${keyPrefix}-${editVersion}`}
+        editView={({ ...fieldProps }) => (
+          <CreatableSelect
+            {...fieldProps}
+            styles={compactSelectStyles}
+            isMulti
+            isClearable
+            placeholder=""
+            formatCreateLabel={(s: string) => t('create_label', { name: s })}
+            noOptionsMessage={(obj: { inputValue: string }) => t('no_options', { name: obj.inputValue })}
+            options={options.map(createOption)}
+            autoFocus
+            openMenuOnFocus
+          />
+        )}
+        readView={() =>
+          defaultValue && defaultValue.length === 0 ? (
+            <Box xcss={readViewContainerStyles}>{emptyGroup}</Box>
+          ) : (
+            <Inline xcss={readViewContainerStyles} space="space.100">
+              {defaultValue.map((opt: string) => (
+                <Lozenge key={opt}>{opt}</Lozenge>
+              ))}
+            </Inline>
+          )
+        }
+        onConfirm={onConfirmWrapper}
+      />
+    </div>
   );
 };
 

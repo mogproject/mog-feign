@@ -7,9 +7,9 @@ import { css } from '@emotion/react';
 import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/disable-native-drag-preview';
 import { preventUnhandled } from '@atlaskit/pragmatic-drag-and-drop/prevent-unhandled';
-import { minColumnWidth } from './constants';
+import { minColumnWidth, firstColumnAdditionalPadding } from './constants';
 
-import { HeadCellType, HeadType } from './types';
+import { HeadCellType } from './types';
 
 type HeaderState =
   | {
@@ -22,6 +22,7 @@ type HeaderState =
       nextHeaderInitialWidth: number;
       nextHeader: HTMLElement;
       maxWidth: number;
+      minWidth: number;
     };
 
 type ColumnType = 'first-of-many' | 'middle-of-many' | 'last-of-many' | 'only-column';
@@ -152,6 +153,7 @@ const TableHeader: React.FC<TableHeaderProps> = ({ cell, index, numColumns }) =>
         preventUnhandled.start();
 
         const initialWidth = header.getBoundingClientRect().width;
+        const minWidth = minColumnWidth + (index === 0 ? firstColumnAdditionalPadding : 0);
 
         const nextHeader = header.nextElementSibling;
         invariant(nextHeader instanceof HTMLElement);
@@ -162,7 +164,7 @@ const TableHeader: React.FC<TableHeaderProps> = ({ cell, index, numColumns }) =>
         const tableWidth = table.getBoundingClientRect().width;
 
         // We cannot let `nextHeader` get smaller than `minColumnWidth`
-        const maxWidth = initialWidth + nextHeaderInitialWidth - minColumnWidth;
+        const maxWidth = initialWidth + nextHeaderInitialWidth - minWidth;
 
         setState({
           type: 'resizing',
@@ -171,18 +173,19 @@ const TableHeader: React.FC<TableHeaderProps> = ({ cell, index, numColumns }) =>
           nextHeaderInitialWidth,
           nextHeader,
           maxWidth,
+          minWidth,
         });
       },
       onDrag({ location }) {
         const diffX = location.current.input.clientX - location.initial.input.clientX;
 
         invariant(state.type === 'resizing');
-        const { initialWidth, nextHeaderInitialWidth, nextHeader, maxWidth } = state;
+        const { initialWidth, nextHeaderInitialWidth, nextHeader, maxWidth, minWidth } = state;
 
         // Set the width of our header being resized
         const proposedWidth = clamp({
           value: initialWidth + diffX,
-          min: minColumnWidth,
+          min: minWidth,
           max: maxWidth,
         });
         header.style.setProperty('--local-resizing-width', `${proposedWidth}px`);

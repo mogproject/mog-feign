@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import Form, { ErrorMessage, Field, MessageWrapper } from '@atlaskit/form';
 import TextField from '@atlaskit/textfield';
 import Button, { IconButton } from '@atlaskit/button/new';
-import { HeadType, RowType } from '@atlaskit/dynamic-table/types';
+import { HeadType, RowType } from '../forms/rankable-table/types';
 import { Box, Inline, xcss } from '@atlaskit/primitives';
 
 import { DiscordUser } from '../../models/DiscordUser';
@@ -18,7 +18,7 @@ import Modal, { ModalBody, ModalFooter, ModalHeader, ModalTitle, ModalTransition
 // Note: Importing from '@atlaskit/select' breaks creatable select.
 import CreatableSelect from '@atlaskit/select/CreatableSelect';
 import { createOption } from '../forms/select-helper';
-import CompactTable, { CompactTableSettings, defaultCompactTableSettings } from '../forms/CompactTable';
+// import CompactTable, { CompactTableSettings, defaultCompactTableSettings } from '../forms/CompactTable';
 import RankableTable from '../forms/rankable-table/rankable-table';
 import { reorder } from '@atlaskit/pragmatic-drag-and-drop/reorder';
 
@@ -40,26 +40,20 @@ const readViewContainerStyles = xcss({
   display: 'flex',
   font: token('font.body'),
   maxWidth: '100%',
-  paddingBlock: 'space.050',
+  paddingBlock: 'space.0',
   paddingInline: 'space.075',
-  wordBreak: `break-word`,
+  wordBreak: 'break-word',
+  overflowX: 'hidden',
 });
 
 const readViewContainerStylesForId = xcss({
-  display: 'flex',
-  font: token('font.body'),
   color: 'color.text.subtlest',
-  maxWidth: '100%',
-  paddingBlock: 'space.050',
-  paddingInline: 'space.075',
-  wordBreak: `break-word`,
 });
 
 const compactSelectStyles = {
   control: (base: any) => ({
     ...base,
     minHeight: '32px',
-    height: '32px',
   }),
   valueContainer: (base: any) => ({
     ...base,
@@ -68,7 +62,7 @@ const compactSelectStyles = {
   }),
   indicatorsContainer: (base: any) => ({
     ...base,
-    height: '32px',
+    height: '28px',
   }),
 };
 
@@ -145,10 +139,10 @@ function DiscordUsers() {
   // Define header.
   const head: HeadType = {
     cells: [
-      { key: 'name', content: tt('name'), isSortable: true, width: 14 },
-      { key: 'id', content: 'ID', isSortable: true, width: 18 },
-      { key: 'groups', content: tt('groups'), isSortable: true, width: 30 },
-      { key: 'action', content: tt('remove'), isSortable: false, width: 4 },
+      { key: 'name', content: <Box xcss={xcss({ paddingLeft: 'space.100' })}>{tt('name')}</Box>, isSortable: true },
+      { key: 'id', content: <Box xcss={xcss({ paddingLeft: 'space.100' })}>{'ID'}</Box>, isSortable: true },
+      { key: 'groups', content: tt('groups'), isSortable: true },
+      { key: 'action', content: tt('remove'), isSortable: false },
     ],
   };
 
@@ -180,7 +174,7 @@ function DiscordUsers() {
         content: (
           <EditableText
             defaultValue={user.id}
-            readView={() => <Box xcss={readViewContainerStylesForId}>{user.id}</Box>}
+            readView={() => <Box xcss={[readViewContainerStyles, readViewContainerStylesForId]}>{user.id}</Box>}
             validate={(id) => validateId(id, index, true)}
             onConfirm={(value) => setEditValue(index, 'id', value)}
             keyPrefix={`table-id-${index}`}
@@ -354,90 +348,20 @@ function DiscordUsers() {
   //----------------------------------------------------------------------------
   //    Output
   //----------------------------------------------------------------------------
-  const [discordUsersTableSettings, setDiscordUsersTableSettings] = React.useState<CompactTableSettings>(defaultCompactTableSettings);
-
-  const myHead = {
-    cells: [
-      { key: 'name', content: tt('name'), isSortable: true },
-      { key: 'id', content: 'ID', isSortable: true },
-      { key: 'groups', content: tt('groups'), isSortable: true },
-      { key: 'action', content: tt('remove'), isSortable: false },
-    ],
-  };
-
-  const myRows: RowType[] = discordUsers.map((user, index) => ({
-    // key: index.toString(),
-    // className: 'compact-table-row',
-    cells: [
-      //------------------------------------------------------------------------
-      //    Name
-      //------------------------------------------------------------------------
-      {
-        key: user.name,
-        content: user.name,
-      },
-
-      //------------------------------------------------------------------------
-      //    ID
-      //------------------------------------------------------------------------
-      {
-        key: Number(user.id), // Compare as a number.
-        content: user.id,
-      },
-      //------------------------------------------------------------------------
-      //    Groups
-      //------------------------------------------------------------------------
-      {
-        key: user.groups.join('|'),
-        content: user.groups.join('|'),
-      },
-      //------------------------------------------------------------------------
-      //    Remove
-      //------------------------------------------------------------------------
-      {
-        content: (
-          <IconButton
-            icon={DeleteIcon}
-            label={tt('remove')}
-            appearance="subtle"
-            isTooltipDisabled={true}
-            onClick={() => {
-              setRemoveIndex(index);
-              openModal();
-            }}
-          />
-        ),
-      },
-    ],
-  }));
+  // const [discordUsersTableSettings, setDiscordUsersTableSettings] = React.useState<CompactTableSettings>(defaultCompactTableSettings);
 
   return (
     <Box xcss={containerStyles}>
       <p>{t('description')}</p>
-      {/* <CompactTable
-        settings={discordUsersTableSettings}
-        onSettingsChange={(updated) => {
-          setDiscordUsersTableSettings({ ...discordUsersTableSettings, ...updated });
-        }}
-        head={head}
-        rows={rows}
-        onRankEnd={(sourceIndex, destinationIndex) => {
-          const updated = Array.from(discordUsers);
-          const [moved] = updated.splice(sourceIndex, 1);
-          updated.splice(destinationIndex, 0, moved);
-          setDiscordUsers(updated);
-        }}
-      /> */}
-      {newEntryField}
-      <hr />
       <RankableTable
-        head={myHead}
+        head={head}
         rows={rows}
         onRankEnd={(sourceIndex, destinationIndex) => {
           // console.log('RankEnd: ', sourceIndex, destinationIndex);
           setDiscordUsers((users) => reorder({ list: users, startIndex: sourceIndex, finishIndex: destinationIndex }));
         }}
       />
+      {newEntryField}
       {deletionModal}
     </Box>
   );

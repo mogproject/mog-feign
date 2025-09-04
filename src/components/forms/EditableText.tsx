@@ -5,6 +5,13 @@ import InlineDialog from '@atlaskit/inline-dialog';
 import TextField from '@atlaskit/textfield';
 import { token } from '@atlaskit/tokens';
 import ErrorIcon from '@atlaskit/icon/glyph/error';
+import { css } from '@emotion/react';
+
+const compactTextFieldStyles = css({
+  height: '24px !important',
+  margin: '0',
+  padding: '0 0 0 1px',
+});
 
 interface EditableTextProps {
   defaultValue: string;
@@ -59,30 +66,32 @@ const EditableText: React.FC<EditableTextProps> = ({ defaultValue, readView, val
   };
 
   return (
-    <InlineEdit
-      hideActionButtons={false}
-      defaultValue={defaultValue}
-      key={`${keyPrefix}-${editVersion}`}
-      editView={({ errorMessage, ...fieldProps }) => (
-        <InlineDialog isOpen={fieldProps.isInvalid} content={<Box>{errorMessage}</Box>} placement="right">
-          <TextField
-            {...fieldProps}
-            className="table-textfield"
-            elemAfterInput={
-              fieldProps.isInvalid && (
-                <Box xcss={errorIconContainerStyles}>
-                  <ErrorIcon label="error" primaryColor={token('color.icon.danger')} />
-                </Box>
-              )
-            }
-            autoFocus
-          />
-        </InlineDialog>
-      )}
-      readView={readView}
-      validate={validateWrapper}
-      onConfirm={onConfirmWrapper}
-    />
+    <div css={css({ marginTop: '-8px' })}>
+      <InlineEdit
+        hideActionButtons={false}
+        defaultValue={defaultValue}
+        key={`${keyPrefix}-${editVersion}`}
+        editView={({ errorMessage, ...fieldProps }) => (
+          <InlineDialog isOpen={fieldProps.isInvalid} content={<Box>{errorMessage}</Box>} placement="right">
+            <TextField
+              {...fieldProps}
+              css={compactTextFieldStyles}
+              elemAfterInput={
+                fieldProps.isInvalid && (
+                  <Box xcss={errorIconContainerStyles}>
+                    <ErrorIcon label="error" primaryColor={token('color.icon.danger')} />
+                  </Box>
+                )
+              }
+              autoFocus
+            />
+          </InlineDialog>
+        )}
+        readView={readView}
+        validate={validateWrapper}
+        onConfirm={onConfirmWrapper}
+      />
+    </div>
   );
 };
 
