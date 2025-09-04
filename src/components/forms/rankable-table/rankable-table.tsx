@@ -184,13 +184,13 @@ const RankableTable: React.FC<RankableTableProps> = (props) => {
           <Box as="thead" xcss={tableHeaderStyles}>
             <tr>
               {props.head.cells.map((cell, colIndex) => (
-                <TableHeader cell={cell} index={colIndex} numColumns={props.head.cells.length} />
+                <TableHeader key={colIndex} cell={cell} index={colIndex} numColumns={props.head.cells.length} />
               ))}
             </tr>
           </Box>
           <tbody ref={tbodyRef}>
             {props.rows.map((row, rowIndex) => (
-              <Row cells={row.cells} rowIndex={rowIndex} />
+              <Row key={rowIndex} cells={row.cells} rowIndex={rowIndex} />
             ))}
           </tbody>
         </table>

@@ -207,7 +207,7 @@ const TableHeader: React.FC<TableHeaderProps> = ({ cell, index, numColumns }) =>
   }, [renderResizeHandle, index, state]);
 
   return (
-    <Box as="th" ref={ref} xcss={thStyles}>
+    <Box as="th" ref={ref} xcss={thStyles} key={index}>
       {/* Content */}
       {cell.content}
 

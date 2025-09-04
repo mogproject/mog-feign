@@ -8,7 +8,7 @@ import ErrorIcon from '@atlaskit/icon/glyph/error';
 import { css } from '@emotion/react';
 
 const compactTextFieldStyles = css({
-  height: '24px !important',
+  height: '32px',
   margin: '0',
   padding: '0 0 0 1px',
 });

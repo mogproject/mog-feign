@@ -112,20 +112,18 @@ const Row = React.memo(function Row({ cells, rowIndex }: { cells: RowCellType[];
   }, [instanceId, cells, rowIndex]);
 
   return (
-    <Fragment>
-      <tr key={rowIndex} draggable={isDraggable} ref={ref} css={rowStyles}>
-        {cells.map((cell, columnIndex) => (
-          <Box as="td" key={cell.key} xcss={rowDataStyles}>
-            {
-              /* Rendering this in only the first column of each row */
-              columnIndex === 0 && <RowMenuButton ref={dragHandleRef} rowIndex={rowIndex} />
-            }
-            <Box xcss={[textOverflowStyles, state.type === 'dragging' && fadedRowStyles]}>{cell.content}</Box>
-            {state.type === 'is-over' && state.closestEdge ? <DropIndicator edge={state.closestEdge} gap="0px" /> : null}
-          </Box>
-        ))}
-      </tr>
-    </Fragment>
+    <tr draggable={isDraggable} ref={ref} css={rowStyles}>
+      {cells.map((cell, columnIndex) => (
+        <Box as="td" key={columnIndex} xcss={rowDataStyles}>
+          {
+            /* Rendering this in only the first column of each row */
+            columnIndex === 0 && <RowMenuButton ref={dragHandleRef} rowIndex={rowIndex} />
+          }
+          <Box xcss={[textOverflowStyles, state.type === 'dragging' && fadedRowStyles]}>{cell.content}</Box>
+          {state.type === 'is-over' && state.closestEdge ? <DropIndicator edge={state.closestEdge} gap="0px" /> : null}
+        </Box>
+      ))}
+    </tr>
   );
 });
 

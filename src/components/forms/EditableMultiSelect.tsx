@@ -12,12 +12,10 @@ import Lozenge from '@atlaskit/lozenge';
 import CreatableSelect from '@atlaskit/select/CreatableSelect';
 import { createOption } from './select-helper';
 
-const compactSelectHeight = '28px';
-
 const compactSelectStyles = {
   control: (base: any) => ({
     ...base,
-    minHeight: compactSelectHeight,
+    minHeight: '28px',
   }),
   valueContainer: (base: any) => ({
     ...base,
@@ -26,7 +24,7 @@ const compactSelectStyles = {
   }),
   indicatorsContainer: (base: any) => ({
     ...base,
-    height: compactSelectHeight,
+    height: '30px',
   }),
 };
 
