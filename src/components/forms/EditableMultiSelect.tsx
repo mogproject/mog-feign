@@ -36,6 +36,14 @@ const readViewContainerStyles = xcss({
   overflow: 'hidden',
 });
 
+const readViewContainerEmptyStyles = xcss({
+  font: token('font.body'),
+  color: 'color.text.subtlest',
+  paddingBlock: 'space.050',
+  paddingInline: 'space.0',
+  overflow: 'hidden',
+});
+
 interface EditableMultiSelectProps {
   defaultValue: string[];
   options: string[];
@@ -77,7 +85,7 @@ const EditableMultiSelect: React.FC<EditableMultiSelectProps> = ({ defaultValue,
         )}
         readView={() =>
           defaultValue && defaultValue.length === 0 ? (
-            <Box xcss={readViewContainerStyles}>{emptyGroup}</Box>
+            <Box xcss={readViewContainerEmptyStyles}>{emptyGroup}</Box>
           ) : (
             <Inline xcss={readViewContainerStyles} space="space.100">
               {defaultValue.map((opt: string) => (
