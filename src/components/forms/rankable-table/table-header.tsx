@@ -277,7 +277,7 @@ const TableHeader: React.FC<TableHeaderProps> = ({ cell, index, sortKey, sortOrd
         onMouseLeave={() => setHovered(false)}
         aria-roledescription={t('sort_button')}
       >
-        <Inline space="space.0" alignInline="center" spread="space-between">
+        <Inline space="space.0" alignInline="center" alignBlock="center" spread="space-between">
           {cell.content}
           <SortIndicator order={currentOrder} />
         </Inline>

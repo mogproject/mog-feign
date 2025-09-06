@@ -8,7 +8,10 @@ export const scrollableStyles = xcss({
   maxHeight: '480px',
   overflowY: 'scroll',
   overflowX: 'visible',
+  marginTop: 'space.200',
   paddingLeft: 'space.050', // add space for DropIndicator
+
+  border: `1px solid ${token('color.border')}`,
 });
 
 export const tableStyles = css({
