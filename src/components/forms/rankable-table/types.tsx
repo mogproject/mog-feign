@@ -1,11 +1,5 @@
 import type { Edge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/types';
 
-export type ItemRegistration = {
-  key: string;
-  element: HTMLElement;
-  index: number;
-};
-
 export type ReorderFunction = (args: { startIndex: number; indexOfTarget: number; closestEdgeOfTarget?: Edge | null }) => void;
 
 export interface RowCellType {
@@ -22,9 +16,7 @@ export interface RowCellType {
 export interface HeadCellType {
   key: string;
   content: React.ReactNode | string;
-  /**
-   * Whether the column the cell sits above is sortable.
-   */
+  /** Whether the column the cell sits above is sortable. */
   isSortable?: boolean;
 }
 

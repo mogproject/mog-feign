@@ -1,15 +1,42 @@
-import React from 'react';
+import React, { Component } from 'react';
 import invariant from 'tiny-invariant';
 
-import { Box, xcss } from '@atlaskit/primitives';
+import { Box, Flex, Inline, Pressable, xcss } from '@atlaskit/primitives';
 import { token } from '@atlaskit/tokens';
 import { css } from '@emotion/react';
 import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/disable-native-drag-preview';
 import { preventUnhandled } from '@atlaskit/pragmatic-drag-and-drop/prevent-unhandled';
 import { minColumnWidth, firstColumnAdditionalPadding } from './constants';
+import { B100, N300, N30A, N40 } from '@atlaskit/theme/colors';
+import Tooltip from '@atlaskit/tooltip';
 
-import { HeadCellType } from './types';
+import { HeadCellType, SortOrderType } from './types';
+import { TableContext } from './table-context';
+import { useTranslation } from 'react-i18next';
+import SortIndicator from './SortIndicator';
+
+const buttonWrapperStyles = xcss({
+  display: 'block',
+  minHeight: '20px',
+  width: '100%',
+  alignItems: 'center',
+  padding: '0',
+  backgroundColor: 'transparent' as any,
+  fontWeight: 'inherit',
+  overflow: 'hidden',
+});
+
+const headCellContainerStyles = xcss({
+  display: 'block',
+  alignItems: 'center',
+  fontWeight: 'inherit',
+});
+
+const onClickStyles = xcss({
+  cursor: 'pointer',
+  backgroundColor: 'color.background.neutral.subtle.hovered',
+});
 
 type HeaderState =
   | {
@@ -86,16 +113,13 @@ const thStyles = xcss({
   boxSizing: 'border-box',
   width: 'var(--local-resizing-width)',
 
+  minHeight: '20px',
   paddingBlock: 'space.025',
+  whiteSpace: 'nowrap',
+  textOverflow: 'ellipsis',
 });
 
 const idleState: HeaderState = { type: 'idle' };
-
-interface TableHeaderProps {
-  cell: HeadCellType;
-  index: number;
-  numColumns: number;
-}
 
 //------------------------------------------------------------------------------
 //    Utility Functions
@@ -117,14 +141,32 @@ function clamp({ value, min, max }: { value: number; min: number; max: number })
 }
 
 //------------------------------------------------------------------------------
+//    Props
+//------------------------------------------------------------------------------
+
+interface TableHeaderProps {
+  cell: HeadCellType;
+  index: number;
+  sortKey: string | null;
+  sortOrder: SortOrderType | null;
+  onSort: (sortKey: string | null, sortOrder: SortOrderType | null) => void;
+  testId?: string;
+}
+
+//------------------------------------------------------------------------------
 //    TableHeader
 //------------------------------------------------------------------------------
-const TableHeader: React.FC<TableHeaderProps> = ({ cell, index, numColumns }) => {
+const TableHeader: React.FC<TableHeaderProps> = ({ cell, index, sortKey, sortOrder, onSort, testId }) => {
   const ref = React.useRef<HTMLTableCellElement | null>(null);
   const resizerRef = React.useRef<HTMLDivElement | null>(null);
   const [state, setState] = React.useState<HeaderState>(idleState);
+  const { numberOfColumns } = React.useContext(TableContext);
+  const [hovered, setHovered] = React.useState(false);
 
-  const columnType = getColumnType(index, numColumns);
+  const { t: translate } = useTranslation('translation', { keyPrefix: 'table' });
+  const t = translate as (s: string, o?: Record<string, string | boolean>) => string;
+
+  const columnType = getColumnType(index, numberOfColumns);
 
   const renderResizeHandle: boolean =
     (state.type === 'idle' || state.type === 'resizing') && (columnType === 'first-of-many' || columnType === 'middle-of-many');
@@ -206,10 +248,45 @@ const TableHeader: React.FC<TableHeaderProps> = ({ cell, index, numColumns }) =>
     });
   }, [renderResizeHandle, index, state]);
 
+  // Sort button.
+  // const sortButton = <IconButton appearance="subtle" icon={ArrowDownIcon} label="昇順にソート" spacing="compact" />;
+  const onClick = React.useCallback(() => {
+    if (sortKey === cell.key) {
+      if (sortOrder === 'ASC') {
+        onSort(sortKey, 'DESC');
+      } else if (sortOrder === 'DESC') {
+        onSort(null, null); // reset sorting
+      } else {
+        invariant(false, 'never happens');
+      }
+    } else {
+      onSort(cell.key, 'ASC');
+    }
+  }, [sortKey, sortOrder]);
+
+  const currentOrder = sortKey === cell.key ? sortOrder : null;
+
+  const contentWithSortButton = (
+    <Tooltip content={sortOrder === null ? '' : sortOrder === 'ASC' ? t('ascending_sort') : t('descending_sort')}>
+      <Pressable
+        onClick={onClick}
+        xcss={[buttonWrapperStyles, hovered && onClickStyles]}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        aria-roledescription={t('sort_button')}
+      >
+        <Inline space="space.0" alignInline="center" spread="space-between">
+          {cell.content}
+          <SortIndicator order={currentOrder} />
+        </Inline>
+      </Pressable>
+    </Tooltip>
+  );
+
   return (
     <Box as="th" ref={ref} xcss={thStyles} key={index}>
       {/* Content */}
-      {cell.content}
+      {cell.isSortable ? contentWithSortButton : cell.content}
 
       {/* Resizer */}
       {renderResizeHandle && <div ref={resizerRef} css={[resizerStyles, state.type === 'resizing' ? resizingStyles : undefined]}></div>}

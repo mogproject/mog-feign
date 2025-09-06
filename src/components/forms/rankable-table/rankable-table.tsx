@@ -1,10 +1,8 @@
-import React, { Fragment, type Ref } from 'react';
+import React from 'react';
 import invariant from 'tiny-invariant';
 
-import { css, jsx } from '@emotion/react';
-import { token } from '@atlaskit/tokens';
-import { rowStyles, scrollableStyles, tableHeaderStyles, tableStyles } from './styles';
-import { HeadType, ItemRegistration, ReorderFunction, RowType, SortOrderType } from './types';
+import { scrollableStyles, tableHeaderStyles, tableStyles } from './styles';
+import { HeadType, ReorderFunction, RowType, SortOrderType } from './types';
 import Row from './row';
 import { Box } from '@atlaskit/primitives';
 import TableHeader from './table-header';
@@ -43,8 +41,9 @@ interface RankableTableProps {
   head: HeadType;
   rows: RowType[];
   onRankEnd: (sourceIndex: number, destinationIndex: number) => void;
-  sortKey?: string;
-  sortOrder?: SortOrderType;
+  sortKey: string | null;
+  sortOrder: SortOrderType | null;
+  onSort: (sortKey: string | null, sortOrder: SortOrderType | null) => void;
 }
 
 //------------------------------------------------------------------------------
@@ -150,32 +149,44 @@ const RankableTable: React.FC<RankableTableProps> = (props) => {
     );
   }, [instanceId, reorderItem]);
 
+  const sortColumnIndex = props.head.cells.findIndex((cell) => cell.key === props.sortKey);
+  const rowCompare = React.useCallback(
+    (a: RowType, b: RowType) => {
+      invariant(sortColumnIndex >= 0);
+      const coef = props.sortOrder === 'DESC' ? -1 : 1;
+
+      const akey = a.cells[sortColumnIndex]?.key;
+      const bkey = b.cells[sortColumnIndex]?.key;
+
+      // undefined は常に最後に回す
+      if (akey === undefined && bkey === undefined) return 0;
+      if (akey === undefined) return 1;
+      if (bkey === undefined) return -1;
+
+      // 数値の場合は数値として比較、それ以外は文字列として比較
+      const aValue = typeof akey === 'number' ? akey : String(akey);
+      const bValue = typeof bkey === 'number' ? bkey : String(bkey);
+
+      if (aValue < bValue) return -1 * coef;
+      if (aValue > bValue) return 1 * coef;
+      return 0;
+    },
+    [sortColumnIndex, props.sortOrder]
+  );
+  const sortedRows = props.sortKey === null ? props.rows : [...props.rows].sort(rowCompare);
+  console.log(sortedRows.map((row) => row.cells[sortColumnIndex]?.key));
+
   // Context
-  // const register = React.useCallback((registration: ItemRegistration) => {
-  //   registrationsRef.current.set(registration.element, registration);
-  //   // The `useEffect` of children runs before parents
-  //   // so when initially mounting the `IntersectionObserver` will not be ready yet
-  //   observerRef.current?.observe(registration.element);
-
-  //   elementMapRef.current.set(registration.index, registration.element);
-
-  //   return function unregister() {
-  //     registrationsRef.current.delete(registration.element);
-  //     observerRef.current?.unobserve(registration.element);
-
-  //     elementMapRef.current.delete(registration.index);
-  //   };
-  // }, []);
-
   const contextValue = React.useMemo(() => {
     return {
       instanceId,
       reorderItem,
       numberOfRows: props.rows.length,
-      sortKey: props.sortKey ?? null,
+      numberOfColumns: props.head.cells.length,
+      sortKey: props.sortKey,
+      sortOrder: props.sortOrder,
     };
-  }, [instanceId, reorderItem, props.rows.length]);
-  // }, [reorderItem, register, instanceId]);
+  }, [instanceId, reorderItem, props.rows.length, props.head.cells.length, props.sortKey, props.sortOrder]);
 
   return (
     <TableContext.Provider value={contextValue}>
@@ -184,12 +195,19 @@ const RankableTable: React.FC<RankableTableProps> = (props) => {
           <Box as="thead" xcss={tableHeaderStyles}>
             <tr>
               {props.head.cells.map((cell, colIndex) => (
-                <TableHeader key={colIndex} cell={cell} index={colIndex} numColumns={props.head.cells.length} />
+                <TableHeader
+                  key={colIndex}
+                  cell={cell}
+                  index={colIndex}
+                  sortKey={props.sortKey}
+                  sortOrder={props.sortOrder}
+                  onSort={props.onSort}
+                />
               ))}
             </tr>
           </Box>
           <tbody ref={tbodyRef}>
-            {props.rows.map((row, rowIndex) => (
+            {sortedRows.map((row, rowIndex) => (
               <Row key={rowIndex} cells={row.cells} rowIndex={rowIndex} />
             ))}
           </tbody>
