@@ -114,7 +114,9 @@ const thStyles = xcss({
   width: 'var(--local-resizing-width)',
 
   minHeight: '20px',
-  paddingBlock: 'space.025',
+  verticalAlign: 'middle',
+  paddingTop: 'space.050',
+  paddingBottom: 'space.0',
   whiteSpace: 'nowrap',
   textOverflow: 'ellipsis',
 });

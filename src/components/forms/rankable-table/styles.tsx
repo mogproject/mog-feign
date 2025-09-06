@@ -31,6 +31,7 @@ export const tableHeaderStyles = xcss({
   background: token('elevation.surface', '#FFF'),
   position: 'sticky',
   top: 'space.0',
+  height: token('space.400'),
   zIndex: '1',
 });
 

@@ -141,7 +141,7 @@ function DiscordUsers() {
   const head: HeadType = {
     cells: [
       { key: 'name', content: <Box xcss={xcss({ paddingLeft: 'space.100' })}>{tt('name')}</Box>, isSortable: true },
-      { key: 'id', content: <Box xcss={xcss({ paddingLeft: 'space.100' })}>{'ID'}</Box>, isSortable: true },
+      { key: 'id', content: <Box xcss={xcss({ paddingLeft: 'space.100' })}>{'Discord ID'}</Box>, isSortable: true },
       { key: 'groups', content: <Box xcss={xcss({ paddingLeft: 'space.100' })}>{tt('groups')}</Box>, isSortable: true },
       { key: 'action', content: tt('remove'), isSortable: false },
     ],

@@ -10,7 +10,6 @@ import { getReorderDestinationIndex } from '@atlaskit/pragmatic-drag-and-drop-hi
 import { TableContext } from './table-context';
 import { combine } from '@atlaskit/pragmatic-drag-and-drop/combine';
 import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
-import { reorder } from '@atlaskit/pragmatic-drag-and-drop/reorder';
 import { autoScrollForElements } from '@atlaskit/pragmatic-drag-and-drop-auto-scroll/element';
 import { triggerPostMoveFlash } from '@atlaskit/pragmatic-drag-and-drop-flourish/trigger-post-move-flash';
 import { extractClosestEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge';
@@ -59,13 +58,6 @@ const RankableTable: React.FC<RankableTableProps> = (props) => {
 
   const [lastOperation, setLastOperation] = React.useState<Operation | null>(null);
 
-  // Element map
-  // const elementMapRef = React.useRef(new Map<number, HTMLElement>());
-
-  // Visible items
-  // const observerRef = React.useRef<IntersectionObserver | null>(null);
-  // const registrationsRef = React.useRef<Map<Element, ItemRegistration>>(new Map());
-
   //----------------------------------------------------------------------------
   //    Reordering Functions
   //----------------------------------------------------------------------------
@@ -100,6 +92,7 @@ const RankableTable: React.FC<RankableTableProps> = (props) => {
       if (tr) {
         triggerPostMoveFlash(tr);
       }
+      setLastOperation(null);
       return;
     }
   }, [lastOperation]);
@@ -174,7 +167,6 @@ const RankableTable: React.FC<RankableTableProps> = (props) => {
     [sortColumnIndex, props.sortOrder]
   );
   const sortedRows = props.sortKey === null ? props.rows : [...props.rows].sort(rowCompare);
-  console.log(sortedRows.map((row) => row.cells[sortColumnIndex]?.key));
 
   // Context
   const contextValue = React.useMemo(() => {
