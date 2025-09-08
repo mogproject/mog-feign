@@ -39,6 +39,11 @@ const EditableText: React.FC<EditableTextProps> = ({ defaultValue, readView, val
     };
   });
 
+  // Increment the edit verion whenever we get a new default value.
+  React.useEffect(() => {
+    setEditVersion((v) => v + 1);
+  }, [defaultValue]);
+
   const validateWrapper = (value: string) => {
     const trimmed = value.trim();
     const errorMessage = validate(trimmed);
@@ -61,7 +66,7 @@ const EditableText: React.FC<EditableTextProps> = ({ defaultValue, readView, val
 
   const onConfirmWrapper = (value: string) => {
     const trimmed = value.trim();
-    setEditVersion(editVersion + 1);
+    setEditVersion((v) => v + 1);
     onConfirm(trimmed);
   };
 

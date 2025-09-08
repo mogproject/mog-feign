@@ -57,9 +57,14 @@ const EditableMultiSelect: React.FC<EditableMultiSelectProps> = ({ defaultValue,
   const [editVersion, setEditVersion] = React.useState(0);
   const emptyGroup = '----';
 
+  // Increment the edit verion whenever we get a new default value.
+  React.useEffect(() => {
+    setEditVersion((v) => v + 1);
+  }, [defaultValue]);
+
   const onConfirmWrapper = (value: ValueType<OptionType, true>) => {
     const trimmed = Array.from(new Set(value.map((opt) => opt.label.trim()).filter((s) => s !== '')));
-    setEditVersion(editVersion + 1);
+    setEditVersion((v) => v + 1);
     onConfirm(trimmed.map(createOption));
   };
 
