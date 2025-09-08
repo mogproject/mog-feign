@@ -27,6 +27,9 @@ const en = {
     move_up: 'Move up',
     move_down: 'Move down',
     move_to_bottom: 'Move to bottom',
+    ascending_sort: 'Sort ascending',
+    descending_sort: 'Sort descending',
+    sort_button: 'Sort button',
   },
   // Colors.
   colors: {

@@ -12,12 +12,10 @@ import Lozenge from '@atlaskit/lozenge';
 import CreatableSelect from '@atlaskit/select/CreatableSelect';
 import { createOption } from './select-helper';
 
-const compactSelectHeight = '28px';
-
 const compactSelectStyles = {
   control: (base: any) => ({
     ...base,
-    minHeight: compactSelectHeight,
+    minHeight: '28px',
   }),
   valueContainer: (base: any) => ({
     ...base,
@@ -26,14 +24,22 @@ const compactSelectStyles = {
   }),
   indicatorsContainer: (base: any) => ({
     ...base,
-    height: compactSelectHeight,
+    height: '30px',
   }),
 };
 
 const readViewContainerStyles = xcss({
   font: token('font.body'),
   color: 'color.text.subtlest',
-  paddingBlock: 'space.0',
+  paddingBlock: 'space.075',
+  paddingInline: 'space.0',
+  overflow: 'hidden',
+});
+
+const readViewContainerEmptyStyles = xcss({
+  font: token('font.body'),
+  color: 'color.text.subtlest',
+  paddingBlock: 'space.050',
   paddingInline: 'space.0',
   overflow: 'hidden',
 });
@@ -51,9 +57,14 @@ const EditableMultiSelect: React.FC<EditableMultiSelectProps> = ({ defaultValue,
   const [editVersion, setEditVersion] = React.useState(0);
   const emptyGroup = '----';
 
+  // Increment the edit verion whenever we get a new default value.
+  React.useEffect(() => {
+    setEditVersion((v) => v + 1);
+  }, [defaultValue]);
+
   const onConfirmWrapper = (value: ValueType<OptionType, true>) => {
     const trimmed = Array.from(new Set(value.map((opt) => opt.label.trim()).filter((s) => s !== '')));
-    setEditVersion(editVersion + 1);
+    setEditVersion((v) => v + 1);
     onConfirm(trimmed.map(createOption));
   };
 
@@ -79,7 +90,7 @@ const EditableMultiSelect: React.FC<EditableMultiSelectProps> = ({ defaultValue,
         )}
         readView={() =>
           defaultValue && defaultValue.length === 0 ? (
-            <Box xcss={readViewContainerStyles}>{emptyGroup}</Box>
+            <Box xcss={readViewContainerEmptyStyles}>{emptyGroup}</Box>
           ) : (
             <Inline xcss={readViewContainerStyles} space="space.100">
               {defaultValue.map((opt: string) => (

@@ -21,6 +21,7 @@ import { createOption } from '../forms/select-helper';
 // import CompactTable, { CompactTableSettings, defaultCompactTableSettings } from '../forms/CompactTable';
 import RankableTable from '../forms/rankable-table/rankable-table';
 import { reorder } from '@atlaskit/pragmatic-drag-and-drop/reorder';
+import { SortOrderType } from '@atlaskit/dynamic-table/types';
 
 const initialUsers: DiscordUser[] = [
   {
@@ -140,8 +141,8 @@ function DiscordUsers() {
   const head: HeadType = {
     cells: [
       { key: 'name', content: <Box xcss={xcss({ paddingLeft: 'space.100' })}>{tt('name')}</Box>, isSortable: true },
-      { key: 'id', content: <Box xcss={xcss({ paddingLeft: 'space.100' })}>{'ID'}</Box>, isSortable: true },
-      { key: 'groups', content: tt('groups'), isSortable: true },
+      { key: 'id', content: <Box xcss={xcss({ paddingLeft: 'space.100' })}>{'Discord ID'}</Box>, isSortable: true },
+      { key: 'groups', content: <Box xcss={xcss({ paddingLeft: 'space.100' })}>{tt('groups')}</Box>, isSortable: true },
       { key: 'action', content: tt('remove'), isSortable: false },
     ],
   };
@@ -204,6 +205,7 @@ function DiscordUsers() {
             icon={DeleteIcon}
             label={tt('remove')}
             appearance="subtle"
+            spacing="compact"
             isTooltipDisabled={true}
             onClick={() => {
               setRemoveIndex(index);
@@ -349,6 +351,8 @@ function DiscordUsers() {
   //    Output
   //----------------------------------------------------------------------------
   // const [discordUsersTableSettings, setDiscordUsersTableSettings] = React.useState<CompactTableSettings>(defaultCompactTableSettings);
+  const [sortKey, setSortKey] = React.useState<string | null>(null);
+  const [sortOrder, setSortOrder] = React.useState<SortOrderType | null>(null);
 
   return (
     <Box xcss={containerStyles}>
@@ -359,6 +363,12 @@ function DiscordUsers() {
         onRankEnd={(sourceIndex, destinationIndex) => {
           // console.log('RankEnd: ', sourceIndex, destinationIndex);
           setDiscordUsers((users) => reorder({ list: users, startIndex: sourceIndex, finishIndex: destinationIndex }));
+        }}
+        sortKey={sortKey}
+        sortOrder={sortOrder}
+        onSort={(k, o) => {
+          setSortKey(k);
+          setSortOrder(o);
         }}
       />
       {newEntryField}

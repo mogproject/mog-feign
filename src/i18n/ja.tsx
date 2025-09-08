@@ -27,6 +27,9 @@ const ja = {
     move_up: '上に移動',
     move_down: '下に移動',
     move_to_bottom: '最後に移動',
+    ascending_sort: '昇順ソート',
+    descending_sort: '降順ソート',
+    sort_button: 'ソート',
   },
   // Colors.
   colors: {

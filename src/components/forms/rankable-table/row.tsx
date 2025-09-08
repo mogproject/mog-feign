@@ -2,7 +2,6 @@ import React, { Fragment } from 'react';
 import invariant from 'tiny-invariant';
 
 import { RowCellType } from './types';
-import { css } from '@emotion/react';
 import { TableContext } from './table-context';
 import * as liveRegion from '@atlaskit/pragmatic-drag-and-drop-live-region';
 import { attachClosestEdge, type Edge, extractClosestEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge';
@@ -25,18 +24,12 @@ type State =
       closestEdge: Edge | null;
     };
 
-// The column button has a bit more spacing than the row button,
-// to avoid conflict with the resize handle
-const columnMenuButtonWrapperStyles = css({
-  right: 12,
-});
-
 const Row = React.memo(function Row({ cells, rowIndex }: { cells: RowCellType[]; rowIndex: number }) {
   const ref = React.useRef<HTMLTableRowElement | null>(null);
   const dragHandleRef = React.useRef<HTMLButtonElement>(null);
   const { instanceId, sortKey } = React.useContext(TableContext);
   const [state, setState] = React.useState<State>({ type: 'idle' });
-  const isDraggable = sortKey !== null;
+  const isDraggable = sortKey === null;
 
   // cleanup the live region when this component is finished
   React.useEffect(() => {
@@ -47,6 +40,8 @@ const Row = React.memo(function Row({ cells, rowIndex }: { cells: RowCellType[];
 
   // pragmatic drag and drop
   React.useEffect(() => {
+    if (!isDraggable) return;
+
     const element = ref.current;
     invariant(element);
     const dragHandle = dragHandleRef.current;
@@ -109,23 +104,21 @@ const Row = React.memo(function Row({ cells, rowIndex }: { cells: RowCellType[];
         },
       })
     );
-  }, [instanceId, cells, rowIndex]);
+  }, [instanceId, cells, rowIndex, isDraggable]);
 
   return (
-    <Fragment>
-      <tr key={rowIndex} draggable={isDraggable} ref={ref} css={rowStyles}>
-        {cells.map((cell, columnIndex) => (
-          <Box as="td" key={cell.key} xcss={rowDataStyles}>
-            {
-              /* Rendering this in only the first column of each row */
-              columnIndex === 0 && <RowMenuButton ref={dragHandleRef} rowIndex={rowIndex} />
-            }
-            <Box xcss={[textOverflowStyles, state.type === 'dragging' && fadedRowStyles]}>{cell.content}</Box>
-            {state.type === 'is-over' && state.closestEdge ? <DropIndicator edge={state.closestEdge} gap="0px" /> : null}
-          </Box>
-        ))}
-      </tr>
-    </Fragment>
+    <tr draggable={isDraggable} ref={ref} css={rowStyles}>
+      {cells.map((cell, columnIndex) => (
+        <Box as="td" key={columnIndex} xcss={rowDataStyles}>
+          {
+            /* Rendering this in only the first column of each row */
+            columnIndex === 0 && isDraggable && <RowMenuButton ref={dragHandleRef} rowIndex={rowIndex} />
+          }
+          <Box xcss={[textOverflowStyles, state.type === 'dragging' && fadedRowStyles]}>{cell.content}</Box>
+          {state.type === 'is-over' && state.closestEdge ? <DropIndicator edge={state.closestEdge} gap="0px" /> : null}
+        </Box>
+      ))}
+    </tr>
   );
 });
 
