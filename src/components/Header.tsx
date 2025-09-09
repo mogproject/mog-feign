@@ -35,6 +35,8 @@ const compactSelectStyles = {
     ...base,
     paddingTop: 0,
     paddingBottom: 0,
+    paddingRight: 0,
+    marginRight: 0,
   }),
   indicatorsContainer: (base: any) => ({
     ...base,
