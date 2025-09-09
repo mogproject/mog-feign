@@ -35,7 +35,7 @@ export const tableHeaderStyles = xcss({
   position: 'sticky',
   top: 'space.0',
   height: token('space.400'),
-  zIndex: '1',
+  // zIndex: '1',
 });
 
 export const rowStyles = css({

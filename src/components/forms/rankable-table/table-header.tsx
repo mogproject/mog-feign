@@ -1,14 +1,13 @@
-import React, { Component } from 'react';
+import React from 'react';
 import invariant from 'tiny-invariant';
 
-import { Box, Flex, Inline, Pressable, xcss } from '@atlaskit/primitives';
+import { Box, Inline, Pressable, xcss } from '@atlaskit/primitives';
 import { token } from '@atlaskit/tokens';
 import { css } from '@emotion/react';
 import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/disable-native-drag-preview';
 import { preventUnhandled } from '@atlaskit/pragmatic-drag-and-drop/prevent-unhandled';
 import { minColumnWidth, firstColumnAdditionalPadding } from './constants';
-import { B100, N300, N30A, N40 } from '@atlaskit/theme/colors';
 import Tooltip from '@atlaskit/tooltip';
 
 import { HeadCellType, SortOrderType } from './types';
@@ -25,12 +24,6 @@ const buttonWrapperStyles = xcss({
   backgroundColor: 'transparent' as any,
   fontWeight: 'inherit',
   overflow: 'hidden',
-});
-
-const headCellContainerStyles = xcss({
-  display: 'block',
-  alignItems: 'center',
-  fontWeight: 'inherit',
 });
 
 const onClickStyles = xcss({
