@@ -86,6 +86,7 @@ const EditableMultiSelect: React.FC<EditableMultiSelectProps> = ({ defaultValue,
             options={options.map(createOption)}
             autoFocus
             openMenuOnFocus
+            menuPortalTarget={document.body}
           />
         )}
         readView={() =>

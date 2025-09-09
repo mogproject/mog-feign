@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
 import { useTranslation } from 'react-i18next';
+import { css } from '@emotion/react';
 
 import Form, { ErrorMessage, Field, MessageWrapper } from '@atlaskit/form';
 import TextField from '@atlaskit/textfield';
@@ -18,24 +19,23 @@ import Modal, { ModalBody, ModalFooter, ModalHeader, ModalTitle, ModalTransition
 // Note: Importing from '@atlaskit/select' breaks creatable select.
 import CreatableSelect from '@atlaskit/select/CreatableSelect';
 import { createOption } from '../forms/select-helper';
-// import CompactTable, { CompactTableSettings, defaultCompactTableSettings } from '../forms/CompactTable';
 import RankableTable from '../forms/rankable-table/rankable-table';
 import { reorder } from '@atlaskit/pragmatic-drag-and-drop/reorder';
-import { SortOrderType } from '@atlaskit/dynamic-table/types';
+import { useAppDispatch, useAppState, useUserGroups } from '../../models/ContextProvider';
 
-const initialUsers: DiscordUser[] = [
-  {
-    id: '12345678901234',
-    name: 'Alice',
-    groups: ['Admin', 'Beta Tester'],
-  },
-  { id: '98765432109876', name: 'Bob', groups: ['Member'] },
-  { id: '11112222333344', name: 'Charlie', groups: ['Moderator', 'VIP'] },
-  { id: '11112222333345', name: 'Charlie 1', groups: ['Moderator', 'VIP'] },
-  { id: '11112222333346', name: 'Charlie 2', groups: [] },
-  { id: '11112222333347', name: 'Charlie 3', groups: ['Member', 'VIP'] },
-  { id: '11112222333348', name: 'Charlie 4', groups: ['Member', 'VIP'] },
-];
+// const initialUsers: DiscordUser[] = [
+//   {
+//     id: '12345678901234',
+//     name: 'Alice',
+//     groups: ['Admin', 'Beta Tester'],
+//   },
+//   { id: '98765432109876', name: 'Bob', groups: ['Member'] },
+//   { id: '11112222333344', name: 'Charlie', groups: ['Moderator', 'VIP'] },
+//   { id: '11112222333345', name: 'Charlie 1', groups: ['Moderator', 'VIP'] },
+//   { id: '11112222333346', name: 'Charlie 2', groups: [] },
+//   { id: '11112222333347', name: 'Charlie 3', groups: ['Member', 'VIP'] },
+//   { id: '11112222333348', name: 'Charlie 4', groups: ['Member', 'VIP'] },
+// ];
 
 const readViewContainerStyles = xcss({
   display: 'flex',
@@ -49,6 +49,14 @@ const readViewContainerStyles = xcss({
 
 const readViewContainerStylesForId = xcss({
   color: 'color.text.subtlest',
+});
+
+const compactTextFieldStyles = css({
+  height: '32px',
+  paddingTop: '0',
+  paddingBottom: '0',
+  paddingRight: 'space.050',
+  paddingLeft: 'space.050',
 });
 
 const compactSelectStyles = {
@@ -67,10 +75,6 @@ const compactSelectStyles = {
   }),
 };
 
-function findDiscordGroups(users: DiscordUser[]) {
-  return Array.from(new Set(users.flatMap((u) => u.groups))).sort();
-}
-
 function DiscordUsers() {
   const { t: translate } = useTranslation('translation', {
     keyPrefix: 'settings.discord',
@@ -80,8 +84,9 @@ function DiscordUsers() {
     return t(k, { ...o, keyPrefix: '' });
   };
 
-  const [discordUsers, setDiscordUsers] = React.useState<DiscordUser[]>(initialUsers);
-  const [discordGroups, setDiscordGroups] = React.useState<string[]>(findDiscordGroups(discordUsers));
+  const { discordUsers, discordUsersTableSettings } = useAppState();
+  const userGroups = useUserGroups();
+  const dispatch = useAppDispatch();
 
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [removeIndex, setRemoveIndex] = React.useState(-1);
@@ -89,16 +94,19 @@ function DiscordUsers() {
   const closeModal = React.useCallback(() => setIsModalOpen(false), []);
 
   const setEditValue = (index: number, key: string, value: string) => {
-    const newUsers = discordUsers.map((user: DiscordUser, i: number) => (i == index ? { ...user, [key]: value } : user));
-    setDiscordUsers(newUsers);
+    dispatch((prev) => {
+      const newUsers = prev.discordUsers.map((user: DiscordUser, i: number) => (i == index ? { ...user, [key]: value } : user));
+      return { ...prev, discordUsers: newUsers };
+    });
   };
 
   const setEditGroups = (index: number, value: ValueType<OptionType, true>) => {
-    const newUsers = discordUsers.map((user: DiscordUser, i: number) =>
-      i == index ? { ...user, groups: value.map((opt) => opt.label) } : user
-    );
-    setDiscordUsers(newUsers);
-    setDiscordGroups(findDiscordGroups(newUsers));
+    dispatch((prev) => {
+      const newUsers = prev.discordUsers.map((user: DiscordUser, i: number) =>
+        i == index ? { ...user, groups: value.map((opt) => opt.label) } : user
+      );
+      return { ...prev, discordUsers: newUsers };
+    });
   };
 
   const removeDiscordUser = () => {
@@ -106,8 +114,8 @@ function DiscordUsers() {
 
     const newUsers = discordUsers.filter((_, index) => index !== removeIndex);
     setRemoveIndex(-1);
-    setDiscordUsers(newUsers);
-    setDiscordGroups(findDiscordGroups(newUsers));
+    // console.log('remove new: ', newUsers);
+    dispatch((prev) => ({ ...prev, discordUsers: newUsers }));
   };
 
   // Validations.
@@ -149,7 +157,6 @@ function DiscordUsers() {
 
   const rows: RowType[] = discordUsers.map((user, index) => ({
     key: index.toString(),
-    className: 'compact-table-row',
     cells: [
       //------------------------------------------------------------------------
       //    Name
@@ -190,7 +197,7 @@ function DiscordUsers() {
         content: (
           <EditableMultiSelect
             defaultValue={user.groups}
-            options={discordGroups}
+            options={userGroups}
             onConfirm={(value) => setEditGroups(index, value)}
             keyPrefix={`table-groups-${index}`}
           />
@@ -222,10 +229,6 @@ function DiscordUsers() {
     marginInline: 'auto', // centering
     paddingInline: 'space.200', // left & right padding
   });
-
-  //----------------------------------------------------------------------------
-  //    Actions
-  //----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
   //    Components
@@ -284,9 +287,10 @@ function DiscordUsers() {
           const id = data.id.trim();
           const groups = Array.from(new Set(data.groups.map((opt) => opt.label.trim()).filter((s) => s !== '')));
 
-          const newUsers = [...discordUsers, { name: name, id: id, groups: groups }];
-          setDiscordUsers(newUsers);
-          setDiscordGroups(findDiscordGroups(newUsers));
+          dispatch((prev) => {
+            const newUsers = [...prev.discordUsers, { name: name, id: id, groups: groups }];
+            return { ...prev, discordUsers: newUsers };
+          });
 
           form.reset(); // clear all fields
         }}
@@ -298,7 +302,7 @@ function DiscordUsers() {
               <Field<string> name="name" isRequired validate={(value) => validateName(value || '', -1, false)} defaultValue="">
                 {({ fieldProps, error }) => (
                   <Box xcss={xcss({ width: '144px' })}>
-                    <TextField {...fieldProps} className="compact-textfield" placeholder={t('name_placeholder')} />
+                    <TextField {...fieldProps} css={compactTextFieldStyles} placeholder={t('name_placeholder')} />
                     <MessageWrapper>{error && <ErrorMessage>{error}</ErrorMessage>}</MessageWrapper>
                   </Box>
                 )}
@@ -308,7 +312,7 @@ function DiscordUsers() {
               <Field<string> name="id" isRequired validate={(value) => validateId(value || '', -1, false)} defaultValue="">
                 {({ fieldProps, error }) => (
                   <Box xcss={xcss({ width: '144px' })}>
-                    <TextField {...fieldProps} className="compact-textfield" placeholder={t('id_placeholder')} />
+                    <TextField {...fieldProps} css={compactTextFieldStyles} placeholder={t('id_placeholder')} />
                     <MessageWrapper>{error && <ErrorMessage>{error}</ErrorMessage>}</MessageWrapper>
                   </Box>
                 )}
@@ -325,8 +329,10 @@ function DiscordUsers() {
                       isClearable
                       placeholder={t('group_placeholder')}
                       formatCreateLabel={(s: string) => tt('create_label', { name: s })}
-                      noOptionsMessage={(obj: { inputValue: string }) => t('no_options', { name: obj.inputValue })}
-                      options={discordGroups.map(createOption)}
+                      noOptionsMessage={(obj: { inputValue: string }) =>
+                        obj.inputValue === '' ? '' : tt('no_options', { name: obj.inputValue })
+                      }
+                      options={userGroups.map(createOption)}
                       autoFocus={false}
                       openMenuOnFocus={false}
                     />
@@ -350,10 +356,6 @@ function DiscordUsers() {
   //----------------------------------------------------------------------------
   //    Output
   //----------------------------------------------------------------------------
-  // const [discordUsersTableSettings, setDiscordUsersTableSettings] = React.useState<CompactTableSettings>(defaultCompactTableSettings);
-  const [sortKey, setSortKey] = React.useState<string | null>(null);
-  const [sortOrder, setSortOrder] = React.useState<SortOrderType | null>(null);
-
   return (
     <Box xcss={containerStyles}>
       <p>{t('description')}</p>
@@ -362,13 +364,16 @@ function DiscordUsers() {
         rows={rows}
         onRankEnd={(sourceIndex, destinationIndex) => {
           // console.log('RankEnd: ', sourceIndex, destinationIndex);
-          setDiscordUsers((users) => reorder({ list: users, startIndex: sourceIndex, finishIndex: destinationIndex }));
+          // console.log('newUsers: ', newUsers);
+          dispatch((prev) => {
+            const newUsers = reorder({ list: prev.discordUsers, startIndex: sourceIndex, finishIndex: destinationIndex });
+            return { ...prev, discordUsers: newUsers };
+          });
         }}
-        sortKey={sortKey}
-        sortOrder={sortOrder}
+        sortKey={discordUsersTableSettings.sortKey}
+        sortOrder={discordUsersTableSettings.sortOrder}
         onSort={(k, o) => {
-          setSortKey(k);
-          setSortOrder(o);
+          dispatch((prev) => ({ ...prev, discordUsersTableSettings: { sortKey: k, sortOrder: o } }));
         }}
       />
       {newEntryField}

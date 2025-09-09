@@ -31,6 +31,14 @@ const en = {
     descending_sort: 'Sort descending',
     sort_button: 'Sort button',
   },
+
+  // Layout options.
+  layout: {
+    home_page: 'Home page',
+    expand_sidebar: 'Expand sidebar',
+    collapse_sidebar: 'Collapse sidebar',
+  },
+
   // Colors.
   colors: {
     white: 'White',

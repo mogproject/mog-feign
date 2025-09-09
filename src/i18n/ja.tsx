@@ -31,6 +31,14 @@ const ja = {
     descending_sort: '降順ソート',
     sort_button: 'ソート',
   },
+
+  // Layout options.
+  layout: {
+    home_page: 'ホーム',
+    expand_sidebar: 'サイドバーを表示',
+    collapse_sidebar: 'サイドバーを非表示',
+  },
+  
   // Colors.
   colors: {
     white: '白',
