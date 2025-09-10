@@ -3,7 +3,7 @@ import React, { Fragment } from 'react';
 import { TopNavStart } from '@atlaskit/navigation-system/layout/top-nav';
 import { SideNavToggleButton } from '@atlaskit/navigation-system/layout/side-nav';
 import { AppLogo, CustomTitle } from '@atlaskit/navigation-system/top-nav-items';
-import { APP_VERSION } from '../models/app-context';
+import { APP_VERSION } from '../../models/app-context';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faYoutube, faGithub } from '@fortawesome/free-brands-svg-icons';
 import { useTranslation } from 'react-i18next';

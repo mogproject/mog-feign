@@ -13,6 +13,7 @@
     "@atlaskit/ds-lib": "5.0.0",
     "@atlaskit/dynamic-table": "^18.2.11",
     "@atlaskit/form": "^12.2.1",
+    "@atlaskit/heading": "^5.2.7",
     "@atlaskit/icon-lab": "^5.7.1",
     "@atlaskit/inline-edit": "^15.3.5",
     "@atlaskit/link": "^3.2.5",

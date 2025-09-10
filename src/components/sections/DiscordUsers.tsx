@@ -224,12 +224,6 @@ function DiscordUsers() {
     ],
   }));
 
-  const containerStyles = xcss({
-    maxWidth: '1200px',
-    marginInline: 'auto', // centering
-    paddingInline: 'space.200', // left & right padding
-  });
-
   //----------------------------------------------------------------------------
   //    Components
   //----------------------------------------------------------------------------
@@ -357,7 +351,7 @@ function DiscordUsers() {
   //    Output
   //----------------------------------------------------------------------------
   return (
-    <Box xcss={containerStyles}>
+    <Box xcss={xcss({ paddingTop: 'space.200' })}>
       <p>{t('description')}</p>
       <RankableTable
         head={head}
