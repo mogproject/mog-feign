@@ -1,25 +1,24 @@
 import React, { ReactNode } from 'react';
 import invariant from 'tiny-invariant';
-import { SortOrderType } from '../components/forms/rankable-table/types';
-import { DiscordUser } from './DiscordUser';
+import {
+  loadAllFromLocalStorage,
+  saveAvatarSettingsToLocalStorage,
+  saveDiscordUsersTableSettingsToLocalStorage,
+  saveDiscordUsersToLocalStorage,
+  saveFeignPlayersToLocalStorage,
+  saveFeiSettingsToLocalStorage,
+  saveNamedChannelsTableSettingsToLocalStorage,
+  saveNamedChannelsToLocalStorage,
+  saveStreamerSettingsToLocalStorage,
+  saveUsernameSettingsToLocalStorage,
+  saveVoiceChannelURLToLocalStorage,
+} from '../io/AppStateIO';
+import AppState from './AppState';
+import { DiscordUser } from './detail/DiscordUser';
 
 // Utilities.
 function findUserGroups(users: DiscordUser[]) {
   return Array.from(new Set(users.flatMap((u) => u.groups))).sort();
-}
-
-export interface DiscordUserTableSettings {
-  sortKey: string | null;
-  sortOrder: SortOrderType | null;
-}
-
-// App state.
-export interface AppState {
-  // Discord users
-  discordUsers: DiscordUser[];
-
-  // Discord users table
-  discordUsersTableSettings: DiscordUserTableSettings;
 }
 
 // Action.
@@ -54,24 +53,50 @@ function appReducer(state: AppState, action: AppAction): AppState {
 }
 
 export function ContextProvider({ children }: { children: ReactNode }) {
-  // Load from local storage
-  const initDiscordUsers = JSON.parse(localStorage.getItem('discord_users') || '[]');
-  const initDiscordUsersTableSettings = JSON.parse(localStorage.getItem('discord_users_table') || '{"sortKey":null,"sortOrder":null}');
-  const defaultState: AppState = {
-    discordUsers: initDiscordUsers,
-    discordUsersTableSettings: initDiscordUsersTableSettings,
-  };
+  // Load from local storage.
+  const initialState = loadAllFromLocalStorage();
+  const [state, dispatch] = React.useReducer(appReducer, initialState);
 
-  const [state, dispatch] = React.useReducer(appReducer, defaultState);
-
-  // Effects.
+  // Effects; save to local storage.
   React.useEffect(() => {
-    localStorage.setItem('discord_users', JSON.stringify(state.discordUsers));
+    saveVoiceChannelURLToLocalStorage(state.channelURL);
+  }, [state.channelURL]);
+
+  React.useEffect(() => {
+    saveNamedChannelsToLocalStorage(state.namedChannels);
+  }, [state.namedChannels]);
+
+  React.useEffect(() => {
+    saveNamedChannelsTableSettingsToLocalStorage(state.namedChannelsTableSettings);
+  }, [state.namedChannelsTableSettings]);
+
+  React.useEffect(() => {
+    saveDiscordUsersToLocalStorage(state.discordUsers);
   }, [state.discordUsers]);
 
   React.useEffect(() => {
-    localStorage.setItem('discord_users_table', JSON.stringify(state.discordUsersTableSettings));
+    saveDiscordUsersTableSettingsToLocalStorage(state.discordUsersTableSettings);
   }, [state.discordUsersTableSettings]);
+
+  React.useEffect(() => {
+    saveFeignPlayersToLocalStorage(state.feignPlayers);
+  }, [state.feignPlayers]);
+
+  React.useEffect(() => {
+    saveFeiSettingsToLocalStorage(state.viewSettings.fei);
+  }, [state.viewSettings.fei]);
+
+  React.useEffect(() => {
+    saveAvatarSettingsToLocalStorage(state.viewSettings.avatar);
+  }, [state.viewSettings.avatar]);
+
+  React.useEffect(() => {
+    saveUsernameSettingsToLocalStorage(state.viewSettings.username);
+  }, [state.viewSettings.username]);
+
+  React.useEffect(() => {
+    saveStreamerSettingsToLocalStorage(state.viewSettings.streamer);
+  }, [state.viewSettings.streamer]);
 
   return (
     <StateContext.Provider value={state}>

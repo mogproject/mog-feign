@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import Header from './components/sections/Header';
 import DiscordUsers from './components/sections/DiscordUsers';
 import { ContextProvider } from './models/ContextProvider';
+import SaveLoad from './components/sections/SaveLoad';
 
 const containerStyles = xcss({
   maxWidth: '1200px',
@@ -57,6 +58,8 @@ const App: React.FC = () => {
             {t('settings.settings')}
           </Heading>
         </Box>
+        {/* ---- Save / Load ----*/}
+        <SaveLoad />
 
         <DiscordUsers />
       </Box>

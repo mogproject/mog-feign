@@ -8,7 +8,7 @@ import Button, { IconButton } from '@atlaskit/button/new';
 import { HeadType, RowType } from '../forms/rankable-table/types';
 import { Box, Inline, xcss } from '@atlaskit/primitives';
 
-import { DiscordUser } from '../../models/DiscordUser';
+import { DiscordUser } from '../../models/detail/DiscordUser';
 import { token } from '@atlaskit/tokens';
 import EditableText from '../forms/EditableText';
 import EditableMultiSelect from '../forms/EditableMultiSelect';

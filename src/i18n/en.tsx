@@ -65,6 +65,7 @@ const en = {
   settings: {
     settings: 'Settings',
     saveload: {
+      description: 'To prevent data loss, save all settings to a file on a regular basis.',
       save_all: 'Save All Settings',
       save_all_but_view: 'Save all but overlay settings',
       save_all_but_view_anonymized: 'Anonymize and save all but overlay settings',

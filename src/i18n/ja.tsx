@@ -65,6 +65,7 @@ const ja = {
   settings: {
     settings: '設定',
     saveload: {
+      description: 'データの消失を防ぐため、定期的に全ての設定をファイルに保存することを推奨します。',
       save_all: '全ての設定を保存',
       save_all_but_view: '表示設定以外を保存',
       save_all_but_view_anonymized: '表示設定以外を匿名化して保存',
