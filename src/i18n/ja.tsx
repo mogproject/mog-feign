@@ -32,13 +32,22 @@ const ja = {
     sort_button: 'ソート',
   },
 
+  // File I/O options.
+  file: {
+    loading: '読み込み中',
+    load_success: '読み込み完了',
+    load_failure: '読み込み失敗',
+    too_large: 'ファイルが大きすぎます',
+    choose_file: '.{{extension}} ファイルを選択してください',
+  },
+
   // Layout options.
   layout: {
     home_page: 'ホーム',
     expand_sidebar: 'サイドバーを表示',
     collapse_sidebar: 'サイドバーを非表示',
   },
-  
+
   // Colors.
   colors: {
     white: '白',
@@ -65,6 +74,7 @@ const ja = {
   settings: {
     settings: '設定',
     saveload: {
+      description: 'データの消失を防ぐため、定期的に全ての設定をファイルに保存することを推奨します。',
       save_all: '全ての設定を保存',
       save_all_but_view: '表示設定以外を保存',
       save_all_but_view_anonymized: '表示設定以外を匿名化して保存',
@@ -77,6 +87,7 @@ const ja = {
       confirm_initialization: '全ての設定を初期状態に戻します。よろしいですか?',
       cancel: 'キャンセル',
       initialize: '初期設定に戻す',
+      initialized: '設定を初期化しました。',
     },
     discord_voice_channel: 'Discord ボイスチャンネル',
     channel: {

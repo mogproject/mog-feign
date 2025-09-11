@@ -32,6 +32,15 @@ const en = {
     sort_button: 'Sort button',
   },
 
+  // File I/O options.
+  file: {
+    loading: 'Loading',
+    load_success: 'Loaded',
+    load_failure: 'Failed to load',
+    too_large: 'File too large',
+    choose_file: 'Choose file with .{{extension}}',
+  },
+
   // Layout options.
   layout: {
     home_page: 'Home page',
@@ -65,6 +74,7 @@ const en = {
   settings: {
     settings: 'Settings',
     saveload: {
+      description: 'To prevent data loss, save all settings to a file on a regular basis.',
       save_all: 'Save All Settings',
       save_all_but_view: 'Save all but overlay settings',
       save_all_but_view_anonymized: 'Anonymize and save all but overlay settings',
@@ -77,6 +87,7 @@ const en = {
       confirm_initialization: 'Do you want to initialize all settings?',
       cancel: 'Cancel',
       initialize: 'Initialize',
+      initialized: 'Initialized all settings.',
     },
     discord_voice_channel: 'Discord Voice Channel',
     channel: {

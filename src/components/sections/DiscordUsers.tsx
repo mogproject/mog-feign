@@ -8,7 +8,7 @@ import Button, { IconButton } from '@atlaskit/button/new';
 import { HeadType, RowType } from '../forms/rankable-table/types';
 import { Box, Inline, xcss } from '@atlaskit/primitives';
 
-import { DiscordUser } from '../../models/DiscordUser';
+import { DiscordUser } from '../../models/detail/DiscordUser';
 import { token } from '@atlaskit/tokens';
 import EditableText from '../forms/EditableText';
 import EditableMultiSelect from '../forms/EditableMultiSelect';
@@ -224,12 +224,6 @@ function DiscordUsers() {
     ],
   }));
 
-  const containerStyles = xcss({
-    maxWidth: '1200px',
-    marginInline: 'auto', // centering
-    paddingInline: 'space.200', // left & right padding
-  });
-
   //----------------------------------------------------------------------------
   //    Components
   //----------------------------------------------------------------------------
@@ -357,7 +351,7 @@ function DiscordUsers() {
   //    Output
   //----------------------------------------------------------------------------
   return (
-    <Box xcss={containerStyles}>
+    <Box xcss={xcss({ paddingTop: 'space.200' })}>
       <p>{t('description')}</p>
       <RankableTable
         head={head}
