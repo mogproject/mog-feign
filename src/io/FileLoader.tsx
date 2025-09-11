@@ -1,7 +1,9 @@
-interface FileLoaderMessage {
-  level: string,
-  message: string
-};
+import { useTranslation } from 'react-i18next';
+
+export interface FileLoaderMessage {
+  level: 'info' | 'success' | 'danger';
+  message: string;
+}
 
 class FileLoader {
   readonly elemForm: HTMLFormElement;
@@ -13,6 +15,10 @@ class FileLoader {
   maxFileSizeKb: number = 100;
 
   constructor(id: string) {
+    // i18n
+    const { t: translate } = useTranslation('translation', { keyPrefix: 'file' });
+    const t = translate as (s: string, o?: Record<string, string | boolean>) => string;
+
     // Create invisible input element.
     const elemForm = document.createElement('form');
     elemForm.setAttribute('id', id);
@@ -20,7 +26,7 @@ class FileLoader {
     const elemInput: HTMLInputElement = document.createElement('input');
     elemInput.setAttribute('id', id + '-input');
     elemInput.setAttribute('type', 'file');
-    elemInput.setAttribute('class', 'form-control d-none');
+    elemInput.style.display = 'none'; // hidden object
 
     // Add event listener
     const handleChange = (e: Event) => {
@@ -28,31 +34,31 @@ class FileLoader {
       const file = target.files?.[0];
       if (!file) return;
       if (!file.name.toLowerCase().endsWith('.' + this.extension)) {
-        this.messageHandler({ level: 'danger', message: `.${this.extension} ファイルを選択してください` });
+        this.messageHandler({ level: 'danger', message: t('choose_file', { extension: this.extension }) });
         return;
       }
       if (file.size > this.maxFileSizeKb * 1024) {
-        this.messageHandler({ level: 'danger', message: `.${this.extension} ファイルが大きすぎます` });
+        this.messageHandler({ level: 'danger', message: t('too_large') });
         return;
       }
-      this.messageHandler({ level: 'info', message: `読み込み中: ${file.name}` });
+      this.messageHandler({ level: 'info', message: `${t('loading')}: ${file.name}` });
 
       const reader = new FileReader();
 
       reader.onload = (evt) => {
         if (evt.target?.result) {
           if (this.contentHandler(evt.target?.result.toString())) {
-            this.messageHandler({ level: 'success', message: `読み込み完了: ${file.name}` });
+            this.messageHandler({ level: 'success', message: `${t('load_success')}: ${file.name}` });
           } else {
-            this.messageHandler({ level: 'danger', message: `読み込み失敗: ${file.name}` });
+            this.messageHandler({ level: 'danger', message: `${t('load_failure')}: ${file.name}` });
           }
         }
         // This makes an effect when loading the same file path repeatedly.
         target.value = '';
       };
       reader.onerror = () => {
-        this.messageHandler({ level: 'danger', message: `読み込み失敗: ${file.name}` });
-      }
+        this.messageHandler({ level: 'danger', message: `${t('load_failure')}: ${file.name}` });
+      };
 
       reader.readAsText(file);
     };
@@ -65,7 +71,7 @@ class FileLoader {
     this.elemForm = elemForm;
     this.elemInput = elemInput;
     this.contentHandler = () => true;
-    this.messageHandler = () => { };
+    this.messageHandler = () => {};
     this.extension = 'json';
     this.maxFileSizeKb = 100;
   }
@@ -87,6 +93,6 @@ class FileLoader {
     // Simulate click.
     this.elemInput.click();
   }
-};
+}
 
 export default FileLoader;

@@ -11,8 +11,10 @@ import {
   ViewSettings,
 } from '../models/detail/ViewSettings';
 import { NamedChannel } from '../models/detail/ChannelSettings';
-import FeignPlayers from '../models/detail/FeignPlayers';
+import FeignPlayers, { getPlayers, numberOfActivePlayers } from '../models/detail/FeignPlayers';
 import { NUMBER_OF_FEI_COLORS } from '../models/app-context';
+import { AppAction } from '../models/ContextProvider';
+import { Dispatch } from 'react';
 
 const KEY_VOICE_CHANNEL = 'voice_channel_url';
 const KEY_NAMED_CHANNELS = 'named_channels';
@@ -37,7 +39,7 @@ const defaultAppState: AppState = {
   namedChannelsTableSettings: defaultTableSettings,
   discordUsers: [],
   discordUsersTableSettings: defaultTableSettings,
-  feignPlayers: { group: '', players: new Map<string, string[]>([['', []]]) },
+  feignPlayers: { group: '', players: new Map<string, string[]>([['', Array(NUMBER_OF_FEI_COLORS).fill('')]]) },
   viewSettings: defaultViewSettings,
   isSpeaking: [],
 };
@@ -71,8 +73,13 @@ function loadTableSettings(obj: any, keys: string[]): TableSettings {
 //------------------------------------------------------------------------------
 //    Channel URL
 //------------------------------------------------------------------------------
-function loadVoiceChannelURLFromLocalStorage(): string {
-  return localStorage.getItem(KEY_VOICE_CHANNEL) || '';
+function loadVoiceChannelURL(obj: any): string {
+  try {
+    invariant(typeof obj === 'string');
+    return obj as string;
+  } catch (err) {
+    return defaultAppState.channelURL;
+  }
 }
 
 export function saveVoiceChannelURLToLocalStorage(url: string) {
@@ -177,16 +184,15 @@ function loadFeignPlayers(obj: any): FeignPlayers {
     return defaultAppState.feignPlayers;
   }
 }
-
-function saveFeignPlayers(feignPlayers: FeignPlayers) {
-  return JSON.stringify({
+function serializeFeignPlayers(feignPlayers: FeignPlayers): Object {
+  return {
     group: feignPlayers.group,
     players: Object.fromEntries(feignPlayers.players),
-  });
+  };
 }
 
 export function saveFeignPlayersToLocalStorage(feignPlayers: FeignPlayers) {
-  return localStorage.setItem(KEY_FEIGN_PLAYERS, saveFeignPlayers(feignPlayers));
+  return localStorage.setItem(KEY_FEIGN_PLAYERS, JSON.stringify(serializeFeignPlayers(feignPlayers)));
 }
 
 //------------------------------------------------------------------------------
@@ -275,8 +281,9 @@ export function saveStreamerSettingsToLocalStorage(s: StreamerSettings) {
 
 //------------------------------------------------------------------------------
 export function loadAllFromLocalStorage(): AppState {
+  const feignPlayers = loadFromLocalStorage(KEY_FEIGN_PLAYERS, loadFeignPlayers, defaultAppState.feignPlayers);
   return {
-    channelURL: loadVoiceChannelURLFromLocalStorage(),
+    channelURL: loadFromLocalStorage(KEY_VOICE_CHANNEL, loadVoiceChannelURL, defaultAppState.channelURL),
     namedChannels: loadFromLocalStorage(KEY_NAMED_CHANNELS, loadNamedChannels, defaultAppState.namedChannels),
     namedChannelsTableSettings: loadFromLocalStorage(
       KEY_NAMED_CHANNELS_TABLE,
@@ -289,13 +296,89 @@ export function loadAllFromLocalStorage(): AppState {
       loadDiscordUsersTableSettings,
       defaultAppState.discordUsersTableSettings
     ),
-    feignPlayers: loadFromLocalStorage(KEY_FEIGN_PLAYERS, loadFeignPlayers, defaultAppState.feignPlayers),
+    feignPlayers: feignPlayers,
     viewSettings: new ViewSettings(
       loadFromLocalStorage(KEY_VIEW_FEI, loadFeiSettings, defaultAppState.viewSettings.fei),
       loadFromLocalStorage(KEY_VIEW_AVATAR, loadAvatarSettings, defaultAppState.viewSettings.avatar),
       loadFromLocalStorage(KEY_VIEW_USERNAME, loadUsernameSettings, defaultAppState.viewSettings.username),
       loadFromLocalStorage(KEY_VIEW_STREAMER, loadStreamerSettings, defaultAppState.viewSettings.streamer)
     ),
-    isSpeaking: defaultAppState.isSpeaking,
+    isSpeaking: Array(numberOfActivePlayers(feignPlayers)).fill(false), // reset isSpeaking
   };
+}
+
+//------------------------------------------------------------------------------
+export function appStateToJSON(state: AppState, anonymizeDiscordUsers: boolean, includeData: boolean, includeView: boolean) {
+  var obj: Object = {};
+  if (includeData) {
+    if (anonymizeDiscordUsers) {
+      // Create anonymous users from player IDs.
+      const playerIDs: string[] = getPlayers(state.feignPlayers);
+      const activeIDs: string[] = playerIDs.filter((id: string) => id !== '');
+      const anonymizedUsers: DiscordUser[] = activeIDs.map((id: string, i: number) => {
+        return { name: `user-${i}`, id: id, groups: [] };
+      });
+      obj = {
+        channelURL: state.channelURL,
+        namedChannels: state.namedChannels,
+        namedChannelsTableSettings: state.namedChannelsTableSettings,
+        discordUsers: anonymizedUsers,
+        discordUsersTableSettings: defaultTableSettings,
+        feignPlayers: {
+          group: '',
+          players: { '': playerIDs },
+        },
+      };
+    } else {
+      obj = {
+        channelURL: state.channelURL,
+        namedChannels: state.namedChannels,
+        namedChannelsTableSettings: state.namedChannelsTableSettings,
+        discordUsers: state.discordUsers,
+        discordUsersTableSettings: state.discordUsersTableSettings,
+        feignPlayers: serializeFeignPlayers(state.feignPlayers),
+      };
+    }
+  }
+  if (includeView) {
+    obj = { ...obj, viewSettings: state.viewSettings };
+  }
+  return JSON.stringify(obj);
+}
+
+export function initializeAppState(dispatch: Dispatch<AppAction>) {
+  dispatch(() => defaultAppState);
+}
+
+export function loadJSONString(content: string, dispatch: Dispatch<AppAction>, includeData: boolean, includeView: boolean): boolean {
+  try {
+    const newState: Partial<AppState> = {};
+    const obj = JSON.parse(content);
+    invariant(obj);
+
+    if (includeData) {
+      newState.channelURL = loadVoiceChannelURL(obj.channelURL);
+      newState.namedChannels = loadNamedChannels(obj.namedChannels);
+      newState.namedChannelsTableSettings = loadNamedChannelsTableSettings(obj.namedChannelsTableSettings);
+      newState.discordUsers = loadDiscordUsers(obj.discordUsers);
+      newState.discordUsersTableSettings = loadDiscordUsersTableSettings(obj.discordUsersTableSettings);
+      newState.feignPlayers = loadFeignPlayers(obj.feignPlayers);
+      newState.isSpeaking = Array(numberOfActivePlayers(newState.feignPlayers)).fill(false); // reset isSpeaking
+    }
+    if (includeView) {
+      newState.viewSettings = new ViewSettings(
+        loadFeiSettings(obj.viewSettings.fei),
+        loadAvatarSettings(obj.viewSettings.avatar),
+        loadUsernameSettings(obj.viewSettings.username),
+        loadStreamerSettings(obj.viewSettings.streamer)
+      );
+    }
+
+    // Perform update.
+    dispatch((prev) => ({ ...prev, ...newState }));
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+  return true;
 }
