@@ -13,14 +13,14 @@ import { SingleValue } from '@atlaskit/react-select';
 import SideNavToggleButton from '../layout/SideNavToggleButton';
 
 const topBarStyles = xcss({
-  padding: 'space.100',
-  backgroundColor: 'elevation.surface',
+  height: '100%',
+  paddingLeft: 'space.200',
+
+  backgroundColor: 'color.background.brand.subtlest',
   borderColor: 'color.border',
   borderWidth: '0',
   borderBottomWidth: 'border.width',
   borderStyle: 'solid',
-  borderRadius: 'radius.small',
-  gap: 'space.200',
 });
 
 const compactSelectStyles = {
@@ -54,7 +54,7 @@ const Header: React.FC = () => {
 
   // @note Somehow, TopNavEnd does not work as expected.
   return (
-    <Inline xcss={topBarStyles} spread={'space-between'}>
+    <Inline xcss={topBarStyles} spread={'space-between'} alignBlock={'center'}>
       <TopNavStart>
         <SideNavToggleButton collapseLabel={t('layout.collapse_sidebar')} expandLabel={t('layout.expand_sidebar')} />
         <AppLogo href="#" icon={() => <Fragment />} name="Feign CSS Generator" label={t('layout.home_page')} />
