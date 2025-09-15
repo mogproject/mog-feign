@@ -1,36 +1,38 @@
 import React from 'react';
-import { LayoutContext, LayoutContextProvider } from './LayoutContext';
+import { LayoutContextProvider, useLayoutState } from './LayoutContext';
 import { rootStyles } from './styles';
+import { css } from '@emotion/react';
 
 type RootProps = {
   children: React.ReactNode;
+  defaultTopNavHeight: number;
   defaultSideNavWidth: number;
   defaultSideNavExpanded: boolean;
   defaultAsideWidth: number;
 };
 
-const Root: React.FC<RootProps> = (props: RootProps) => {
-  const state = React.useContext(LayoutContext);
-  const columnValue = React.useMemo(() => {
-    return state ? `${state.sideNavWidth}px 1fr ${state.asideWidth}px` : '';
-  }, [state?.sideNavWidth, state?.asideWidth]);
+type RootInnerProps = {
+  children: React.ReactNode;
+};
 
+const RootInner: React.FC<RootInnerProps> = ({ children }) => {
+  const state = useLayoutState();
+  const gridColumnStyles = React.useMemo(() => {
+    return css({ gridTemplateColumns: `${state.sideNavWidth + 1}px 1fr ${state.asideWidth}px` });
+  }, [state.sideNavWidth, state.asideWidth]);
+
+  return <div css={[rootStyles, gridColumnStyles]}>{children}</div>;
+};
+
+const Root: React.FC<RootProps> = (props: RootProps) => {
   return (
     <LayoutContextProvider
+      defaultTopNavHeight={props.defaultTopNavHeight}
       defaultSideNavWidth={props.defaultSideNavWidth}
       defaultSideNavExpanded={props.defaultSideNavExpanded}
       defaultAsideWidth={props.defaultAsideWidth}
     >
-      <div
-        css={[
-          rootStyles,
-          {
-            gridTemplateColumns: columnValue,
-          },
-        ]}
-      >
-        {props.children}
-      </div>
+      <RootInner>{props.children}</RootInner>
     </LayoutContextProvider>
   );
 };

@@ -14,7 +14,7 @@ import MainContent from './components/sections/MainContent';
 const App: React.FC = () => {
   return (
     <ContextProvider>
-      <Root defaultSideNavWidth={200} defaultSideNavExpanded={true} defaultAsideWidth={240}>
+      <Root defaultTopNavHeight={49} defaultSideNavWidth={200} defaultSideNavExpanded={true} defaultAsideWidth={240}>
         {/*=====================================================================
              TOP NAV
          ====================================================================*/}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLayoutDispatch } from './LayoutContext';
+import { useLayoutState } from './LayoutContext';
 import { topNavStyles } from './styles';
 
 type TopNavProps = {
@@ -7,18 +7,14 @@ type TopNavProps = {
 };
 
 const TopNav: React.FC<TopNavProps> = (props) => {
-  const topNavRef = React.useRef<HTMLElement>(null);
-  const dispatch = useLayoutDispatch();
+  const state = useLayoutState();
 
-  React.useEffect(() => {
-    dispatch((prev) => ({ ...prev, topNavRef: topNavRef }));
-  }, [topNavRef]);
-
-  return (
-    <header ref={topNavRef} css={topNavStyles}>
-      {props.children}
-    </header>
-  );
+  const heightStyles = React.useMemo(() => {
+    return {
+      height: state.topNavHeight,
+    };
+  }, [state.topNavHeight]);
+  return <header css={[topNavStyles, heightStyles]}>{props.children}</header>;
 };
 
 export default TopNav;

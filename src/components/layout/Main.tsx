@@ -4,8 +4,8 @@ type MainProps = {
   children: React.ReactNode;
 };
 
-const SideNav: React.FC<MainProps> = (props) => {
-  return <nav css={mainStyles}>{props.children}</nav>;
+const Main: React.FC<MainProps> = (props) => {
+  return <div css={mainStyles}>{props.children}</div>;
 };
 
-export default SideNav;
+export default Main;

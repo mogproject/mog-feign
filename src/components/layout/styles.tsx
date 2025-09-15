@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 
 export const rootStyles = css({
   display: 'grid',
-  grid: 'auto 1fr',
+  gridTemplateRows: 'auto 1fr',
   gridTemplateAreas: `
   "top-nav top-nav top-nav"
   "side-nav main aside"
