@@ -1,27 +1,20 @@
 import React from 'react';
-import { LayoutContextProvider, useLayoutState } from './LayoutContext';
-import { rootStyles } from './styles';
-import { css } from '@emotion/react';
+import { LayoutContextProvider } from './LayoutContext';
+import { Inline, Stack, xcss } from '@atlaskit/primitives';
+import TopNav from './TopNav';
+import SideNav from './SideNav';
+import Main from './Main';
+import Aside from './Aside';
 
 type RootProps = {
-  children: React.ReactNode;
   defaultTopNavHeight: number;
   defaultSideNavWidth: number;
   defaultSideNavExpanded: boolean;
   defaultAsideWidth: number;
-};
-
-type RootInnerProps = {
-  children: React.ReactNode;
-};
-
-const RootInner: React.FC<RootInnerProps> = ({ children }) => {
-  const state = useLayoutState();
-  const gridColumnStyles = React.useMemo(() => {
-    return css({ gridTemplateColumns: `${state.sideNavWidth + 1}px 1fr ${state.asideWidth}px` });
-  }, [state.sideNavWidth, state.asideWidth]);
-
-  return <div css={[rootStyles, gridColumnStyles]}>{children}</div>;
+  topNavContent: React.ReactNode;
+  sideNavContent: React.ReactNode;
+  mainContent: React.ReactNode;
+  asideContent: React.ReactNode;
 };
 
 const Root: React.FC<RootProps> = (props: RootProps) => {
@@ -32,7 +25,14 @@ const Root: React.FC<RootProps> = (props: RootProps) => {
       defaultSideNavExpanded={props.defaultSideNavExpanded}
       defaultAsideWidth={props.defaultAsideWidth}
     >
-      <RootInner>{props.children}</RootInner>
+      {/* <Stack space="space.0" xcss={xcss({ height: '100vh' })}> */}
+        <TopNav>{props.topNavContent}</TopNav>
+        <Inline space="space.0" alignBlock="start">
+          <SideNav>{props.sideNavContent}</SideNav>
+          <Main>{props.mainContent}</Main>
+          <Aside>{props.asideContent}</Aside>
+        </Inline>
+      {/* </Stack> */}
     </LayoutContextProvider>
   );
 };

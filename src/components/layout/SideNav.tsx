@@ -2,7 +2,7 @@ import React from 'react';
 import { css } from '@emotion/react';
 
 import { useLayoutState } from './LayoutContext';
-import { sideNavHidden, sideNavStyles } from './styles';
+import { sideBarStyles, sideNavHidden, sideNavStyles } from './styles';
 
 type SideNavProps = {
   children: React.ReactNode;
@@ -14,7 +14,7 @@ const SideNav: React.FC<SideNavProps> = (props) => {
     () =>
       css({
         top: state.topNavHeight,
-        height: `calc(100vh - ${state.topNavHeight}px)`,
+        height: `calc(100vh - ${state.topNavHeight + 1}px)`,
       }),
     [state.topNavHeight]
   );
@@ -23,7 +23,7 @@ const SideNav: React.FC<SideNavProps> = (props) => {
   return (
     <nav
       css={[
-        //
+        sideBarStyles,
         sideNavStyles,
         topStyles,
         widthStyles,

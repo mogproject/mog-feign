@@ -2,39 +2,32 @@ import { token } from '@atlaskit/tokens';
 import { css } from '@emotion/react';
 
 export const rootStyles = css({
-  display: 'grid',
-  gridTemplateRows: 'auto 1fr',
-  gridTemplateAreas: `
-  "top-nav top-nav top-nav"
-  "side-nav main aside"
-`,
   height: '100vh',
 });
 
 export const topNavStyles = css({
-  gridArea: 'top-nav',
   position: 'sticky',
   top: 0,
-  left: 0,
-  width: '100%',
   zIndex: 100,
 });
 
 // TODO: Support overlay.
-export const sideNavStyles = css({
-  gridArea: 'side-nav',
-  position: 'fixed',
-  left: 0,
+export const sideBarStyles = css({
+  top: '0',
+  position: 'sticky',
+  minHeight: 0,
+  overflowX: 'hidden',
   overflowY: 'auto',
-
-  // Border
-  borderInlineStart: 'none',
-  borderInlineEnd: `1px solid ${token('color.border')}`,
 
   // Animation
   transition: 'width 0.3s ease',
-  overflowX: 'hidden',
   whiteSpace: 'nowrap',
+});
+
+export const sideNavStyles = css({
+  // Border
+  borderInlineStart: 'none',
+  borderInlineEnd: `1px solid ${token('color.border')}`,
 });
 
 export const sideNavHidden = css({
@@ -42,5 +35,11 @@ export const sideNavHidden = css({
 });
 
 export const mainStyles = css({
-  gridArea: 'main',
+  flex: '1',
+});
+
+export const asideStyles = css({
+  // Border
+  borderInlineStart: `1px solid ${token('color.border')}`,
+  borderInlineEnd: 'none',
 });

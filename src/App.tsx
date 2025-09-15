@@ -6,34 +6,21 @@ import { ContextProvider } from './models/ContextProvider';
 
 import LeftSideMenu from './components/sections/LeftSideMenu';
 import Root from './components/layout/Root';
-import TopNav from './components/layout/TopNav';
-import SideNav from './components/layout/SideNav';
-import Main from './components/layout/Main';
 import MainContent from './components/sections/MainContent';
 
 const App: React.FC = () => {
   return (
     <ContextProvider>
-      <Root defaultTopNavHeight={49} defaultSideNavWidth={200} defaultSideNavExpanded={true} defaultAsideWidth={240}>
-        {/*=====================================================================
-             TOP NAV
-         ====================================================================*/}
-        <TopNav>
-          <Header />
-        </TopNav>
-        {/*=====================================================================
-             SIDE NAV
-         ====================================================================*/}
-        <SideNav>
-          <LeftSideMenu />
-        </SideNav>
-        {/*=====================================================================
-             MAIN PANE
-         ====================================================================*/}
-        <Main>
-          <MainContent />
-        </Main>
-      </Root>
+      <Root
+        defaultTopNavHeight={49}
+        defaultSideNavWidth={200}
+        defaultSideNavExpanded={true}
+        defaultAsideWidth={240}
+        topNavContent={<Header />}
+        sideNavContent={<LeftSideMenu />}
+        mainContent={<MainContent />}
+        asideContent={<div>Aside!</div>}
+      />
     </ContextProvider>
   );
 };
