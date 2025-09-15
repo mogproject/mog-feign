@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React from 'react';
 import invariant from 'tiny-invariant';
 import {
   loadAllFromLocalStorage,
@@ -52,7 +52,7 @@ function appReducer(state: AppState, action: AppAction): AppState {
   return action(state);
 }
 
-export function ContextProvider({ children }: { children: ReactNode }) {
+export function ContextProvider({ children }: { children: React.ReactNode }) {
   // Load from local storage.
   const initialState = loadAllFromLocalStorage();
   const [state, dispatch] = React.useReducer(appReducer, initialState);
