@@ -324,7 +324,7 @@ function DiscordUsers() {
                       placeholder={t('group_placeholder')}
                       formatCreateLabel={(s: string) => tt('create_label', { name: s })}
                       noOptionsMessage={(obj: { inputValue: string }) =>
-                        obj.inputValue === '' ? '' : tt('no_options', { name: obj.inputValue })
+                        obj.inputValue === '' ? null : tt('no_options', { name: obj.inputValue })
                       }
                       options={userGroups.map(createOption)}
                       autoFocus={false}
