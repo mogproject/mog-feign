@@ -15,7 +15,7 @@ const containerStyles = xcss({
 });
 
 const headingStyles = xcss({
-  paddingTop: 'space.200',
+  paddingTop: 'space.300',
 });
 
 const MainContent: React.FC = () => {
@@ -41,7 +41,6 @@ const MainContent: React.FC = () => {
           <li>{t('features.part4')}</li>
         </ul>
       </Box>
-
       {/*--------------------------------------------------------------------
            Settings
        --------------------------------------------------------------------*/}
@@ -52,8 +51,42 @@ const MainContent: React.FC = () => {
       </Box>
       {/* ---- Save / Load ----*/}
       <SaveLoad />
-
+      <Box xcss={headingStyles}>
+        <Heading id="channels" size="medium">
+          {t('settings.discord_voice_channel')}
+        </Heading>
+      </Box>
+      TODO
+      <Box xcss={headingStyles}>
+        <Heading id="users" size="medium">
+          {t('settings.discord_user_management')}
+        </Heading>
+      </Box>
       <DiscordUsers />
+      <Box xcss={headingStyles}>
+        <Heading id="players" size="medium">
+          {t('settings.feign_player_settings')}
+        </Heading>
+      </Box>
+      TODO
+      <Box xcss={headingStyles}>
+        <Heading id="overlay" size="medium">
+          {t('settings.overlay_settings')}
+        </Heading>
+      </Box>
+      TODO
+      <Box xcss={headingStyles}>
+        <Heading id="preview" size="large">
+          {t('preview.preview')}
+        </Heading>
+      </Box>
+      TODO
+      <Box xcss={headingStyles}>
+        <Heading id="obs" size="large">
+          {t('obs.obs_settings')}
+        </Heading>
+      </Box>
+      TODO
     </Box>
   );
 };

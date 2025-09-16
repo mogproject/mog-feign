@@ -6,6 +6,7 @@ import TopNav from './TopNav';
 import SideNav from './SideNav';
 import Main from './Main';
 import Aside from './Aside';
+import { token } from '@atlaskit/tokens';
 
 type RootInnerProps = {
   topNavContent: React.ReactNode;
@@ -21,7 +22,7 @@ const RootInner: React.FC<RootInnerProps> = (props: RootInnerProps) => {
       css({
         html: {
           // Adjust scroll offset.
-          scrollPaddingTop: state.topNavHeight,
+          scrollPaddingTop: `calc(${state.topNavHeight}px + ${token('space.100')})`,
         },
       }),
     [state.topNavHeight]

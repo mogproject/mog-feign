@@ -2,61 +2,47 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Inline, Stack, Text, xcss } from '@atlaskit/primitives';
-import { token } from '@atlaskit/tokens';
 import { LinkButton } from '@atlaskit/button/new';
 
 const containerStyles = xcss({
   padding: 'space.200',
+  height: '100%',
+  backgroundColor: 'color.background.neutral',
 });
 
 const LeftSideMenu: React.FC = () => {
-  const { t: translate } = useTranslation();
+  const { t: translate, i18n } = useTranslation();
   const t = translate as (s: string) => string;
 
-  return (
-    <Stack xcss={containerStyles} alignInline={'start'}>
-      <LinkButton appearance="subtle" href="#">
-        {t('home')}
-      </LinkButton>
-
-      <LinkButton appearance="subtle" href="#features">
-        {t('features.features')}
-      </LinkButton>
-
-      <LinkButton appearance="subtle" href="#settings">
-        {t('settings.settings')}
-      </LinkButton>
-
-      <Inline xcss={xcss({ marginLeft: 'space.200' })}>
-        <LinkButton appearance="subtle" href="#channels">
-          <Text size="small">{t('settings.discord_voice_channel')}</Text>
+  function createLink(label: string, href: string, indented: boolean) {
+    return (
+      <Inline xcss={indented ? xcss({ marginLeft: 'space.200' }) : {}}>
+        <LinkButton appearance="subtle" href={href} shouldFitContainer={true}>
+          <Inline alignInline={'start'}>
+            <Text align="start" size={indented ? 'small' : 'medium'}>
+              {label}
+            </Text>
+          </Inline>
         </LinkButton>
       </Inline>
-      <Inline xcss={xcss({ marginLeft: 'space.200' })}>
-        <LinkButton appearance="subtle" href="#users">
-          <Text size="small">{t('settings.discord_user_management')}</Text>
-        </LinkButton>
-      </Inline>
-      <Inline xcss={xcss({ marginLeft: 'space.200' })}>
-        <LinkButton appearance="subtle" href="#players">
-          <Text size="small">{t('settings.feign_player_settings')}</Text>
-        </LinkButton>
-      </Inline>
-      <Inline xcss={xcss({ marginLeft: 'space.200' })}>
-        <LinkButton appearance="subtle" href="#overlay">
-          <Text size="small">{t('settings.overlay_settings')}</Text>
-        </LinkButton>
-      </Inline>
+    );
+  }
 
-      <LinkButton appearance="subtle" href="#preview">
-        {t('preview.preview')}
-      </LinkButton>
-
-      <LinkButton appearance="subtle" href="#obs">
-        {t('obs.obs_settings')}
-      </LinkButton>
-    </Stack>
-  );
+  return React.useMemo(() => {
+    return (
+      <Stack xcss={containerStyles}>
+        {createLink(t('home'), '#', false)}
+        {createLink(t('features.features'), '#features', false)}
+        {createLink(t('settings.settings'), '#settings', false)}
+        {createLink(t('settings.discord_voice_channel'), '#channels', true)}
+        {createLink(t('settings.discord_user_management'), '#users', true)}
+        {createLink(t('settings.feign_player_settings'), '#players', true)}
+        {createLink(t('settings.overlay_settings'), '#overlay', true)}
+        {createLink(t('preview.preview'), '#preview', false)}
+        {createLink(t('obs.obs_settings'), '#obs', false)}
+      </Stack>
+    );
+  }, [i18n.resolvedLanguage]);
 };
 
 export default LeftSideMenu;

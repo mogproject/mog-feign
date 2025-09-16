@@ -13,7 +13,7 @@ const App: React.FC = () => {
     <ContextProvider>
       <Root
         defaultTopNavHeight={40}
-        defaultSideNavWidth={200}
+        defaultSideNavWidth={232}
         defaultSideNavExpanded={true}
         defaultAsideWidth={240}
         topNavContent={<Header />}
