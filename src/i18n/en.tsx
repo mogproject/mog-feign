@@ -14,6 +14,7 @@ const en = {
   group: 'Group',
   groups: 'Groups',
   action: 'Action',
+  home: 'Home',
 
   app_title: 'mog-feign',
 
