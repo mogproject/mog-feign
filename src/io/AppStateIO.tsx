@@ -47,12 +47,17 @@ const defaultAppState: AppState = {
 //------------------------------------------------------------------------------
 //    Utilities
 //------------------------------------------------------------------------------
-function loadFromLocalStorage<T>(key: string, loader: (obj: any) => T, defaultValue: T): T {
+function loadFromLocalStorage<T>(key: string, loader: (obj: any) => T, defaultValue: T, isJson: boolean): T {
   try {
     const raw = localStorage.getItem(key);
-    invariant(raw);
-    return loader(JSON.parse(raw));
+    invariant(raw !== null);
+    if (isJson) {
+      return loader(JSON.parse(raw));
+    } else {
+      return loader(raw);
+    }
   } catch (err) {
+    console.log(key, err);
     return defaultValue;
   }
 }
@@ -281,27 +286,29 @@ export function saveStreamerSettingsToLocalStorage(s: StreamerSettings) {
 
 //------------------------------------------------------------------------------
 export function loadAllFromLocalStorage(): AppState {
-  const feignPlayers = loadFromLocalStorage(KEY_FEIGN_PLAYERS, loadFeignPlayers, defaultAppState.feignPlayers);
+  const feignPlayers = loadFromLocalStorage(KEY_FEIGN_PLAYERS, loadFeignPlayers, defaultAppState.feignPlayers, true);
   return {
-    channelURL: loadFromLocalStorage(KEY_VOICE_CHANNEL, loadVoiceChannelURL, defaultAppState.channelURL),
-    namedChannels: loadFromLocalStorage(KEY_NAMED_CHANNELS, loadNamedChannels, defaultAppState.namedChannels),
+    channelURL: loadFromLocalStorage(KEY_VOICE_CHANNEL, loadVoiceChannelURL, defaultAppState.channelURL, false),
+    namedChannels: loadFromLocalStorage(KEY_NAMED_CHANNELS, loadNamedChannels, defaultAppState.namedChannels, true),
     namedChannelsTableSettings: loadFromLocalStorage(
       KEY_NAMED_CHANNELS_TABLE,
       loadNamedChannelsTableSettings,
-      defaultAppState.namedChannelsTableSettings
+      defaultAppState.namedChannelsTableSettings,
+      true
     ),
-    discordUsers: loadFromLocalStorage(KEY_DISCORD_USERS, loadDiscordUsers, defaultAppState.discordUsers),
+    discordUsers: loadFromLocalStorage(KEY_DISCORD_USERS, loadDiscordUsers, defaultAppState.discordUsers, true),
     discordUsersTableSettings: loadFromLocalStorage(
       KEY_DISCORD_USERS_TABLE,
       loadDiscordUsersTableSettings,
-      defaultAppState.discordUsersTableSettings
+      defaultAppState.discordUsersTableSettings,
+      true
     ),
     feignPlayers: feignPlayers,
     viewSettings: new ViewSettings(
-      loadFromLocalStorage(KEY_VIEW_FEI, loadFeiSettings, defaultAppState.viewSettings.fei),
-      loadFromLocalStorage(KEY_VIEW_AVATAR, loadAvatarSettings, defaultAppState.viewSettings.avatar),
-      loadFromLocalStorage(KEY_VIEW_USERNAME, loadUsernameSettings, defaultAppState.viewSettings.username),
-      loadFromLocalStorage(KEY_VIEW_STREAMER, loadStreamerSettings, defaultAppState.viewSettings.streamer)
+      loadFromLocalStorage(KEY_VIEW_FEI, loadFeiSettings, defaultAppState.viewSettings.fei, true),
+      loadFromLocalStorage(KEY_VIEW_AVATAR, loadAvatarSettings, defaultAppState.viewSettings.avatar, true),
+      loadFromLocalStorage(KEY_VIEW_USERNAME, loadUsernameSettings, defaultAppState.viewSettings.username, true),
+      loadFromLocalStorage(KEY_VIEW_STREAMER, loadStreamerSettings, defaultAppState.viewSettings.streamer, true)
     ),
     isSpeaking: Array(numberOfActivePlayers(feignPlayers)).fill(false), // reset isSpeaking
   };
