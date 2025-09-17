@@ -82,7 +82,7 @@ const EditableMultiSelect: React.FC<EditableMultiSelectProps> = ({ defaultValue,
             isClearable
             placeholder=""
             formatCreateLabel={(s: string) => t('create_label', { name: s })}
-            noOptionsMessage={(obj: { inputValue: string }) => t('no_options', { name: obj.inputValue })}
+            noOptionsMessage={(obj: { inputValue: string }) => (obj.inputValue === '' ? null : t('no_options', { name: obj.inputValue }))}
             options={options.map(createOption)}
             autoFocus
             openMenuOnFocus

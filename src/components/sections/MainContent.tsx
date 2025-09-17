@@ -5,6 +5,7 @@ import { Box, Text, xcss } from '@atlaskit/primitives';
 import Heading from '@atlaskit/heading';
 import DiscordUsers from './DiscordUsers';
 import SaveLoad from './SaveLoad';
+import DiscordChannels from './DiscordChannels';
 
 const containerStyles = xcss({
   display: 'flex',
@@ -56,7 +57,7 @@ const MainContent: React.FC = () => {
           {t('settings.discord_voice_channel')}
         </Heading>
       </Box>
-      TODO
+      <DiscordChannels />
       <Box xcss={headingStyles}>
         <Heading id="users" size="medium">
           {t('settings.discord_user_management')}
