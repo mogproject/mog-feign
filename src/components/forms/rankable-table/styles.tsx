@@ -4,11 +4,8 @@ import { xcss } from '@atlaskit/primitives';
 import { firstColumnAdditionalPadding } from './constants';
 
 export const scrollableStyles = xcss({
-  minHeight: '360px',
-  maxHeight: '480px',
   overflowY: 'scroll',
   overflowX: 'visible',
-  marginTop: 'space.200',
   paddingLeft: 'space.050', // add space for DropIndicator
 
   border: `1px solid ${token('color.border')}`,

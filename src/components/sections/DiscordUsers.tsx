@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { css } from '@emotion/react';
 
@@ -19,28 +19,15 @@ import Modal, { ModalBody, ModalFooter, ModalHeader, ModalTitle, ModalTransition
 // Note: Importing from '@atlaskit/select' breaks creatable select.
 import CreatableSelect from '@atlaskit/select/CreatableSelect';
 import { createOption } from '../forms/select-helper';
-import RankableTable from '../forms/rankable-table/rankable-table';
+import RankableTable from '../forms/rankable-table/RankableTable';
 import { reorder } from '@atlaskit/pragmatic-drag-and-drop/reorder';
 import { useAppDispatch, useAppState, useUserGroups } from '../../models/ContextProvider';
-
-// const initialUsers: DiscordUser[] = [
-//   {
-//     id: '12345678901234',
-//     name: 'Alice',
-//     groups: ['Admin', 'Beta Tester'],
-//   },
-//   { id: '98765432109876', name: 'Bob', groups: ['Member'] },
-//   { id: '11112222333344', name: 'Charlie', groups: ['Moderator', 'VIP'] },
-//   { id: '11112222333345', name: 'Charlie 1', groups: ['Moderator', 'VIP'] },
-//   { id: '11112222333346', name: 'Charlie 2', groups: [] },
-//   { id: '11112222333347', name: 'Charlie 3', groups: ['Member', 'VIP'] },
-//   { id: '11112222333348', name: 'Charlie 4', groups: ['Member', 'VIP'] },
-// ];
 
 const readViewContainerStyles = xcss({
   display: 'flex',
   font: token('font.body'),
   maxWidth: '100%',
+  marginBlock: 'space.050',
   paddingBlock: 'space.0',
   paddingInline: 'space.075',
   wordBreak: 'break-word',
@@ -53,10 +40,8 @@ const readViewContainerStylesForId = xcss({
 
 const compactTextFieldStyles = css({
   height: '32px',
-  paddingTop: '0',
-  paddingBottom: '0',
-  paddingRight: 'space.050',
-  paddingLeft: 'space.050',
+  paddingBlock: 'space.0',
+  paddingInline: 'space.050',
 });
 
 const compactSelectStyles = {
@@ -74,6 +59,10 @@ const compactSelectStyles = {
     height: '28px',
   }),
 };
+
+const tableStyles = xcss({
+  height: '500px',
+});
 
 function DiscordUsers() {
   const { t: translate } = useTranslation('translation', {
@@ -150,7 +139,7 @@ function DiscordUsers() {
     cells: [
       { key: 'name', content: <Box xcss={xcss({ paddingLeft: 'space.100' })}>{tt('name')}</Box>, isSortable: true },
       { key: 'id', content: <Box xcss={xcss({ paddingLeft: 'space.100' })}>{'Discord ID'}</Box>, isSortable: true },
-      { key: 'groups', content: <Box xcss={xcss({ paddingLeft: 'space.100' })}>{tt('groups')}</Box>, isSortable: true },
+      { key: 'groups', content: tt('groups'), isSortable: true },
       { key: 'action', content: tt('remove'), isSortable: false },
     ],
   };
@@ -272,88 +261,87 @@ function DiscordUsers() {
   };
 
   const newEntryField = (
-    <Fragment>
-      <Form<FormValues>
-        key="discord-user-new"
-        onSubmit={(data, form) => {
-          // console.log('Data:', data);
-          const name = data.name.trim();
-          const id = data.id.trim();
-          const groups = Array.from(new Set(data.groups.map((opt) => opt.label.trim()).filter((s) => s !== '')));
+    <Form<FormValues>
+      key="discord-user-new"
+      onSubmit={(data, form) => {
+        // console.log('Data:', data);
+        const name = data.name.trim();
+        const id = data.id.trim();
+        const groups = Array.from(new Set(data.groups.map((opt) => opt.label.trim()).filter((s) => s !== '')));
 
-          dispatch((prev) => {
-            const newUsers = [...prev.discordUsers, { name: name, id: id, groups: groups }];
-            return { ...prev, discordUsers: newUsers };
-          });
+        dispatch((prev) => {
+          const newUsers = [...prev.discordUsers, { name: name, id: id, groups: groups }];
+          return { ...prev, discordUsers: newUsers };
+        });
 
-          form.reset(); // clear all fields
-        }}
-      >
-        {({ formProps }) => (
-          <form {...formProps}>
-            <Inline space="space.100" alignInline="center" alignBlock="start" shouldWrap>
-              {/* name */}
-              <Field<string> name="name" isRequired validate={(value) => validateName(value || '', -1, false)} defaultValue="">
-                {({ fieldProps, error }) => (
-                  <Box xcss={xcss({ width: '144px' })}>
-                    <TextField {...fieldProps} css={compactTextFieldStyles} placeholder={t('name_placeholder')} />
-                    <MessageWrapper>{error && <ErrorMessage>{error}</ErrorMessage>}</MessageWrapper>
-                  </Box>
+        form.reset(); // clear all fields
+      }}
+    >
+      {({ formProps }) => (
+        <form {...formProps}>
+          <Inline space="space.100" alignInline="center" alignBlock="start" shouldWrap>
+            {/* name */}
+            <Field<string> name="name" isRequired validate={(value) => validateName(value || '', -1, false)} defaultValue="">
+              {({ fieldProps, error }) => (
+                <Box xcss={xcss({ width: '144px' })}>
+                  <TextField {...fieldProps} css={compactTextFieldStyles} placeholder={t('name_placeholder')} />
+                  <MessageWrapper>{error && <ErrorMessage>{error}</ErrorMessage>}</MessageWrapper>
+                </Box>
+              )}
+            </Field>
+
+            {/* ID */}
+            <Field<string> name="id" isRequired validate={(value) => validateId(value || '', -1, false)} defaultValue="">
+              {({ fieldProps, error }) => (
+                <Box xcss={xcss({ width: '144px' })}>
+                  <TextField {...fieldProps} css={compactTextFieldStyles} placeholder={t('id_placeholder')} />
+                  <MessageWrapper>{error && <ErrorMessage>{error}</ErrorMessage>}</MessageWrapper>
+                </Box>
+              )}
+            </Field>
+
+            {/* groups */}
+            <Box xcss={xcss({ flex: 1 })}>
+              <Field<ValueType<OptionType, true>> name="groups" defaultValue={[]}>
+                {({ fieldProps }) => (
+                  <CreatableSelect
+                    {...fieldProps}
+                    styles={compactSelectStyles}
+                    isMulti
+                    isClearable
+                    placeholder={t('group_placeholder')}
+                    formatCreateLabel={(s: string) => tt('create_label', { name: s })}
+                    noOptionsMessage={(obj: { inputValue: string }) =>
+                      obj.inputValue === '' ? null : tt('no_options', { name: obj.inputValue })
+                    }
+                    options={userGroups.map(createOption)}
+                    autoFocus={false}
+                    openMenuOnFocus={false}
+                  />
                 )}
               </Field>
+            </Box>
 
-              {/* ID */}
-              <Field<string> name="id" isRequired validate={(value) => validateId(value || '', -1, false)} defaultValue="">
-                {({ fieldProps, error }) => (
-                  <Box xcss={xcss({ width: '144px' })}>
-                    <TextField {...fieldProps} css={compactTextFieldStyles} placeholder={t('id_placeholder')} />
-                    <MessageWrapper>{error && <ErrorMessage>{error}</ErrorMessage>}</MessageWrapper>
-                  </Box>
-                )}
-              </Field>
-
-              {/* groups */}
-              <Box xcss={xcss({ flex: 1 })}>
-                <Field<ValueType<OptionType, true>> name="groups" defaultValue={[]}>
-                  {({ fieldProps }) => (
-                    <CreatableSelect
-                      {...fieldProps}
-                      styles={compactSelectStyles}
-                      isMulti
-                      isClearable
-                      placeholder={t('group_placeholder')}
-                      formatCreateLabel={(s: string) => tt('create_label', { name: s })}
-                      noOptionsMessage={(obj: { inputValue: string }) =>
-                        obj.inputValue === '' ? null : tt('no_options', { name: obj.inputValue })
-                      }
-                      options={userGroups.map(createOption)}
-                      autoFocus={false}
-                      openMenuOnFocus={false}
-                    />
-                  )}
-                </Field>
-              </Box>
-
-              {/* add button */}
-              <Box xcss={xcss({ marginTop: 'space.100' })}>
-                <Button type="submit" appearance="primary" spacing="default">
-                  {tt('add')}
-                </Button>
-              </Box>
-            </Inline>
-          </form>
-        )}
-      </Form>
-    </Fragment>
+            {/* add button */}
+            <Box xcss={xcss({ marginTop: 'space.100' })}>
+              <Button type="submit" appearance="primary" spacing="default">
+                {tt('add')}
+              </Button>
+            </Box>
+          </Inline>
+        </form>
+      )}
+    </Form>
   );
 
   //----------------------------------------------------------------------------
   //    Output
   //----------------------------------------------------------------------------
   return (
-    <Box xcss={xcss({ paddingTop: 'space.200' })}>
-      <p>{t('description')}</p>
+    <Box>
+      <p css={css({ padding: '8px 0' })}>{t('description')}</p>
       <RankableTable
+        xcss={tableStyles}
         head={head}
         rows={rows}
         onRankEnd={(sourceIndex, destinationIndex) => {

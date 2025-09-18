@@ -2,11 +2,11 @@ import React from 'react';
 import { css } from '@emotion/react';
 
 import Textfield from '@atlaskit/textfield';
-import { Inline, Text } from '@atlaskit/primitives';
+import { Inline } from '@atlaskit/primitives';
 import { token } from '@atlaskit/tokens';
 import StatusSuccessIcon from '@atlaskit/icon/core/status-success';
 import StatusErrorIcon from '@atlaskit/icon/core/status-error';
-import InlineDialog from '@atlaskit/inline-dialog';
+import Popup from '@atlaskit/popup';
 
 const labelStyles = css({
   padding: '5px 8px',
@@ -22,6 +22,13 @@ const suffixStyles = css({
   marginLeft: '8px',
 });
 
+const feedbackStyles = css({
+  color: token('color.text.inverse'),
+  backgroundColor: token('color.background.accent.red.bolder'),
+  borderRadius: '4px',
+  padding: '4px 8px',
+});
+
 type LabeledTextFieldProps = {
   id: string;
   label: string;
@@ -32,7 +39,8 @@ type LabeledTextFieldProps = {
   validate: (s: string) => boolean;
   placeholder: string;
   feedback: string;
-  fontSize?: number;
+  // fontSize?: number;
+  showStatus: boolean;
 };
 
 const LabeledTextField: React.FC<LabeledTextFieldProps> = (props) => {
@@ -43,14 +51,6 @@ const LabeledTextField: React.FC<LabeledTextFieldProps> = (props) => {
   const textFieldStyles = css(textFieldStylesInner);
   const textFieldClass = `css-${textFieldStyles.name}`;
 
-  const feedbackStyles = css({
-    margin: '-16px -24px',
-    color: token('color.text.inverse'),
-    backgroundColor: token('color.background.accent.red.bolder'),
-    borderRadius: '4px',
-    padding: '18px 24px',
-  });
-
   const validIcon = <StatusSuccessIcon color={token('color.icon.success')} />;
   const invalidIcon = <StatusErrorIcon color={token('color.icon.danger')} />;
 
@@ -58,48 +58,55 @@ const LabeledTextField: React.FC<LabeledTextFieldProps> = (props) => {
   const isValid = props.validate(props.value);
   const isInvalid = !isEmpty && !isValid;
 
-  return (
-    <InlineDialog
-      //------------------------------------------------------------------------
-      //    Feedback
-      //------------------------------------------------------------------------
-      content={<span css={feedbackStyles}>{props.feedback}</span>}
-      isOpen={isInvalid}
-      placement="bottom-start"
-    >
-      <Inline alignBlock="center">
-        {/*-----------------------------------------------------------------------
-            Label
-          ----------------------------------------------------------------------*/}
-        <span css={[labelStyles]}>{props.label}</span>
-        {/*-----------------------------------------------------------------------
-            Input
-          ----------------------------------------------------------------------*/}
-        <span css={css({ [`.${textFieldClass}`]: textFieldStylesInner })}>
-          <Textfield
-            id={props.id}
-            isCompact
-            // We need to define className instead of css for the outer div.
-            className={textFieldClass}
-            placeholder={props.placeholder}
-            // Styling the inner input.
-            // style={{ fontSize: props.fontSize }}
-            value={props.value}
-            isInvalid={isInvalid}
-            onChange={(e) => {
-              props.setValue((e.target as HTMLInputElement).value);
-            }}
-          />
-        </span>
-        {/*-----------------------------------------------------------------------
-            Status Icon
-          ----------------------------------------------------------------------*/}
+  const mainContent = (triggerProps: any) => (
+    <Inline {...triggerProps} alignBlock="center">
+      {/*-----------------------------------------------------------------------
+          Label
+        ----------------------------------------------------------------------*/}
+      <span css={[labelStyles]}>{props.label}</span>
+      {/*-----------------------------------------------------------------------
+          Input
+        ----------------------------------------------------------------------*/}
+      <span css={css({ [`.${textFieldClass}`]: textFieldStylesInner })}>
+        <Textfield
+          id={props.id}
+          isCompact
+          // We need to define className instead of css for the outer div.
+          className={textFieldClass}
+          placeholder={props.placeholder}
+          // Styling the inner input.
+          // style={{ fontSize: props.fontSize }}
+          value={props.value}
+          isInvalid={isInvalid}
+          onChange={(e) => {
+            props.setValue((e.target as HTMLInputElement).value);
+          }}
+        />
+      </span>
+      {/*-----------------------------------------------------------------------
+          Status Icon
+        ----------------------------------------------------------------------*/}
+      {props.showStatus && (
         <span css={suffixStyles}>
           {isValid && validIcon}
           {isInvalid && invalidIcon}
         </span>
-      </Inline>
-    </InlineDialog>
+      )}
+    </Inline>
+  );
+
+  return (
+    //------------------------------------------------------------------------
+    //    Feedback
+    //------------------------------------------------------------------------
+    <Popup
+      shouldRenderToParent
+      autoFocus={false}
+      placement={'bottom-start'}
+      isOpen={isInvalid}
+      content={() => <div css={feedbackStyles}>{props.feedback}</div>}
+      trigger={mainContent}
+    />
   );
 };
 

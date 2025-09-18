@@ -4,7 +4,7 @@ import invariant from 'tiny-invariant';
 import { scrollableStyles, tableHeaderStyles, tableStyles } from './styles';
 import { HeadType, ReorderFunction, RowType, SortOrderType } from './types';
 import Row from './row';
-import { Box } from '@atlaskit/primitives';
+import { Box, XCSS, xcss } from '@atlaskit/primitives';
 import TableHeader from './table-header';
 import { getReorderDestinationIndex } from '@atlaskit/pragmatic-drag-and-drop-hitbox/util/get-reorder-destination-index';
 import { TableContext } from './table-context';
@@ -43,6 +43,8 @@ interface RankableTableProps {
   sortKey: string | null;
   sortOrder: SortOrderType | null;
   onSort: (sortKey: string | null, sortOrder: SortOrderType | null) => void;
+  /** Styles applied to the scrollable div. */
+  xcss?: XCSS;
 }
 
 //------------------------------------------------------------------------------
@@ -151,12 +153,10 @@ const RankableTable: React.FC<RankableTableProps> = (props) => {
       const akey = a.cells[sortColumnIndex]?.key;
       const bkey = b.cells[sortColumnIndex]?.key;
 
-      // undefined は常に最後に回す
       if (akey === undefined && bkey === undefined) return 0;
       if (akey === undefined) return 1;
       if (bkey === undefined) return -1;
 
-      // 数値の場合は数値として比較、それ以外は文字列として比較
       const aValue = typeof akey === 'number' ? akey : String(akey);
       const bValue = typeof bkey === 'number' ? bkey : String(bkey);
 
@@ -182,7 +182,7 @@ const RankableTable: React.FC<RankableTableProps> = (props) => {
 
   return (
     <TableContext.Provider value={contextValue}>
-      <Box ref={scrollableRef} xcss={scrollableStyles}>
+      <Box ref={scrollableRef} xcss={[scrollableStyles, props.xcss]}>
         <table ref={tableRef} css={tableStyles}>
           <Box as="thead" xcss={tableHeaderStyles}>
             <tr>
@@ -200,7 +200,7 @@ const RankableTable: React.FC<RankableTableProps> = (props) => {
           </Box>
           <tbody ref={tbodyRef}>
             {sortedRows.map((row, rowIndex) => (
-              <Row key={rowIndex} cells={row.cells} rowIndex={rowIndex} />
+              <Row key={rowIndex} rowIndex={rowIndex} {...row}/>
             ))}
           </tbody>
         </table>
