@@ -27,6 +27,7 @@ const DiscordChannels: React.FC = () => {
         placeholder={t('placeholder')}
         id="discord-channel-url"
         feedback={t('feedback')}
+        showStatus
       />
     </Stack>
   );
