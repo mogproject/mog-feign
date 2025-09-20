@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 // Atlassian Design System
 import { Box, Inline, Stack, Text, xcss } from '@atlaskit/primitives';
 import { token } from '@atlaskit/tokens';
-import Form, { ErrorMessage, Field, MessageWrapper } from '@atlaskit/form';
+import Form, { ErrorMessage, Field, Label, MessageWrapper } from '@atlaskit/form';
 import Button, { IconButton } from '@atlaskit/button/new';
 import TextField from '@atlaskit/textfield';
 import Modal, { ModalBody, ModalFooter, ModalHeader, ModalTitle, ModalTransition } from '@atlaskit/modal-dialog';
@@ -48,11 +48,11 @@ const readViewReadonlyStyles = xcss({
 
 const newEntryStyles = xcss({
   paddingTop: 'space.025',
-  height: '48px',
+  height: '60px',
 });
 
 const tableStyles = xcss({
-  marginTop: 'space.050',
+  marginTop: 'space.0',
   height: '198px',
 });
 
@@ -166,7 +166,6 @@ const DiscordChannels: React.FC = () => {
     ],
   };
   const rows: RowType[] = namedChannels.map((channel, index) => ({
-    key: index.toString(),
     cells: [
       //------------------------------------------------------------------------
       //    Name
@@ -301,13 +300,12 @@ const DiscordChannels: React.FC = () => {
       />
       <Inline alignBlock="end" spread="space-between">
         <Inline alignBlock="end">
-          <Text size="small" weight="bold">
-            {t('named_channels')}
-          </Text>
+          <Label htmlFor="named-channels-table">{t('named_channels')}</Label>
         </Inline>
         <Inline alignInline="end">{newEntryField}</Inline>
       </Inline>
       <RankableTable
+        id="named-channels-table"
         xcss={tableStyles}
         head={head}
         rows={rows}

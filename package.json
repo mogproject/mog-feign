@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "@atlaskit/analytics-next": "latest",
+    "@atlaskit/analytics-next": "^11.1.1",
     "@atlaskit/app-provider": "latest",
     "@atlaskit/avatar": "25.1.9",
     "@atlaskit/badge": "18.1.4",
@@ -15,6 +15,7 @@
     "@atlaskit/form": "^12.2.1",
     "@atlaskit/heading": "^5.2.7",
     "@atlaskit/icon-lab": "^5.7.1",
+    "@atlaskit/image": "^3.0.2",
     "@atlaskit/inline-edit": "^15.3.5",
     "@atlaskit/link": "^3.2.5",
     "@atlaskit/lozenge": "13.0.5",
