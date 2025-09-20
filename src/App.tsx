@@ -1,5 +1,7 @@
 import React from 'react';
 
+import './styles/discord.css';
+
 import Header from './components/sections/Header';
 
 import { ContextProvider } from './models/ContextProvider';

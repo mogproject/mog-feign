@@ -23,6 +23,9 @@ const RootInner: React.FC<RootInnerProps> = (props: RootInnerProps) => {
         html: {
           // Adjust scroll offset.
           scrollPaddingTop: `calc(${state.topNavHeight}px + ${token('space.100')})`,
+
+          // Scroll behavior.
+          scrollBehavior: 'smooth',
         },
       }),
     [state.topNavHeight]

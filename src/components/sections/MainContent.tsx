@@ -7,6 +7,7 @@ import DiscordUsers from './DiscordUsers';
 import SaveLoad from './SaveLoad';
 import DiscordChannels from './DiscordChannels';
 import FeignPlayers from './FeignPlayers';
+import Preview from './Preview';
 
 const containerStyles = xcss({
   display: 'flex',
@@ -82,13 +83,15 @@ const MainContent: React.FC = () => {
           {t('preview.preview')}
         </Heading>
       </Box>
-      TODO
+      <Preview />
       <Box xcss={headingStyles}>
         <Heading id="obs" size="large">
           {t('obs.obs_settings')}
         </Heading>
       </Box>
       TODO
+      <hr />
+      Footer
     </Box>
   );
 };

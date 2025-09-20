@@ -64,6 +64,11 @@ const tableStyles = xcss({
   height: '500px',
 });
 
+function cleanId(id: string): string {
+  // Remove leading zeros.
+  return id.trim().replace(/^0+(?!$)/, '');
+}
+
 function DiscordUsers() {
   const { t: translate } = useTranslation('translation', {
     keyPrefix: 'settings.discord',
@@ -121,6 +126,7 @@ function DiscordUsers() {
   };
 
   const validateId = (editId: string, index: number, checkEmpty: boolean) => {
+    editId = cleanId(editId);
     if (!checkEmpty && editId === '') {
       return undefined;
     } else if (editId === '') {
@@ -172,7 +178,7 @@ function DiscordUsers() {
             defaultValue={user.id}
             readView={() => <Box xcss={[readViewContainerStyles, readViewContainerStylesForId]}>{user.id}</Box>}
             validate={(id) => validateId(id, index, true)}
-            onConfirm={(value) => setEditValue(index, 'id', value)}
+            onConfirm={(value) => setEditValue(index, 'id', cleanId(value))}
             keyPrefix={`table-id-${index}`}
           />
         ),
@@ -265,7 +271,7 @@ function DiscordUsers() {
       onSubmit={(data, form) => {
         // console.log('Data:', data);
         const name = data.name.trim();
-        const id = data.id.trim();
+        const id = cleanId(data.id);
         const groups = Array.from(new Set(data.groups.map((opt) => opt.label.trim()).filter((s) => s !== '')));
 
         dispatch((prev) => {
