@@ -1,0 +1,61 @@
+:root {
+  --brand: #5865f2;
+  --brand-dark: #4957f1;
+  --grey-1: #99aab5;
+  --grey-3: #737f8d;
+  --grey-6: #4f545c;
+  --guilds-grey: #1e2124;
+  --status-grey: #604f56;
+  --status-green: #3ba53b;
+}
+
+.discord_preview {
+  font-family: var(--font-primary), sans-serif;
+  background-color: transparent;
+  margin: 0;
+}
+
+/* Modify fonts as we cannot use gg sans. */
+[class*="voiceContainer"] {
+  /* font-family: gg sans; */
+  /* font-weight: 600; */
+  font-family: 'gg sans', 'Hiragino Sans', 'ヒラギノ角ゴ ProN W3', 'Hiragino Kaku Gothic ProN', メイリオ, Meiryo,
+  Osaka, 'MS PGothic', 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: 800;
+  font-size: 16px;
+  line-height: 19px;
+  color: white;
+}
+
+[class*="voiceStates__"] {
+  list-style-type: none;
+  padding-left: 15px;
+}
+
+[class*="voiceState__"] {
+  height: 50px;
+  margin-bottom: 8px;
+}
+
+[class*="Voice_avatar"] {
+  height: 50px;
+  width: 50px;
+  border: 3px solid transparent;
+  border-radius: 50%;
+  float: left;
+  margin-right: 8px;
+}
+
+[class*="Voice_avatarSpeaking"] {
+  border-color: var(--status-green);
+}
+
+[class*="Voice_user"] {
+  padding-top: 18px;
+}
+
+[class*="Voice_name"] {
+  background-color: var(--guilds-grey);
+  border-radius: 3px;
+  padding: 4px 6px;
+}
