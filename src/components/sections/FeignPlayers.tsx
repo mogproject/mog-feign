@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import invariant from 'tiny-invariant';
 
-import { Stack, Text, xcss } from '@atlaskit/primitives';
+import { Inline, Stack, Text, xcss } from '@atlaskit/primitives';
 import { css } from '@emotion/react';
 import { useAppDispatch, useAppState, useUserGroups } from '../../models/ContextProvider';
 import { FEI_COLORS, NUMBER_OF_FEI_COLORS } from '../../models/app-context';
@@ -49,6 +49,24 @@ const selectedStyles = {
   }),
 };
 
+const labelStyles = css({
+  padding: '5px 8px',
+  backgroundColor: token('color.background.input.hovered'),
+  borderRadius: '3px 0 0 3px',
+  borderWidth: '1px',
+  borderColor: token('color.border.accent.gray'),
+  borderStyle: 'solid',
+  borderRight: 'none',
+});
+
+const groupSelectStyles = {
+  control: (base: any) => ({
+    ...base,
+    borderRadius: `0 3px 3px 0`,
+    minWidth: '240px',
+  }),
+};
+
 const FeignPlayers: React.FC = () => {
   const { t: translate } = useTranslation('translation', { keyPrefix: 'settings.player' });
   const t = translate as (s: string, o?: Record<string, string | boolean>) => string;
@@ -80,22 +98,20 @@ const FeignPlayers: React.FC = () => {
   }
 
   const groupSelection = (
-    <>
-      <Select
-        spacing="compact"
-        // css={css({ marginTop: '-56px', width: '100%' })}
-        inputId={`feign-player-group`}
-        options={groups.map((v) => ({ label: v, value: v }))}
-        placeholder={t('unselected')}
-        isClearable={true}
-        clearControlLabel={t('reset')}
-        noOptionsMessage={() => t('no_groups')}
-        value={state.feignPlayers.group === '' ? null : { label: state.feignPlayers.group, value: state.feignPlayers.group }}
-        onChange={(e: { label: string; value: string }) => {
-          dispatch((prev) => ({ ...prev, feignPlayers: { ...prev.feignPlayers, group: e === null ? '' : e.value } }));
-        }}
-      />
-    </>
+    <Select
+      spacing="compact"
+      styles={groupSelectStyles}
+      inputId={`feign-player-group`}
+      options={groups.map((v) => ({ label: v, value: v }))}
+      placeholder={t('unselected')}
+      isClearable={true}
+      clearControlLabel={t('reset')}
+      noOptionsMessage={() => t('no_groups')}
+      value={state.feignPlayers.group === '' ? null : { label: state.feignPlayers.group, value: state.feignPlayers.group }}
+      onChange={(e: { label: string; value: string }) => {
+        dispatch((prev) => ({ ...prev, feignPlayers: { ...prev.feignPlayers, group: e === null ? '' : e.value } }));
+      }}
+    />
   );
 
   const FeignPlayer = (color: number) => {
@@ -125,7 +141,10 @@ const FeignPlayers: React.FC = () => {
 
   return (
     <Stack>
-      {groupSelection}
+      <Inline alignBlock="center" xcss={xcss({ marginBlock: 'space.200' })}>
+        <span css={[labelStyles]}>{t('filter_by_group')}</span>
+        {groupSelection}
+      </Inline>
       <div css={gridStyles}>
         {Array(13)
           .fill(0)
