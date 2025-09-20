@@ -42,6 +42,13 @@ const unselectedStyles = {
   }),
 };
 
+const selectedStyles = {
+  control: (base: any) => ({
+    ...base,
+    opacity: 0.9,
+  }),
+};
+
 const FeignPlayers: React.FC = () => {
   const { t: translate } = useTranslation('translation', { keyPrefix: 'settings.player' });
   const t = translate as (s: string, o?: Record<string, string | boolean>) => string;
@@ -102,13 +109,13 @@ const FeignPlayers: React.FC = () => {
         <Select
           spacing="compact"
           css={css({ marginTop: '-56px', width: '100%' })}
-          styles={selected || unselectedStyles}
+          styles={selected ? selectedStyles : unselectedStyles}
           inputId={`feign-player-color-${color}`}
           isClearable={true}
           clearControlLabel={t('reset')}
           value={selected}
           options={players}
-          placeholder={t('unselected')}
+          placeholder={''}
           noOptionsMessage={() => t('no_options')}
           onChange={(e: { label: string; value: string }) => handleUpdate(color, e === null ? '' : e.value)}
         />
