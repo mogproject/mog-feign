@@ -6,6 +6,7 @@ import Heading from '@atlaskit/heading';
 import DiscordUsers from './DiscordUsers';
 import SaveLoad from './SaveLoad';
 import DiscordChannels from './DiscordChannels';
+import FeignPlayers from './FeignPlayers';
 
 const containerStyles = xcss({
   display: 'flex',
@@ -69,7 +70,7 @@ const MainContent: React.FC = () => {
           {t('settings.feign_player_settings')}
         </Heading>
       </Box>
-      TODO
+      <FeignPlayers />
       <Box xcss={headingStyles}>
         <Heading id="overlay" size="medium">
           {t('settings.overlay_settings')}

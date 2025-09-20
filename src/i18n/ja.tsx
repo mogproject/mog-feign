@@ -119,6 +119,13 @@ const ja = {
       confirm_removal: '以下のユーザーを削除します。よろしいですか?',
     },
     feign_player_settings: 'Feign プレイヤー設定',
+    player: {
+      filter_by_group: 'グループで絞り込み',
+      no_groups: 'グループがありません',
+      unselected: '(未選択)',
+      reset: 'リセット',
+      no_options: 'ユーザーを追加してください',
+    },
     overlay_settings: 'オーバーレイ詳細設定',
     overlay: {
       initialize: '初期設定に戻す',

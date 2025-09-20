@@ -13,6 +13,7 @@ import {
   saveUsernameSettingsToLocalStorage,
   saveVoiceChannelURLToLocalStorage,
 } from '../io/AppStateIO';
+import { NUMBER_OF_FEI_COLORS } from './app-context';
 import AppState from './AppState';
 import { DiscordUser } from './detail/DiscordUser';
 
@@ -72,6 +73,40 @@ export function ContextProvider({ children }: { children: React.ReactNode }) {
 
   React.useEffect(() => {
     saveDiscordUsersToLocalStorage(state.discordUsers);
+    const groups = findUserGroups(state.discordUsers);
+
+    // Clean feign players
+    dispatch((prev) => {
+      const newGroup = groups.includes(prev.feignPlayers.group) ? prev.feignPlayers.group : '';
+      const newPlayers = new Map<string, string[]>(
+        Array.from(prev.feignPlayers.players).flatMap(([k, v]) => {
+          if (k !== '' && !groups.includes(k)) {
+            return []; // group no longer exists
+          } else {
+            // Make sure that each player exists and belongs to the specific group.
+            return [
+              [
+                k,
+                v.map((id) => {
+                  if (id === '') {
+                    return ''; // unselected
+                  }
+
+                  const user = state.discordUsers.find((user) => user.id === id && (k === '' || user.groups.includes(k)));
+                  return user === undefined ? '' : id;
+                }),
+              ],
+            ];
+          }
+        })
+      );
+      groups.forEach((group) => {
+        if (!newPlayers.has(group)) {
+          newPlayers.set(group, Array(NUMBER_OF_FEI_COLORS).fill(''));
+        }
+      });
+      return { ...prev, feignPlayers: { group: newGroup, players: newPlayers } };
+    });
   }, [state.discordUsers]);
 
   React.useEffect(() => {

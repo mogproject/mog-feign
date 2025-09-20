@@ -4,7 +4,7 @@ import invariant from 'tiny-invariant';
 import { scrollableStyles, tableHeaderStyles, tableStyles } from './styles';
 import { HeadType, ReorderFunction, RowType, SortOrderType } from './types';
 import Row from './row';
-import { Box, XCSS, xcss } from '@atlaskit/primitives';
+import { Box, XCSS } from '@atlaskit/primitives';
 import TableHeader from './table-header';
 import { getReorderDestinationIndex } from '@atlaskit/pragmatic-drag-and-drop-hitbox/util/get-reorder-destination-index';
 import { TableContext } from './table-context';
@@ -45,6 +45,7 @@ interface RankableTableProps {
   onSort: (sortKey: string | null, sortOrder: SortOrderType | null) => void;
   /** Styles applied to the scrollable div. */
   xcss?: XCSS;
+  id?: string;
 }
 
 //------------------------------------------------------------------------------
@@ -183,7 +184,7 @@ const RankableTable: React.FC<RankableTableProps> = (props) => {
   return (
     <TableContext.Provider value={contextValue}>
       <Box ref={scrollableRef} xcss={[scrollableStyles, props.xcss]}>
-        <table ref={tableRef} css={tableStyles}>
+        <table id={props.id} ref={tableRef} css={tableStyles}>
           <Box as="thead" xcss={tableHeaderStyles}>
             <tr>
               {props.head.cells.map((cell, colIndex) => (
@@ -200,7 +201,7 @@ const RankableTable: React.FC<RankableTableProps> = (props) => {
           </Box>
           <tbody ref={tbodyRef}>
             {sortedRows.map((row, rowIndex) => (
-              <Row key={rowIndex} rowIndex={rowIndex} {...row}/>
+              <Row key={rowIndex} rowIndex={rowIndex} {...row} />
             ))}
           </tbody>
         </table>

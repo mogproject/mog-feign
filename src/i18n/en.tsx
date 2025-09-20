@@ -119,6 +119,13 @@ const en = {
       confirm_removal: 'Do you want to remove the following user?',
     },
     feign_player_settings: 'Feign Players',
+    player: {
+      filter_by_group: 'Filter by group',
+      no_groups: 'No groups',
+      unselected: '(Unselected)',
+      reset: 'Reset',
+      no_options: 'Add Discord users first',
+    },
     overlay_settings: 'Overlay Settings',
     overlay: {
       initialize: 'Initialize',

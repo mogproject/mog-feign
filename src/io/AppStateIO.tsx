@@ -169,7 +169,7 @@ function loadFeignPlayers(obj: any): FeignPlayers {
       Object.values(obj.players).every((v) => {
         invariant(Array.isArray(v));
         invariant(v.every((s: any) => typeof s === 'string'));
-        invariant(obj.length === NUMBER_OF_FEI_COLORS);
+        invariant(v.length === NUMBER_OF_FEI_COLORS);
       });
       return {
         group: obj.group,

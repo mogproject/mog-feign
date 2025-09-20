@@ -145,7 +145,6 @@ function DiscordUsers() {
   };
 
   const rows: RowType[] = discordUsers.map((user, index) => ({
-    key: index.toString(),
     cells: [
       //------------------------------------------------------------------------
       //    Name
