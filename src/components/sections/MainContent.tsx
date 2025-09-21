@@ -8,6 +8,7 @@ import SaveLoad from './SaveLoad';
 import DiscordChannels from './DiscordChannels';
 import FeignPlayers from './FeignPlayers';
 import Preview from './Preview';
+import ViewSettingsPane from './ViewSettingsPane';
 
 const containerStyles = xcss({
   display: 'flex',
@@ -19,6 +20,8 @@ const containerStyles = xcss({
 
 const headingStyles = xcss({
   paddingTop: 'space.300',
+  marginTop: 'space.500',
+  marginBottom: 'space.200',
 });
 
 const MainContent: React.FC = () => {
@@ -77,7 +80,7 @@ const MainContent: React.FC = () => {
           {t('settings.overlay_settings')}
         </Heading>
       </Box>
-      TODO
+      <ViewSettingsPane />
       <Box xcss={headingStyles}>
         <Heading id="preview" size="large">
           {t('preview.preview')}
