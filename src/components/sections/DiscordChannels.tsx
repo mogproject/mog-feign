@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 // Atlassian Design System
 import { Box, Inline, Stack, Text, xcss } from '@atlaskit/primitives';
 import { token } from '@atlaskit/tokens';
-import Form, { ErrorMessage, Field, Label, MessageWrapper } from '@atlaskit/form';
+import Form, { ErrorMessage, Field, MessageWrapper } from '@atlaskit/form';
 import Button, { IconButton } from '@atlaskit/button/new';
 import TextField from '@atlaskit/textfield';
 import Modal, { ModalBody, ModalFooter, ModalHeader, ModalTitle, ModalTransition } from '@atlaskit/modal-dialog';
@@ -137,7 +137,7 @@ const DiscordChannels: React.FC = () => {
             <Field<string> name="name" isRequired defaultValue="" validate={(s) => validateName((s || '').trim(), -1)}>
               {({ fieldProps, error }) => (
                 <Box xcss={xcss({ width: '180px', marginTop: 'space.negative.100' })}>
-                  <TextField {...fieldProps} css={compactTextFieldStyles} placeholder={t('register_placeholder')} />
+                  <TextField {...fieldProps} css={compactTextFieldStyles} placeholder={t('register_placeholder')} autoComplete='off' />
                   <MessageWrapper>{error && <ErrorMessage>{error}</ErrorMessage>}</MessageWrapper>
                 </Box>
               )}
@@ -300,7 +300,7 @@ const DiscordChannels: React.FC = () => {
       />
       <Inline alignBlock="end" spread="space-between">
         <Inline alignBlock="end">
-          <Label htmlFor="named-channels-table">{t('named_channels')}</Label>
+          <Text size="small">{t('named_channels')}</Text>
         </Inline>
         <Inline alignInline="end">{newEntryField}</Inline>
       </Inline>

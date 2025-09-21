@@ -23,3 +23,6 @@ yarn-error.log*
 # vite.js
 /.vite
 
+# build dir
+/dist
+

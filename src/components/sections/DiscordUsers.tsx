@@ -289,7 +289,7 @@ function DiscordUsers() {
             <Field<string> name="name" isRequired validate={(value) => validateName(value || '', -1, false)} defaultValue="">
               {({ fieldProps, error }) => (
                 <Box xcss={xcss({ width: '144px' })}>
-                  <TextField {...fieldProps} css={compactTextFieldStyles} placeholder={t('name_placeholder')} />
+                  <TextField {...fieldProps} css={compactTextFieldStyles} placeholder={t('name_placeholder')} autoComplete="off" />
                   <MessageWrapper>{error && <ErrorMessage>{error}</ErrorMessage>}</MessageWrapper>
                 </Box>
               )}
