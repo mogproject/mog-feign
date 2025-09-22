@@ -9,6 +9,8 @@ import DiscordChannels from './DiscordChannels';
 import FeignPlayers from './FeignPlayers';
 import Preview from './Preview';
 import ViewSettingsPane from './ViewSettingsPane';
+import OBSSettings from './OBSSettings';
+import Footer from './Footer';
 
 const containerStyles = xcss({
   display: 'flex',
@@ -92,9 +94,9 @@ const MainContent: React.FC = () => {
           {t('obs.obs_settings')}
         </Heading>
       </Box>
-      TODO
+      <OBSSettings />
       <hr />
-      Footer
+      <Footer />
     </Box>
   );
 };

@@ -7,9 +7,9 @@ import { Inline, Stack, Text, xcss } from '@atlaskit/primitives';
 import { HelperMessage, ValidMessage, ErrorMessage, MessageWrapper } from '@atlaskit/form';
 import Modal, { ModalBody, ModalFooter, ModalHeader, ModalTitle, ModalTransition } from '@atlaskit/modal-dialog';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faDownload, faUpload } from '@fortawesome/free-solid-svg-icons';
 import ChevronDownIcon from '@atlaskit/icon/core/chevron-down';
+import DownloadIcon from '@atlaskit/icon/core/download';
+import UploadIcon from '@atlaskit/icon/core/upload';
 
 import FileLoader, { FileLoaderMessage } from '../../io/FileLoader';
 import FileSaver from '../../io/FileSaver';
@@ -87,7 +87,7 @@ const SaveButton: React.FC = () => {
         <SplitButton>
           <Button onClick={() => fileSaver.saveTextToFile(() => appStateToJSON(state, false, true, true), 'feign-discord.json')}>
             <Inline space="space.100" alignBlock="center">
-              <FontAwesomeIcon icon={faDownload} />
+              <DownloadIcon label="" />
               {t('save_all')}
             </Inline>
           </Button>
@@ -125,7 +125,7 @@ const SaveButton: React.FC = () => {
           <SplitButton>
             <Button onClick={() => fileLoader.loadTextFromFile((s) => loadJSONString(s, dispatch, true, true), setLoaderMessage, 'json')}>
               <Inline space="space.100" alignBlock="center">
-                <FontAwesomeIcon icon={faUpload} />
+                <UploadIcon label="" />
                 {t('load_all')}
               </Inline>
             </Button>

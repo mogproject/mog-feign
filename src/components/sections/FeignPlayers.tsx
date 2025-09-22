@@ -1,9 +1,9 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { css } from '@emotion/react';
 import invariant from 'tiny-invariant';
 
 import { Inline, Stack, Text, xcss } from '@atlaskit/primitives';
-import { css } from '@emotion/react';
 import { useAppDispatch, useAppState, useUserGroups } from '../../models/ContextProvider';
 import { FEI_COLORS, NUMBER_OF_FEI_COLORS } from '../../models/app-context';
 import Image from '@atlaskit/image';
