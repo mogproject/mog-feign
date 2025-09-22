@@ -15,6 +15,7 @@ import {
 } from '../io/AppStateIO';
 import { NUMBER_OF_FEI_COLORS } from './app-context';
 import AppState from './AppState';
+import { buildCSS } from './CSSBuilder';
 import { DiscordUser } from './detail/DiscordUser';
 
 // Utilities.
@@ -46,6 +47,14 @@ export function useAppDispatch(): React.Dispatch<AppAction> {
   const context = React.useContext(DispatchContext);
   invariant(context);
   return context;
+}
+
+export function useCustomCss() {
+  const { feignPlayers, viewSettings } = useAppState();
+  const players = feignPlayers.players.get(feignPlayers.group);
+  invariant(players !== undefined);
+  const customCss = React.useMemo(() => buildCSS(players, viewSettings), [players, viewSettings]);
+  return customCss;
 }
 
 // Reducer.

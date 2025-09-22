@@ -4,10 +4,9 @@ import invariant from 'tiny-invariant';
 
 import Flag from '@atlaskit/flag';
 
-import { useAppDispatch, useAppState } from '../../models/ContextProvider';
+import { useAppDispatch, useAppState, useCustomCss } from '../../models/ContextProvider';
 import { Inline, Stack, xcss } from '@atlaskit/primitives';
 import { buildFeignImageCss } from '../../models/FeignImageCss';
-import { buildCSS } from '../../models/CSSBuilder';
 
 const Preview = () => {
   const { t: translate, i18n } = useTranslation('translation', { keyPrefix: 'preview' });
@@ -73,7 +72,7 @@ const Preview = () => {
         </div>
       </div>
 
-      <style>{buildCSS(players, state.viewSettings)}</style>
+      <style>{useCustomCss()}</style>
       <style>{buildFeignImageCss()}</style>
     </Stack>
   );
