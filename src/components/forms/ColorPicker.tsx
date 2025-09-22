@@ -24,6 +24,14 @@ type ColorPickerProps = {
 };
 
 const ColorPicker: React.FC<ColorPickerProps> = ({ id, title, value, onChange, isNotFirstOfGroup, isNotLastOfGroup }) => {
+  const debounce = 200; // in milliseconds
+  const [rawColor, setRawColor] = React.useState(value);
+
+  React.useEffect(() => {
+    const timeout = setTimeout(() => onChange(rawColor), debounce);
+    return () => clearTimeout(timeout);
+  }, [rawColor]);
+
   return (
     <input
       id={id}
@@ -31,7 +39,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({ id, title, value, onChange, i
       title={title}
       value={value}
       css={[colorPickerStyles, isNotFirstOfGroup && buttonGroupNotFirstStyles, isNotLastOfGroup && buttonGroupNotLastStyles]}
-      onChange={(e) => onChange(e.target.value)}
+      onChange={(e) => setRawColor(e.target.value)}
     />
   );
 };
