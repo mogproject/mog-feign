@@ -149,7 +149,7 @@ const en = {
       size: 'Size',
       font_color: 'Font color',
       background: 'Background',
-      background_color: 'Background color',
+      background_color: 'BG',
       jump: 'Jump',
       flash: 'Flash',
       flash_color: 'Flash color',
