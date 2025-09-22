@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import invariant from 'tiny-invariant';
 
 export interface FileLoaderMessage {
   level: 'info' | 'success' | 'danger';
@@ -76,6 +77,7 @@ class FileLoader {
     } else {
       this.elemForm = existingForm as HTMLFormElement;
       this.elemInput = existingForm.firstElementChild as HTMLInputElement;
+      invariant(this.elemInput !== null);
     }
     this.contentHandler = () => true;
     this.messageHandler = () => {};
