@@ -59,9 +59,7 @@ const tableStyles = xcss({
 const DiscordChannels: React.FC = () => {
   const { t: translate } = useTranslation('translation', { keyPrefix: 'settings.channel' });
   const t = translate as (s: string, o?: Record<string, string | boolean>) => string;
-  const tt = (k: string, o?: Record<string, string | boolean>) => {
-    return t(k, { ...o, keyPrefix: '' });
-  };
+  const tt = (k: string, o?: Record<string, string | boolean>) => t(k, { ...o, keyPrefix: '' });
 
   const { channelURL, namedChannels, namedChannelsTableSettings } = useAppState();
   const dispatch = useAppDispatch();
@@ -137,7 +135,7 @@ const DiscordChannels: React.FC = () => {
             <Field<string> name="name" isRequired defaultValue="" validate={(s) => validateName((s || '').trim(), -1)}>
               {({ fieldProps, error }) => (
                 <Box xcss={xcss({ width: '180px', marginTop: 'space.negative.100' })}>
-                  <TextField {...fieldProps} css={compactTextFieldStyles} placeholder={t('register_placeholder')} autoComplete='off' />
+                  <TextField {...fieldProps} css={compactTextFieldStyles} placeholder={t('register_placeholder')} autoComplete="off" />
                   <MessageWrapper>{error && <ErrorMessage>{error}</ErrorMessage>}</MessageWrapper>
                 </Box>
               )}

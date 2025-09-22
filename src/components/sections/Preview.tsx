@@ -10,7 +10,7 @@ import { buildFeignImageCss } from '../../models/FeignImageCss';
 import { buildCSS } from '../../models/CSSBuilder';
 
 const Preview = () => {
-  const { t: translate } = useTranslation('translation', { keyPrefix: 'preview' });
+  const { t: translate, i18n } = useTranslation('translation', { keyPrefix: 'preview' });
   const t = translate as (s: string, o?: Record<string, string | boolean>) => string;
   const tt = (k: string) => t(k, { keyPrefix: '' });
 

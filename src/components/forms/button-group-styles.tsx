@@ -17,7 +17,6 @@ const buttonStyles = css({
   borderStyle: 'solid',
   borderRadius: '3px',
   padding: '5px 20px',
-  zIndex: '1', // proir to labels
   textWrap: 'nowrap',
 });
 
@@ -25,10 +24,25 @@ export const labelStyles = css({
   padding: '5px 8px',
   backgroundColor: token('color.background.input.hovered'),
   borderWidth: '1px',
+  borderColor: token('color.border.disabled'),
+  borderStyle: 'solid',
+  borderRadius: '3px',
+  textWrap: 'nowrap',
+  zIndex: '-1',
+});
+
+export const iconButtonStyles = css({
+  cursor: 'pointer',
+  padding: '7px 8px',
+  borderWidth: '1px',
   borderColor: token('color.border.accent.gray'),
   borderStyle: 'solid',
   borderRadius: '3px',
   textWrap: 'nowrap',
+  backgroundColor: token('color.background.neutral'),
+  ':hover': {
+    backgroundColor: token('color.background.neutral.hovered'),
+  },
 });
 
 export const buttonCheckedStyles = css({
