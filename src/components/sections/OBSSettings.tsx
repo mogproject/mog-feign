@@ -11,10 +11,9 @@ import Textfield from '@atlaskit/textfield';
 
 import DownloadIcon from '@atlaskit/icon/core/download';
 
-import { useAppState } from '../../models/ContextProvider';
+import { useAppState, useCustomCss } from '../../models/ContextProvider';
 import CopyButton from '../forms/CopyButton';
 import FileSaver from '../../io/FileSaver';
-import { buildCSS } from '../../models/CSSBuilder';
 import { buildFeignImageCss } from '../../models/FeignImageCss';
 import { retrieveChannelIDs } from '../../models/detail/ChannelSettings';
 import { buttonGroupNotFirstStyles, buttonGroupNotLastStyles, iconButtonStyles, labelStyles } from '../forms/button-group-styles';
@@ -41,10 +40,7 @@ const OBSSettings: React.FC = () => {
 
   const state = useAppState();
   const isValid = state.feignPlayers.players.get(state.feignPlayers.group)?.some((user) => user !== '');
-
-  const players = state.feignPlayers.players.get(state.feignPlayers.group);
-  invariant(players !== undefined);
-  const cssContent = buildCSS(players, state.viewSettings) + '\n' + buildFeignImageCss();
+  const cssContent = useCustomCss() + '\n' + buildFeignImageCss();
 
   const [serverID, channelID] = retrieveChannelIDs(state.channelURL);
   const obsURL = createUrl(serverID, channelID, state.viewSettings.streamer.showStreamerFirst);
