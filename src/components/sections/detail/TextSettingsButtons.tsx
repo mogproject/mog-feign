@@ -1,6 +1,5 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { css } from '@emotion/react';
 
 import { Inline } from '@atlaskit/primitives';
 import Textfield from '@atlaskit/textfield';
@@ -24,33 +23,25 @@ const TextSettingsButtons: React.FC<TextSettingsButtonsProps> = ({ fontSize, fon
   const tt = (k: string) => {
     return t(k, { keyPrefix: '' });
   };
-  const textFieldStylesInner = {
-    borderRadius: '0',
-    marginLeft: '-1px',
-  };
-  const textFieldStyles = css(textFieldStylesInner);
-  const textFieldClass = `css-${textFieldStyles.name}`;
 
   return (
     <Inline alignBlock="center">
       <label htmlFor="username-fontsize" css={[labelStyles, buttonGroupNotLastStyles]}>
         {t('size')}
       </label>
-      <span css={css({ [`.${textFieldClass}`]: textFieldStylesInner })}>
-        <Textfield
-          id="username-fontsize"
-          type="number"
-          min={10}
-          max={50}
-          width={60}
-          value={fontSize}
-          isCompact
-          className={textFieldClass}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-            onChange({ fontSize: parseInt(e.target.value) });
-          }}
-        />
-      </span>
+      <Textfield
+        id="username-fontsize"
+        type="number"
+        min={10}
+        max={50}
+        width={60}
+        value={fontSize}
+        isCompact
+        css={[buttonGroupNotFirstStyles, buttonGroupNotLastStyles]}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+          onChange({ fontSize: parseInt(e.target.value) });
+        }}
+      />
 
       <label htmlFor="username-fontcolor" css={[labelStyles, buttonGroupNotFirstStyles, buttonGroupNotLastStyles]}>
         {tt('color')}

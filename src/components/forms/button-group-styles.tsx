@@ -76,13 +76,13 @@ export const checkButtonStyles = css([
 
 export const buttonGroupNotFirstStyles = css({
   marginLeft: '-1px',
-  borderTopLeftRadius: '0',
-  borderBottomLeftRadius: '0',
+  borderTopLeftRadius: '0 !important',
+  borderBottomLeftRadius: '0 !important',
 });
 
 export const buttonGroupNotLastStyles = css({
-  borderTopRightRadius: '0',
-  borderBottomRightRadius: '0',
+  borderTopRightRadius: '0 !important',
+  borderBottomRightRadius: '0 !important',
 });
 
 export const buttonGroupStyles = css({

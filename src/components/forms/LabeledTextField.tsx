@@ -7,16 +7,7 @@ import { token } from '@atlaskit/tokens';
 import StatusSuccessIcon from '@atlaskit/icon/core/status-success';
 import StatusErrorIcon from '@atlaskit/icon/core/status-error';
 import Popup from '@atlaskit/popup';
-
-const labelStyles = css({
-  padding: '5px 8px',
-  backgroundColor: token('color.background.input.hovered'),
-  borderRadius: '3px 0 0 3px',
-  borderWidth: '1px',
-  borderColor: token('color.border.accent.gray'),
-  borderStyle: 'solid',
-  borderRight: 'none',
-});
+import { buttonGroupNotFirstStyles, labelStyles } from './button-group-styles';
 
 const suffixStyles = css({
   marginLeft: '8px',
@@ -44,13 +35,6 @@ type LabeledTextFieldProps = {
 };
 
 const LabeledTextField: React.FC<LabeledTextFieldProps> = (props) => {
-  const textFieldStylesInner = {
-    width: props.width,
-    borderRadius: `0 3px 3px 0`,
-  };
-  const textFieldStyles = css(textFieldStylesInner);
-  const textFieldClass = `css-${textFieldStyles.name}`;
-
   const validIcon = <StatusSuccessIcon color={token('color.icon.success')} />;
   const invalidIcon = <StatusErrorIcon color={token('color.icon.danger')} />;
 
@@ -67,15 +51,12 @@ const LabeledTextField: React.FC<LabeledTextFieldProps> = (props) => {
       {/*-----------------------------------------------------------------------
           Input
         ----------------------------------------------------------------------*/}
-      <span css={css({ [`.${textFieldClass}`]: textFieldStylesInner })}>
+      <span>
         <Textfield
           id={props.id}
           isCompact
-          // We need to define className instead of css for the outer div.
-          className={textFieldClass}
+          css={[css({ width: props.width }), buttonGroupNotFirstStyles]}
           placeholder={props.placeholder}
-          // Styling the inner input.
-          // style={{ fontSize: props.fontSize }}
           value={props.value}
           isInvalid={isInvalid}
           onChange={(e) => {
