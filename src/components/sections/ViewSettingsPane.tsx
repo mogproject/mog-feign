@@ -1,8 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import invariant from 'tiny-invariant';
 
-import { Box, Inline, Stack, Text, xcss } from '@atlaskit/primitives';
+import { Inline, Stack, Text } from '@atlaskit/primitives';
 import { css } from '@emotion/react';
 import Button from '@atlaskit/button/new';
 import Modal, { ModalBody, ModalFooter, ModalHeader, ModalTitle, ModalTransition } from '@atlaskit/modal-dialog';
@@ -12,6 +11,7 @@ import Textfield from '@atlaskit/textfield';
 import { useAppDispatch, useAppState } from '../../models/ContextProvider';
 import {
   AvatarSettings,
+  AvatarShape,
   defaultViewSettings,
   FeiSettings,
   StreamerSettings,
@@ -20,6 +20,18 @@ import {
 } from '../../models/detail/ViewSettings';
 import { Label } from '@atlaskit/form';
 import RadioButtonGroup from '../forms/RadioButtonGroup';
+import AnimationSettingsButtons from './detail/AnimationSettingsButtons';
+import { token } from '@atlaskit/tokens';
+import SettingsCard from './detail/SettingsCard';
+import { toggleLabelStyles } from '../forms/LabeledToggle';
+import TextSettingsButtons from './detail/TextSettingsButtons';
+
+const gridStyles = css({
+  display: 'grid',
+  gap: token('space.200'),
+  // default: 3 columns
+  gridTemplateColumns: 'auto auto auto 1fr',
+});
 
 const ViewSettingsPane: React.FC = () => {
   const { t: translate } = useTranslation('translation', { keyPrefix: 'settings.overlay' });
@@ -133,7 +145,7 @@ const ViewSettingsPane: React.FC = () => {
 --------------------------------------------------------------------------------
          */}
         <Inline alignBlock="center">
-          <div css={css({ marginTop: '2px' })}>
+          <div css={[toggleLabelStyles]}>
             <Label htmlFor="show-my-avatar-first">{t('show_my_avatar_first')}</Label>
           </div>
           <Toggle
@@ -146,42 +158,157 @@ const ViewSettingsPane: React.FC = () => {
         {/*
 --------------------------------------------------------------------------------
          */}
-        <Box>
-          <Inline>{t('feign_characters')}</Inline>
-          <Stack space="space.200">
-            <Inline alignBlock="center" spread="space-between">
-              <Inline alignBlock="center" space="space.100">
-                <Text size="small">{t('facing')}</Text>
-                <RadioButtonGroup
-                  id="fei-facing"
-                  labels={[t('facing_left'), t('facing_right')]}
-                  checked={state.viewSettings.fei.mirror ? 0 : 1}
-                  onChange={(index) => updateFeiSettings({ mirror: index === 0 })}
-                />
-              </Inline>
-              <Inline alignBlock="center" space="space.100">
-                <span css={css({ width: '40px' })}>
-                  <Label htmlFor="fei-interval">{t('interval')}</Label>
-                </span>
-                <Textfield
-                  id="fei-interval"
-                  type="number"
-                  min={0}
-                  max={50}
-                  width={80}
-                  value={state.viewSettings.fei.interval}
-                  isCompact
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    updateFeiSettings({ interval: parseInt(e.target.value) });
-                  }}
-                />
-              </Inline>
-            </Inline>
-            <Inline space="space.100">
-              <Text size="small">{t('speaking_behavior')}</Text>
-            </Inline>
-          </Stack>
-        </Box>
+        <div css={gridStyles}>
+          <SettingsCard title={t('feign_characters')}>
+            <div css={css({ textAlign: 'end', alignContent: 'center' })}>
+              <Text size="small" weight="bold">
+                {t('facing')}
+              </Text>
+            </div>
+            <RadioButtonGroup
+              id="fei-facing"
+              labels={[t('facing_left'), t('facing_right')]}
+              checked={state.viewSettings.fei.mirror ? 0 : 1}
+              onChange={(index) => updateFeiSettings({ mirror: index === 0 })}
+            />
+
+            <div css={css({ textAlign: 'end', alignContent: 'center' })}>
+              <Label htmlFor="fei-interval">{t('interval')}</Label>
+            </div>
+            <Textfield
+              id="fei-interval"
+              type="number"
+              min={0}
+              max={50}
+              width={80}
+              value={state.viewSettings.fei.interval}
+              isCompact
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                updateFeiSettings({ interval: parseInt(e.target.value) });
+              }}
+            />
+
+            <div css={css({ marginTop: '4px', textAlign: 'end' })}>
+              <Text size="small" weight="bold" align="end">
+                {t('speaking_behavior')}
+              </Text>
+            </div>
+            <AnimationSettingsButtons
+              idPrefix="fei"
+              settings={state.viewSettings.fei.speaking}
+              showOutline={false}
+              onChange={(settings) => updateFeiSettings({ speaking: settings })}
+            />
+          </SettingsCard>
+          {/*
+--------------------------------------------------------------------------------
+         */}
+          <SettingsCard title={t('discord_avatar')}>
+            <div css={[toggleLabelStyles, css({ textAlign: 'end' })]}>
+              <Label htmlFor="show-avatar">{tt('show')}</Label>
+            </div>
+            <Toggle
+              id="show-avatar"
+              size="regular"
+              isChecked={state.viewSettings.avatar.show}
+              onChange={() => updateAvatarSettings({ show: !state.viewSettings.avatar.show })}
+            />
+
+            <div css={css({ textAlign: 'end', alignContent: 'center' })}>
+              <Label htmlFor="avatar-offset">{t('vertical_offset')}</Label>
+            </div>
+            <Textfield
+              id="avatar-offset"
+              type="number"
+              min={-300}
+              max={300}
+              width={80}
+              value={state.viewSettings.avatar.offsetY}
+              isCompact
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                updateAvatarSettings({ offsetY: parseInt(e.target.value) });
+              }}
+            />
+
+            <div css={[toggleLabelStyles, css({ textAlign: 'end' })]}>
+              <Label htmlFor="show-avatar-front">{t('show_front')}</Label>
+            </div>
+            <Toggle
+              id="show-avatar-front"
+              size="regular"
+              isChecked={state.viewSettings.avatar.front}
+              onChange={() => updateAvatarSettings({ front: !state.viewSettings.avatar.front })}
+            />
+
+            <div css={css({ textAlign: 'end', alignContent: 'center' })}>
+              <Text size="small" weight="bold">
+                {t('shape')}
+              </Text>
+            </div>
+            <RadioButtonGroup
+              id="avatar-shape"
+              labels={[t('circle'), t('rounded_rectangle'), t('rectangle')]}
+              checked={state.viewSettings.avatar.shape.valueOf()}
+              onChange={(index) =>
+                updateAvatarSettings({ shape: [AvatarShape.Circle, AvatarShape.RoundedRectangle, AvatarShape.Rectangle][index] })
+              }
+            />
+
+            <div css={css({ marginTop: '4px', textAlign: 'end' })}>
+              <Text size="small" weight="bold" align="end">
+                {t('speaking_behavior')}
+              </Text>
+            </div>
+            <AnimationSettingsButtons
+              idPrefix="avatar"
+              settings={state.viewSettings.avatar.speaking}
+              showOutline={true}
+              onChange={(settings) => updateAvatarSettings({ speaking: settings })}
+            />
+          </SettingsCard>
+          {/*
+--------------------------------------------------------------------------------
+         */}
+          <SettingsCard title={t('username')}>
+            <div css={[toggleLabelStyles, css({ textAlign: 'end' })]}>
+              <Label htmlFor="show-username">{tt('show')}</Label>
+            </div>
+            <Toggle
+              id="show-username"
+              size="regular"
+              isChecked={state.viewSettings.username.show}
+              onChange={() => updateUsernameSettings({ show: !state.viewSettings.username.show })}
+            />
+
+            <div css={css({ textAlign: 'end', alignContent: 'center' })}>
+              <Label htmlFor="username-offset">{t('vertical_offset')}</Label>
+            </div>
+            <Textfield
+              id="username-offset"
+              type="number"
+              min={-300}
+              max={300}
+              width={80}
+              value={state.viewSettings.username.offsetY}
+              isCompact
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                updateUsernameSettings({ offsetY: parseInt(e.target.value) });
+              }}
+            />
+
+            <div css={css({ textAlign: 'end', alignContent: 'center' })}>
+              <Text size="small" weight="bold">
+                {t('font')}
+              </Text>
+            </div>
+            <TextSettingsButtons
+              fontSize={state.viewSettings.username.fontSize}
+              fontColor={state.viewSettings.username.fontColor}
+              backgroundColor={state.viewSettings.username.backgroundColor}
+              onChange={updateUsernameSettings}
+            />
+          </SettingsCard>
+        </div>
       </Stack>
       {initModal}
     </>
