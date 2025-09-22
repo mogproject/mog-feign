@@ -1,18 +1,20 @@
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Button, { IconButton, SplitButton } from '@atlaskit/button/new';
 import DropdownMenu, { DropdownItem, DropdownItemGroup } from '@atlaskit/dropdown-menu';
-import ChevronDownIcon from '@atlaskit/icon/core/chevron-down';
 import { Inline, Stack, Text, xcss } from '@atlaskit/primitives';
+import { HelperMessage, ValidMessage, ErrorMessage, MessageWrapper } from '@atlaskit/form';
+import Modal, { ModalBody, ModalFooter, ModalHeader, ModalTitle, ModalTransition } from '@atlaskit/modal-dialog';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDownload, faUpload } from '@fortawesome/free-solid-svg-icons';
+import ChevronDownIcon from '@atlaskit/icon/core/chevron-down';
+
 import FileLoader, { FileLoaderMessage } from '../../io/FileLoader';
 import FileSaver from '../../io/FileSaver';
 import { useAppDispatch, useAppState } from '../../models/ContextProvider';
 import { appStateToJSON, initializeAppState, loadJSONString } from '../../io/AppStateIO';
-import { HelperMessage, ValidMessage, ErrorMessage, MessageWrapper } from '@atlaskit/form';
-import React from 'react';
-import Modal, { ModalBody, ModalFooter, ModalHeader, ModalTitle, ModalTransition } from '@atlaskit/modal-dialog';
 
 const SaveButton: React.FC = () => {
   const { t: translate } = useTranslation('translation', { keyPrefix: 'settings.saveload' });
@@ -166,12 +168,10 @@ const SaveLoad: React.FC = () => {
   const t = translate as (s: string) => string;
 
   return (
-    <>
-      <Stack xcss={xcss({ paddingTop: 'space.100' })} space="space.100">
-        <Text>{t('description')}</Text>
-        <SaveButton />
-      </Stack>
-    </>
+    <Stack xcss={xcss({ paddingTop: 'space.100' })} space="space.100">
+      <Text>{t('description')}</Text>
+      <SaveButton />
+    </Stack>
   );
 };
 
