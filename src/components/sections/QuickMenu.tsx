@@ -17,7 +17,7 @@ import { FEI_COLORS, NUMBER_OF_FEI_COLORS } from '../../models/app-context';
 
 const containerStyles = xcss({
   minWidth: '220px',
-  marginBlockStart: 'space.800',
+  marginBlockStart: 'space.500',
   marginInline: 'space.300',
 
   borderRadius: '12px',
@@ -191,7 +191,7 @@ const QuickMenu: React.FC = () => {
     const inputId = `quick-feign-player-color-${color}`;
 
     return (
-      <Inline key={`quick-player-${color}`} alignBlock="center">
+      <Inline key={inputId} alignBlock="center">
         <label htmlFor={inputId} css={[labelStyles, buttonGroupNotLastStyles, fixedSizeLabelStyles, coloredLabelStyles[color]]}>
           {t(`colors.${FEI_COLORS[color]}`)}
         </label>

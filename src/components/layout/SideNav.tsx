@@ -23,13 +23,13 @@ const SideNav: React.FC<SideNavProps> = (props) => {
         // Position
         top: `${state.topNavHeight}px`,
         height: `calc(100vh - ${state.topNavHeight + 1}px)`,
-        width: state.sideNavExpanded ? `${state.sideNavWidth}px` : '0',
+        width: `${state.sideNavWidth}px`,
 
         // Animation
         transition: 'width 0.3s ease',
         whiteSpace: 'nowrap',
       }),
-    [state.topNavHeight, state.sideNavWidth, state.sideNavExpanded]
+    [state.topNavHeight, state.sideNavWidth]
   );
 
   return (

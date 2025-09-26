@@ -1,6 +1,13 @@
 import React from 'react';
+import { css } from '@emotion/react';
+
 import { useLayoutState } from './LayoutContext';
-import { topNavStyles } from './styles';
+
+const topNavStyles = css({
+  position: 'sticky',
+  top: 0,
+  zIndex: 100,
+});
 
 type TopNavProps = {
   children: React.ReactNode;
