@@ -18,7 +18,7 @@ const App: React.FC = () => {
         defaultTopNavHeight={40}
         defaultSideNavWidth={232}
         defaultSideNavExpanded={true}
-        defaultAsideWidth={160}
+        defaultAsideWidth={240}
         topNavContent={<Header />}
         sideNavContent={<LeftSideMenu />}
         mainContent={<MainContent />}

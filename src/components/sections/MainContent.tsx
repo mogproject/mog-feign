@@ -17,6 +17,8 @@ const containerStyles = xcss({
   maxWidth: '1200px',
   marginInline: 'auto', // centering
   paddingInline: 'space.200', // left & right padding
+  paddingBlockStart: 'space.100',
+  paddingBlockEnd: 'space.300',
 });
 
 const headingStyles = xcss({

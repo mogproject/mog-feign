@@ -1,8 +1,17 @@
 import React from 'react';
 import { css } from '@emotion/react';
+import { token } from '@atlaskit/tokens';
 
 import { useLayoutState } from './LayoutContext';
-import { asideStyles, sideBarStyles } from './styles';
+
+export const asideStyles = css({
+  // borderInlineStart: `1px solid ${token('color.border')}`,
+  top: 0,
+  position: 'sticky',
+  overflowX: 'hidden',
+  overflowY: 'auto',
+  whiteSpace: 'nowrap',
+});
 
 type AsideProps = {
   children: React.ReactNode;
@@ -19,7 +28,7 @@ const Aside: React.FC<AsideProps> = (props) => {
     [state.topNavHeight]
   );
   const widthStyles = React.useMemo(() => css({ width: state.asideWidth }), [state.asideWidth]);
-  return <aside css={[sideBarStyles, asideStyles, topStyles, widthStyles]}>{props.children}</aside>;
+  return <aside css={[asideStyles, topStyles, widthStyles]}>{props.children}</aside>;
 };
 
 export default Aside;

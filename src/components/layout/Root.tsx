@@ -1,13 +1,14 @@
 import React from 'react';
 import { Global, css } from '@emotion/react';
 import { LayoutContextProvider, useLayoutState } from './LayoutContext';
-import { Inline, Stack } from '@atlaskit/primitives';
+import { Inline, Stack, xcss } from '@atlaskit/primitives';
 import TopNav from './TopNav';
 import SideNav from './SideNav';
 import Main from './Main';
 import Aside from './Aside';
 import { token } from '@atlaskit/tokens';
-import { footerStyles } from './styles';
+import { footerStyles, topNavStyles } from './styles';
+import { Hide } from '@atlaskit/primitives/responsive';
 
 type RootInnerProps = {
   topNavContent: React.ReactNode;
@@ -33,19 +34,29 @@ const RootInner: React.FC<RootInnerProps> = (props: RootInnerProps) => {
     [state.topNavHeight]
   );
 
+  const rightPaneStyles = React.useMemo(
+    () =>
+      xcss({
+        width: `calc(100vw - ${state.sideNavWidth + 1}px)`,
+      }),
+    [state.sideNavWidth]
+  );
+
   return (
     <>
       <Global styles={globalScrollStyles} />
       <TopNav>{props.topNavContent}</TopNav>
       <Inline space="space.0" alignBlock="start">
-        <SideNav>{props.sideNavContent}</SideNav>
-        <Main>
-          <Stack space="space.200">
-            {props.mainContent}
-            <div css={footerStyles}>{props.footerContent}</div>
-          </Stack>
-        </Main>
-        <Aside>{props.asideContent}</Aside>
+        {/* <Hide below="md" xcss={xcss({height: 'calc(100vh - 21px) !important'})}> */}
+          <SideNav>{props.sideNavContent}</SideNav>
+        {/* </Hide> */}
+        <Stack xcss={rightPaneStyles}>
+          <Inline>
+            <Main>{props.mainContent}</Main>
+            <Aside>{props.asideContent}</Aside>
+          </Inline>
+          <div css={footerStyles}>{props.footerContent}</div>
+        </Stack>
       </Inline>
     </>
   );

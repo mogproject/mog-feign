@@ -121,7 +121,7 @@ const Footer: React.FC = () => {
           >
             Supported Browsers
           </span>
-          <Inline space="space.050" alignBlock="center">
+          <Inline space="space.050" alignBlock="center" xcss={xcss({color: 'color.text.subtlest'})}>
             <span
               css={linkStyles}
               onClick={() => {
