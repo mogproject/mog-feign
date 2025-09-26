@@ -10,7 +10,6 @@ import FeignPlayers from './FeignPlayers';
 import Preview from './Preview';
 import ViewSettingsPane from './ViewSettingsPane';
 import OBSSettings from './OBSSettings';
-import Footer from './Footer';
 
 const containerStyles = xcss({
   display: 'flex',
@@ -95,8 +94,6 @@ const MainContent: React.FC = () => {
         </Heading>
       </Box>
       <OBSSettings />
-      <hr />
-      <Footer />
     </Box>
   );
 };

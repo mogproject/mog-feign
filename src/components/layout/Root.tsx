@@ -1,18 +1,20 @@
 import React from 'react';
 import { Global, css } from '@emotion/react';
 import { LayoutContextProvider, useLayoutState } from './LayoutContext';
-import { Inline } from '@atlaskit/primitives';
+import { Inline, Stack } from '@atlaskit/primitives';
 import TopNav from './TopNav';
 import SideNav from './SideNav';
 import Main from './Main';
 import Aside from './Aside';
 import { token } from '@atlaskit/tokens';
+import { footerStyles } from './styles';
 
 type RootInnerProps = {
   topNavContent: React.ReactNode;
   sideNavContent: React.ReactNode;
   mainContent: React.ReactNode;
   asideContent: React.ReactNode;
+  footerContent: React.ReactNode;
 };
 
 const RootInner: React.FC<RootInnerProps> = (props: RootInnerProps) => {
@@ -37,7 +39,12 @@ const RootInner: React.FC<RootInnerProps> = (props: RootInnerProps) => {
       <TopNav>{props.topNavContent}</TopNav>
       <Inline space="space.0" alignBlock="start">
         <SideNav>{props.sideNavContent}</SideNav>
-        <Main>{props.mainContent}</Main>
+        <Main>
+          <Stack space="space.200">
+            {props.mainContent}
+            <div css={footerStyles}>{props.footerContent}</div>
+          </Stack>
+        </Main>
         <Aside>{props.asideContent}</Aside>
       </Inline>
     </>

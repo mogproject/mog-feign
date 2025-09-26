@@ -43,3 +43,7 @@ export const asideStyles = css({
   borderInlineStart: `1px solid ${token('color.border')}`,
   borderInlineEnd: 'none',
 });
+
+export const footerStyles = css({
+  borderBlockStart: `1px solid ${token('color.border.bold')}`,
+})

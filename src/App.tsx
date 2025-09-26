@@ -9,6 +9,7 @@ import { ContextProvider } from './models/ContextProvider';
 import LeftSideMenu from './components/sections/LeftSideMenu';
 import Root from './components/layout/Root';
 import MainContent from './components/sections/MainContent';
+import Footer from './components/sections/Footer';
 
 const App: React.FC = () => {
   return (
@@ -22,6 +23,7 @@ const App: React.FC = () => {
         sideNavContent={<LeftSideMenu />}
         mainContent={<MainContent />}
         asideContent={<div>Aside!</div>}
+        footerContent={<Footer />}
       />
     </ContextProvider>
   );
