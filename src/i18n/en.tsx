@@ -40,6 +40,7 @@ const en = {
     load_failure: 'Failed to load',
     too_large: 'File too large',
     choose_file: 'Choose file with .{{extension}}',
+    text_files: 'Text Files',
   },
 
   // Layout options.

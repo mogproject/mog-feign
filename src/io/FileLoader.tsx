@@ -1,5 +1,4 @@
 import { useTranslation } from 'react-i18next';
-import invariant from 'tiny-invariant';
 
 export interface FileLoaderMessage {
   level: 'info' | 'success' | 'danger';
@@ -7,82 +6,13 @@ export interface FileLoaderMessage {
 }
 
 class FileLoader {
-  readonly elemForm: HTMLFormElement;
-  readonly elemInput: HTMLInputElement;
+  t: (s: string, o?: Record<string, string | boolean>) => string;
 
-  contentHandler: (content: string) => boolean;
-  messageHandler: (m: FileLoaderMessage) => void;
-  extension: string;
-  maxFileSizeKb: number = 100;
-
-  constructor(id: string) {
+  constructor() {
     // i18n
     const { t: translate } = useTranslation('translation', { keyPrefix: 'file' });
     const t = translate as (s: string, o?: Record<string, string | boolean>) => string;
-
-    const existingForm = document.getElementById(id);
-    if (existingForm === null) {
-      // Create invisible input element.
-      const elemForm = document.createElement('form');
-      elemForm.setAttribute('id', id);
-
-      const elemInput: HTMLInputElement = document.createElement('input');
-      elemInput.setAttribute('id', id + '-input');
-      elemInput.setAttribute('type', 'file');
-      elemInput.style.display = 'none'; // hidden object
-
-      // Add event listener
-      const handleChange = (e: Event) => {
-        const target = e.target as HTMLInputElement;
-        const file = target.files?.[0];
-        if (!file) return;
-        if (!file.name.toLowerCase().endsWith('.' + this.extension)) {
-          this.messageHandler({ level: 'danger', message: t('choose_file', { extension: this.extension }) });
-          return;
-        }
-        if (file.size > this.maxFileSizeKb * 1024) {
-          this.messageHandler({ level: 'danger', message: t('too_large') });
-          return;
-        }
-        this.messageHandler({ level: 'info', message: `${t('loading')}: ${file.name}` });
-
-        const reader = new FileReader();
-
-        reader.onload = (evt) => {
-          if (evt.target?.result) {
-            if (this.contentHandler(evt.target?.result.toString())) {
-              this.messageHandler({ level: 'success', message: `${t('load_success')}: ${file.name}` });
-            } else {
-              this.messageHandler({ level: 'danger', message: `${t('load_failure')}: ${file.name}` });
-            }
-          }
-          // This makes an effect when loading the same file path repeatedly.
-          target.value = '';
-        };
-        reader.onerror = () => {
-          this.messageHandler({ level: 'danger', message: `${t('load_failure')}: ${file.name}` });
-        };
-
-        reader.readAsText(file);
-      };
-      elemInput.addEventListener('change', handleChange);
-
-      // Add elements to the DOM
-
-      document.body.appendChild(elemForm);
-      elemForm.appendChild(elemInput);
-
-      this.elemForm = elemForm;
-      this.elemInput = elemInput;
-    } else {
-      this.elemForm = existingForm as HTMLFormElement;
-      this.elemInput = existingForm.firstElementChild as HTMLInputElement;
-      invariant(this.elemInput !== null);
-    }
-    this.contentHandler = () => true;
-    this.messageHandler = () => {};
-    this.extension = 'json';
-    this.maxFileSizeKb = 100;
+    this.t = t;
   }
 
   loadTextFromFile(
@@ -93,14 +23,46 @@ class FileLoader {
   ) {
     messageHandler({ level: 'info', message: '' });
 
-    // Rewrite fields.
-    this.contentHandler = contentHandler;
-    this.messageHandler = messageHandler;
-    this.extension = extension;
-    this.maxFileSizeKb = maxFileSizeKb;
+    window
+      .showOpenFilePicker({
+        multiple: false,
+        types: [
+          {
+            description: this.t('text_files'),
+            accept: { 'text/plain': [`.${extension}`] },
+          },
+        ],
+      })
+      .then(([fileHandle]) => fileHandle.getFile())
+      .then((file) => {
+        if (!file.name.toLowerCase().endsWith('.' + extension)) {
+          throw Error(this.t('choose_file', { extension: extension }));
+        }
+        if (file.size > maxFileSizeKb * 1024) {
+          throw Error(this.t('too_large'));
+        }
 
-    // Simulate click.
-    this.elemInput.click();
+        // read content
+        messageHandler({ level: 'info', message: `${this.t('loading')}: ${file.name}` });
+        return file.text().then((text) => ({
+          name: file.name,
+          content: text,
+        }));
+      })
+      .then(({ name, content }) => {
+        if (contentHandler(content)) {
+          messageHandler({ level: 'success', message: `${this.t('load_success')}: ${name}` });
+        } else {
+          messageHandler({ level: 'danger', message: `${this.t('load_failure')}: ${name}` });
+        }
+      })
+      .catch((err: Error) => {
+        if (err.name === 'AbortError') {
+          // canceled by user; do nothing
+        } else {
+          messageHandler({ level: 'danger', message: err.message });
+        }
+      });
   }
 }
 
