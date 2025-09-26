@@ -12,7 +12,7 @@ import Button from '@atlaskit/button/new';
 const containerStyles = xcss({
   marginInline: 'auto', // centering
   paddingInline: 'space.200', // left & right padding
-  paddingBlock: 'space.200',
+  paddingBlock: 'space.100',
 });
 
 const linkStyles = css({

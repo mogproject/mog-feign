@@ -5,6 +5,9 @@ type LayoutState = {
   /** Height of the top nav section. */
   topNavHeight: number;
 
+  /** Default width of the side nav section. */
+  defaultSideNavWidth: number;
+
   /** Width of the side nav section. */
   sideNavWidth: number;
 
@@ -46,10 +49,16 @@ type LayoutContextProviderProps = {
 export function LayoutContextProvider(props: LayoutContextProviderProps) {
   const [state, dispatch] = React.useReducer((s, a) => a(s), {
     topNavHeight: props.defaultTopNavHeight,
+    defaultSideNavWidth: props.defaultSideNavWidth,
     sideNavWidth: props.defaultSideNavWidth,
     sideNavExpanded: props.defaultSideNavExpanded,
     asideWidth: props.defaultAsideWidth,
   });
+
+  // Define chains
+  React.useEffect(() => {
+    dispatch((prev: LayoutState) => ({ ...prev, sideNavWidth: state.sideNavExpanded ? prev.defaultSideNavWidth : 0 }));
+  }, [state.sideNavExpanded]);
 
   return (
     <LayoutContext.Provider value={state}>
