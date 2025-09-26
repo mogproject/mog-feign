@@ -40,6 +40,7 @@ const ja = {
     load_failure: '読み込み失敗',
     too_large: 'ファイルが大きすぎます',
     choose_file: '.{{extension}} ファイルを選択してください',
+    text_files: 'テキストファイル',
   },
 
   // Layout options.

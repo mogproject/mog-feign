@@ -19,7 +19,7 @@ import { appStateToJSON, initializeAppState, loadJSONString } from '../../io/App
 const SaveButton: React.FC = () => {
   const { t: translate } = useTranslation('translation', { keyPrefix: 'settings.saveload' });
   const t = translate as (s: string) => string;
-  const fileLoader = new FileLoader('file-loader');
+  const fileLoader = new FileLoader();
   const fileSaver = new FileSaver();
 
   const state = useAppState();
@@ -133,7 +133,7 @@ const SaveButton: React.FC = () => {
             <DropdownMenu<HTMLButtonElement>
               shouldRenderToParent
               trigger={({ triggerRef, ...triggerProps }) => (
-                <IconButton ref={triggerRef} {...triggerProps} icon={ChevronDownIcon} label="More link work item options" />
+                <IconButton ref={triggerRef} {...triggerProps} icon={ChevronDownIcon} label="" />
               )}
             >
               <DropdownItemGroup>
