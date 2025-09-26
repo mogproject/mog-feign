@@ -101,7 +101,7 @@ const FeignPlayers: React.FC = () => {
     <Select
       spacing="compact"
       styles={groupSelectStyles}
-      inputId={`feign-player-group`}
+      inputId={'feign-player-group'}
       options={groups.map((v) => ({ label: v, value: v }))}
       placeholder={t('unselected')}
       isClearable={true}

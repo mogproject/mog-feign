@@ -2,7 +2,8 @@ import React from 'react';
 import { css } from '@emotion/react';
 
 import { useLayoutState } from './LayoutContext';
-import { sideBarStyles, sideNavHidden, sideNavStyles } from './styles';
+import { Hide } from '@atlaskit/primitives/responsive';
+import { xcss } from '@atlaskit/primitives';
 
 type SideNavProps = {
   children: React.ReactNode;
@@ -10,28 +11,31 @@ type SideNavProps = {
 
 const SideNav: React.FC<SideNavProps> = (props) => {
   const state = useLayoutState();
-  const topStyles = React.useMemo(
+  const navStyles = React.useMemo(
     () =>
-      css({
-        top: state.topNavHeight,
+      xcss({
+        position: 'sticky',
+        zIndex: 'navigation',
+
+        overflowX: 'hidden',
+        overflowY: 'auto',
+
+        // Position
+        top: `${state.topNavHeight}px`,
         height: `calc(100vh - ${state.topNavHeight + 1}px)`,
+        width: state.sideNavExpanded ? `${state.sideNavWidth}px` : '0',
+
+        // Animation
+        transition: 'width 0.3s ease',
+        whiteSpace: 'nowrap',
       }),
-    [state.topNavHeight]
+    [state.topNavHeight, state.sideNavWidth, state.sideNavExpanded]
   );
-  const widthStyles = React.useMemo(() => css({ width: state.sideNavWidth }), [state.sideNavWidth]);
 
   return (
-    <nav
-      css={[
-        sideBarStyles,
-        sideNavStyles,
-        topStyles,
-        widthStyles,
-        state.sideNavExpanded || sideNavHidden,
-      ]}
-    >
+    <Hide below="md" as="nav" xcss={navStyles}>
       {props.children}
-    </nav>
+    </Hide>
   );
 };
 

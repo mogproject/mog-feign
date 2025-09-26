@@ -1,18 +1,21 @@
 import React from 'react';
 import { Global, css } from '@emotion/react';
 import { LayoutContextProvider, useLayoutState } from './LayoutContext';
-import { Inline } from '@atlaskit/primitives';
+import { Inline, Stack, xcss } from '@atlaskit/primitives';
 import TopNav from './TopNav';
 import SideNav from './SideNav';
 import Main from './Main';
 import Aside from './Aside';
 import { token } from '@atlaskit/tokens';
+import { footerStyles, topNavStyles } from './styles';
+import { Hide } from '@atlaskit/primitives/responsive';
 
 type RootInnerProps = {
   topNavContent: React.ReactNode;
   sideNavContent: React.ReactNode;
   mainContent: React.ReactNode;
   asideContent: React.ReactNode;
+  footerContent: React.ReactNode;
 };
 
 const RootInner: React.FC<RootInnerProps> = (props: RootInnerProps) => {
@@ -31,14 +34,27 @@ const RootInner: React.FC<RootInnerProps> = (props: RootInnerProps) => {
     [state.topNavHeight]
   );
 
+  const rightPaneStyles = React.useMemo(
+    () =>
+      xcss({
+        width: `calc(100vw - ${state.sideNavWidth + 1}px)`,
+      }),
+    [state.sideNavWidth]
+  );
+
   return (
     <>
       <Global styles={globalScrollStyles} />
       <TopNav>{props.topNavContent}</TopNav>
       <Inline space="space.0" alignBlock="start">
         <SideNav>{props.sideNavContent}</SideNav>
-        <Main>{props.mainContent}</Main>
-        <Aside>{props.asideContent}</Aside>
+        <Stack xcss={rightPaneStyles}>
+          <Inline>
+            <Main>{props.mainContent}</Main>
+            <Aside>{props.asideContent}</Aside>
+          </Inline>
+          <div css={footerStyles}>{props.footerContent}</div>
+        </Stack>
       </Inline>
     </>
   );

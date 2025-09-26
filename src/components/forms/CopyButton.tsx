@@ -14,9 +14,10 @@ type CopyButtonProps = {
   label?: string;
   disabled?: boolean;
   style?: SerializedStyles;
+  id?: string;
 };
 
-const CopyButton: React.FC<CopyButtonProps> = ({ content, label, disabled, style }) => {
+const CopyButton: React.FC<CopyButtonProps> = ({ content, label, disabled, style, id }) => {
   const { t: translate, i18n } = useTranslation();
   const t = translate as (s: string) => string;
 
@@ -46,7 +47,7 @@ const CopyButton: React.FC<CopyButtonProps> = ({ content, label, disabled, style
   return (
     <Tooltip position="top" content={disabled ? '' : message}>
       {(tooltipProps) => (
-        <button {...tooltipProps} disabled={disabled} onClick={handleCopy} css={style}>
+        <button {...tooltipProps} disabled={disabled} onClick={handleCopy} css={style} id={id}>
           <Inline space="space.100" alignBlock="center">
             {showCopy ? <CopyIcon label="" /> : <CheckMarkIcon color={token('color.icon.success')} label="" />}
             {label}

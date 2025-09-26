@@ -173,6 +173,9 @@ const ja = {
     save_as_file: 'ファイルとして保存',
     invalid_channel_url: 'ボイスチャンネル URL が正しく設定されていません',
   },
+  quick: {
+    quick_menu: 'クイックメニュー',
+  },
   add_feign_player: 'Feign プレイヤーを追加してください。',
 };
 export default ja;

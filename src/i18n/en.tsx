@@ -173,6 +173,9 @@ const en = {
     save_as_file: 'Save as File',
     invalid_channel_url: 'Discord Voice Channel is not properly configured',
   },
+  quick: {
+    quick_menu: 'Quick Menu',
+  },
   add_feign_player: 'Add Feign players.',
 };
 export default en;

@@ -17,10 +17,9 @@ const topBarStyles = xcss({
   paddingLeft: 'space.200',
 
   backgroundColor: 'color.background.brand.subtlest',
-  borderColor: 'color.border',
-  borderWidth: '0',
-  borderBottomWidth: 'border.width',
-  borderStyle: 'solid',
+  borderBlockEndColor: 'color.border.bold',
+  borderBlockEndStyle: 'solid',
+  borderBlockEndWidth: 'border.width',
 });
 
 const compactSelectStyles = {
