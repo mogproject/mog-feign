@@ -16,7 +16,7 @@ open:
 publish: build
 	rm -rf docs
 	mv -f dist docs
-	/bin/echo -n 'feignv1.mogproject.com' > docs/CNAME
+	/bin/echo 'feignv1.mogproject.com' > docs/CNAME
 
 .PHONY: build install clean watch open publish
 
