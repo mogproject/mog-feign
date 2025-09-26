@@ -15,7 +15,7 @@ const SideNav: React.FC<SideNavProps> = (props) => {
     () =>
       xcss({
         position: 'sticky',
-        zIndex: '1',
+        zIndex: 'navigation',
 
         overflowX: 'hidden',
         overflowY: 'auto',
