@@ -15,7 +15,7 @@ import { useAppState, useCustomCss } from '../../models/ContextProvider';
 import CopyButton from '../forms/CopyButton';
 import FileSaver from '../../io/FileSaver';
 import { buildFeignImageCss } from '../../models/FeignImageCss';
-import { retrieveChannelIDs } from '../../models/detail/ChannelSettings';
+import { createUrl, retrieveChannelIDs } from '../../models/detail/ChannelSettings';
 import { buttonGroupNotFirstStyles, buttonGroupNotLastStyles, iconButtonStyles, labelStyles } from '../forms/button-group-styles';
 
 const textFieldStyles = css({
@@ -26,12 +26,6 @@ const textFieldStyles = css({
     fontSize: 13,
   },
 });
-
-function createUrl(serverId: string, channelId: string, showStreamerFirst: boolean) {
-  let url = new URL(`https://streamkit.discord.com/overlay/voice/${serverId}/${channelId}`);
-  if (showStreamerFirst) url.searchParams.append('streamer_avatar_first', 'true');
-  return url.toString();
-}
 
 const OBSSettings: React.FC = () => {
   const { t: translate, i18n } = useTranslation('translation', { keyPrefix: 'obs' });

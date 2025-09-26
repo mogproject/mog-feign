@@ -65,7 +65,7 @@ const Footer: React.FC = () => {
           <li>
             {createLink('Google Chrome', 'https://google.com/chrome')} (Recommended)
             <ul>
-              <li>Version 131.0.6778.205 (Official Build) (arm64)</li>
+              <li>Version 140.0.7339.133 (Official Build) (arm64)</li>
             </ul>
           </li>
           <li>{createLink('Mozilla Firefox', 'https://mozilla.org/firefox')}</li>

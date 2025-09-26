@@ -10,6 +10,7 @@ import LeftSideMenu from './components/sections/LeftSideMenu';
 import Root from './components/layout/Root';
 import MainContent from './components/sections/MainContent';
 import Footer from './components/sections/Footer';
+import QuickMenu from './components/sections/QuickMenu';
 
 const App: React.FC = () => {
   return (
@@ -18,11 +19,11 @@ const App: React.FC = () => {
         defaultTopNavHeight={40}
         defaultSideNavWidth={232}
         defaultSideNavExpanded={true}
-        defaultAsideWidth={240}
+        defaultAsideWidth={320}
         topNavContent={<Header />}
         sideNavContent={<LeftSideMenu />}
         mainContent={<MainContent />}
-        asideContent={<div>Aside!</div>}
+        asideContent={<QuickMenu />}
         footerContent={<Footer />}
       />
     </ContextProvider>
