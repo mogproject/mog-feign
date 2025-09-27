@@ -179,6 +179,7 @@ const QuickMenu: React.FC = () => {
       clearControlLabel={t('settings.player.reset')}
       noOptionsMessage={() => t('settings.player.no_groups')}
       value={state.feignPlayers.group === '' ? null : { label: state.feignPlayers.group, value: state.feignPlayers.group }}
+      isDisabled={groups.length === 0}
       onChange={(e: { label: string; value: string }) => {
         dispatch((prev) => ({ ...prev, feignPlayers: { ...prev.feignPlayers, group: e === null ? '' : e.value } }));
       }}
