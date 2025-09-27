@@ -17,6 +17,7 @@ import FileSaver from '../../io/FileSaver';
 import { buildFeignImageCss } from '../../models/FeignImageCss';
 import { createUrl, retrieveChannelIDs } from '../../models/detail/ChannelSettings';
 import { buttonGroupNotFirstStyles, buttonGroupNotLastStyles, iconButtonStyles, labelStyles } from '../forms/button-group-styles';
+import { Hide } from '@atlaskit/primitives/responsive';
 
 const textFieldStyles = css({
   marginLeft: '-1px',
@@ -49,7 +50,7 @@ const OBSSettings: React.FC = () => {
     <Stack space="space.100">
       <Inline>{t('description')}</Inline>
       <div css={{ display: 'grid', columnGap: token('space.200'), gridTemplateColumns: '2fr 3fr' }}>
-        <Image width="100%" src="assets/img/obs.png" alt="obs" />
+        <Hide below='sm'><Image width="100%" src="assets/img/obs.png" alt="obs" /></Hide>
         <Stack space="space.400">
           {/*
 --------------------------------------------------------------------------------
