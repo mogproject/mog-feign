@@ -287,7 +287,7 @@ const ViewSettingsPane: React.FC = () => {
                 updateUsernameSettings({ offsetY: value });
               }}
             />
-            <div css={css({ textAlign: 'end', alignContent: 'center' })}>
+            <div css={css({ textAlign: 'end', alignContent: 'start', marginTop: '6px' })}>
               <Text size="small" weight="bold">
                 {t('font')}
               </Text>
