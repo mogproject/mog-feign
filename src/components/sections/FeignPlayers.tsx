@@ -9,6 +9,7 @@ import { FEI_COLORS, NUMBER_OF_FEI_COLORS } from '../../models/app-context';
 import Image from '@atlaskit/image';
 import Select from '@atlaskit/select';
 import { token } from '@atlaskit/tokens';
+import { labelStyles } from '../forms/button-group-styles';
 
 const gridStyles = css({
   display: 'grid',
@@ -23,7 +24,7 @@ const gridStyles = css({
 });
 
 const playerStyles = xcss({
-  height: '156px',
+  height: '136px',
   paddingInline: 'space.050',
 });
 
@@ -48,16 +49,6 @@ const selectedStyles = {
     opacity: 0.9,
   }),
 };
-
-const labelStyles = css({
-  padding: '5px 8px',
-  backgroundColor: token('color.background.input.hovered'),
-  borderRadius: '3px 0 0 3px',
-  borderWidth: '1px',
-  borderColor: token('color.border.accent.gray'),
-  borderStyle: 'solid',
-  borderRight: 'none',
-});
 
 const groupSelectStyles = {
   control: (base: any) => ({
@@ -122,7 +113,7 @@ const FeignPlayers: React.FC = () => {
     return (
       <Stack key={`player-${color}`} alignInline="center" xcss={playerStyles}>
         <Text>{tt(`colors.${FEI_COLORS[color]}`)}</Text>
-        <Image src={`assets/img/${FEI_COLORS[color]}-small.png`} width={'80px'} alt={t(FEI_COLORS[color])} />
+        <Image src={`assets/img/${FEI_COLORS[color]}-small.png`} width={'60px'} alt={t(FEI_COLORS[color])} />
         <Select
           spacing="compact"
           css={css({ marginTop: '-56px', width: '100%' })}
@@ -142,7 +133,7 @@ const FeignPlayers: React.FC = () => {
 
   return (
     <Stack>
-      <Inline alignBlock="center" xcss={xcss({ marginBlock: 'space.200' })}>
+      <Inline alignBlock="center" xcss={xcss({ marginBottom: 'space.200' })}>
         <span css={[labelStyles]}>{t('filter_by_group')}</span>
         {groupSelection}
       </Inline>

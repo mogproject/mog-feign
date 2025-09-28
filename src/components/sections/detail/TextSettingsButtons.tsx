@@ -37,7 +37,7 @@ const TextSettingsButtons: React.FC<TextSettingsButtonsProps> = ({ fontSize, fon
         width={60}
         value={fontSize}
         isCompact
-        css={[buttonGroupNotFirstStyles, buttonGroupNotLastStyles]}
+        css={[buttonGroupNotFirstStyles, buttonGroupNotLastStyles, { zIndex: '1' }]}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
           onChange({ fontSize: parseInt(e.target.value) });
         }}

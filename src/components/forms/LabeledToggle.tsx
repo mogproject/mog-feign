@@ -25,7 +25,7 @@ type LabeledToggleProps = {
   isNotLastOfGroup?: boolean;
 };
 
-const LabeledToggle: React.FC<LabeledToggleProps> = ({ id, label, checked, onChange, isNotFirstOfGroup, isNotLastOfGroup }) => {
+const LabeledToggle: React.FC<LabeledToggleProps> = ({ id, label, checked, onChange, isNotFirstOfGroup, isNotLastOfGroup}) => {
   return (
     <Fragment key={id}>
       <input

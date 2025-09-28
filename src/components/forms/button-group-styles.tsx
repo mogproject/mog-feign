@@ -18,6 +18,7 @@ const buttonStyles = css({
   borderRadius: '3px',
   padding: '5px 20px',
   textWrap: 'nowrap',
+  zIndex: '1',
 });
 
 export const labelStyles = css({
@@ -28,7 +29,6 @@ export const labelStyles = css({
   borderStyle: 'solid',
   borderRadius: '3px',
   textWrap: 'nowrap',
-  zIndex: '-1',
 });
 
 export const iconButtonStyles = css({

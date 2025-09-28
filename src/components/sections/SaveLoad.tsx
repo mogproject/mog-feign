@@ -168,7 +168,7 @@ const SaveLoad: React.FC = () => {
   const t = translate as (s: string) => string;
 
   return (
-    <Stack xcss={xcss({ paddingTop: 'space.100' })} space="space.100">
+    <Stack space="space.100">
       <Text>{t('description')}</Text>
       <SaveButton />
     </Stack>
