@@ -50,7 +50,7 @@ const OBSSettings: React.FC = () => {
     <Stack space="space.100">
       <Inline>{t('description')}</Inline>
       <div css={{ display: 'grid', columnGap: token('space.200'), gridTemplateColumns: '2fr 3fr' }}>
-        <Hide below='sm'><Image width="100%" src="assets/img/obs.png" alt="obs" /></Hide>
+        <Hide below='md'><Image width="100%" src="assets/img/obs.png" alt="obs" /></Hide>
         <Stack space="space.400">
           {/*
 --------------------------------------------------------------------------------

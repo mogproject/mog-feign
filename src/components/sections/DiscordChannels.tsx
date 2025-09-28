@@ -284,7 +284,7 @@ const DiscordChannels: React.FC = () => {
   // Output.
   return (
     <Stack>
-      <p css={css({ padding: '8px 0' })}>{t('description')}</p>
+      <p css={css({ paddingBottom: '8px' })}>{t('description')}</p>
       <LabeledTextField
         label="URL"
         value={channelURL}

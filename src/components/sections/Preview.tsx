@@ -61,7 +61,7 @@ const Preview = () => {
 
   const validPreview = (
     <Stack>
-      <Inline xcss={xcss({ marginBlock: 'space.100' })}>{t('description')}</Inline>
+      <Inline xcss={xcss({ marginBottom: 'space.100' })}>{t('description')}</Inline>
       <div className="discord_preview user-select-none" style={{ overflowX: 'scroll', backgroundColor: '#cccccc', height: paneHeight }}>
         <div className="Voice_voiceContainer__aaaaa voice_container">
           <ul className="Voice_voiceStates__aaaaa voice_states">

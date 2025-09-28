@@ -12,6 +12,7 @@ const colorPickerStyles = css({
   borderWidth: '1px',
   borderStyle: 'solid',
   borderRadius: '3px',
+  zIndex: '1',
 });
 
 type ColorPickerProps = {

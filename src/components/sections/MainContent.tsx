@@ -10,6 +10,8 @@ import FeignPlayers from './FeignPlayers';
 import Preview from './Preview';
 import ViewSettingsPane from './ViewSettingsPane';
 import OBSSettings from './OBSSettings';
+import Accordion from '../accordion/Accordion';
+import AccordionItem from '../accordion/AccordionItem';
 
 const containerStyles = xcss({
   display: 'flex',
@@ -22,9 +24,12 @@ const containerStyles = xcss({
 });
 
 const headingStyles = xcss({
-  paddingTop: 'space.300',
-  marginTop: 'space.500',
+  paddingTop: 'space.200',
+  marginTop: 'space.200',
   marginBottom: 'space.200',
+  borderTopStyle: 'solid',
+  borderTopWidth: '1px',
+  borderTopColor: 'color.border',
 });
 
 const MainContent: React.FC = () => {
@@ -60,36 +65,53 @@ const MainContent: React.FC = () => {
       </Box>
       {/* ---- Save / Load ----*/}
       <SaveLoad />
-      <Box xcss={headingStyles}>
-        <Heading id="channels" size="medium">
-          {t('settings.discord_voice_channel')}
-        </Heading>
-      </Box>
-      <DiscordChannels />
-      <Box xcss={headingStyles}>
-        <Heading id="users" size="medium">
-          {t('settings.discord_user_management')}
-        </Heading>
-      </Box>
-      <DiscordUsers />
-      <Box xcss={headingStyles}>
-        <Heading id="players" size="medium">
-          {t('settings.feign_player_settings')}
-        </Heading>
-      </Box>
-      <FeignPlayers />
-      <Box xcss={headingStyles}>
-        <Heading id="overlay" size="medium">
-          {t('settings.overlay_settings')}
-        </Heading>
-      </Box>
-      <ViewSettingsPane />
+
+      {/* ---- Accordion ----*/}
+      <Accordion>
+        <AccordionItem
+          header={
+            <Heading id="channels" size="small">
+              {t('settings.discord_voice_channel')}
+            </Heading>
+          }
+          body={<DiscordChannels />}
+        />
+        <AccordionItem
+          header={
+            <Heading id="users" size="small">
+              {t('settings.discord_user_management')}
+            </Heading>
+          }
+          body={<DiscordUsers />}
+        />
+        <AccordionItem
+          header={
+            <Heading id="players" size="small">
+              {t('settings.feign_player_settings')}
+            </Heading>
+          }
+          body={<FeignPlayers />}
+        />
+        <AccordionItem
+          isLast
+          header={
+            <Heading id="overlay" size="small">
+              {t('settings.overlay_settings')}
+            </Heading>
+          }
+          body={<ViewSettingsPane />}
+        />
+      </Accordion>
+
+      {/* ---- Preview ----*/}
       <Box xcss={headingStyles}>
         <Heading id="preview" size="large">
           {t('preview.preview')}
         </Heading>
       </Box>
       <Preview />
+
+      {/* ---- OBS Settings ----*/}
       <Box xcss={headingStyles}>
         <Heading id="obs" size="large">
           {t('obs.obs_settings')}

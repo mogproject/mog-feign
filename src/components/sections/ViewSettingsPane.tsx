@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { Inline, Stack, Text } from '@atlaskit/primitives';
+import { Inline, Stack, Text, xcss } from '@atlaskit/primitives';
 import { css } from '@emotion/react';
 import Button from '@atlaskit/button/new';
 import Modal, { ModalBody, ModalFooter, ModalHeader, ModalTitle, ModalTransition } from '@atlaskit/modal-dialog';
@@ -135,6 +135,7 @@ const ViewSettingsPane: React.FC = () => {
 
   return (
     <>
+      {initModal}
       <Stack space="space.100">
         <Inline>
           <Button appearance="default" onClick={() => openInitModal()}>
@@ -310,7 +311,6 @@ const ViewSettingsPane: React.FC = () => {
           </SettingsCard>
         </div>
       </Stack>
-      {initModal}
     </>
   );
 };
