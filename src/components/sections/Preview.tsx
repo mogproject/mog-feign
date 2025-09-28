@@ -20,7 +20,11 @@ const Preview = () => {
   invariant(players !== undefined);
   const activeIDs = players.filter((id) => id !== '');
   invariant(activeIDs !== undefined);
-  const activeUsers = state.discordUsers.filter((user) => activeIDs.includes(user.id));
+
+  // Sort by name.
+  const activeUsers = state.discordUsers
+    .filter((user) => activeIDs.includes(user.id))
+    .sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
   const isValid = activeIDs.length > 0;
 
   const previewUser = React.useCallback(
