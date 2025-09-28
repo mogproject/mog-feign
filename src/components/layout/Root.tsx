@@ -1,6 +1,6 @@
 import React from 'react';
 import { Global, css } from '@emotion/react';
-import { LayoutContextProvider, useLayoutState } from './LayoutContext';
+import { LayoutContextProvider, useLayoutDispatch, useLayoutState } from './LayoutContext';
 import { Box, Inline, Stack, xcss } from '@atlaskit/primitives';
 import TopNav from './TopNav';
 import SideNav from './SideNav';

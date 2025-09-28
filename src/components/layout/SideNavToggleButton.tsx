@@ -7,6 +7,7 @@ import SidebarExpandIcon from '@atlaskit/icon/core/sidebar-expand';
 import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
 import { Inline, xcss } from '@atlaskit/primitives';
 import { useLayoutState, useLayoutDispatch } from './LayoutContext';
+import { Hide } from '@atlaskit/primitives/responsive';
 
 const silentIconStyles = xcss({
   display: 'contents',
@@ -40,14 +41,16 @@ const SideNavToggleButton: React.FC<SideNavToggleButtonProps> = (props) => {
   };
 
   return (
-    <IconButton
-      appearance="subtle"
-      label={state.sideNavExpanded ? props.collapseLabel : props.expandLabel}
-      icon={icon}
-      onClick={handleClick}
-      isTooltipDisabled={false}
-      tooltip={toggleButtonTooltipOptions}
-    />
+    <Hide below="md">
+      <IconButton
+        appearance="subtle"
+        label={state.sideNavExpanded ? props.collapseLabel : props.expandLabel}
+        icon={icon}
+        onClick={handleClick}
+        isTooltipDisabled={false}
+        tooltip={toggleButtonTooltipOptions}
+      />
+    </Hide>
   );
 };
 
