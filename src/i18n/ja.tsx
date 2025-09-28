@@ -92,6 +92,7 @@ const ja = {
       initialized: '設定を初期化しました。',
     },
     discord_voice_channel: 'Discord ボイスチャンネル',
+    discord_voice_channel_short: 'ボイスチャンネル',
     channel: {
       description: 'Discord を起動し、対象のボイスチャンネルを右クリック → 「リンクをコピー」を選択。以下のフォームに貼り付けてください。',
       placeholder: 'URL を入力',
@@ -106,6 +107,7 @@ const ja = {
       confirm_removal: '以下のチャンネル URL の登録を削除します。よろしいですか?',
     },
     discord_user_management: 'Discord ユーザー管理',
+    discord_user_management_short: 'ユーザー管理',
     discord: {
       description:
         'Discord のユーザー ID を取得するには、まず「設定」 → 「詳細設定」 → 「開発者モード」を有効にします。' +
@@ -120,6 +122,7 @@ const ja = {
       confirm_removal: '以下のユーザーを削除します。よろしいですか?',
     },
     feign_player_settings: 'Feign プレイヤー設定',
+    feign_player_settings_short: 'プレイヤー設定',
     player: {
       filter_by_group: 'グループで絞り込み',
       no_groups: 'グループがありません',
@@ -128,6 +131,7 @@ const ja = {
       no_options: 'ユーザーを追加してください',
     },
     overlay_settings: 'オーバーレイ詳細設定',
+    overlay_settings_short: 'オーバーレイ',
     overlay: {
       initialize: '初期設定に戻す',
       initialization: '初期設定に戻す',

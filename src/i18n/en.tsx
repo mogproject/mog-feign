@@ -92,6 +92,7 @@ const en = {
       initialized: 'Initialized all settings.',
     },
     discord_voice_channel: 'Discord Voice Channel',
+    discord_voice_channel_short: 'Voice Channel',
     channel: {
       description: 'On Discord, right-click on your voice channel and select "Copy Link". Paste the URL in the following form. ',
       placeholder: 'Enter URL',
@@ -106,6 +107,7 @@ const en = {
       confirm_removal: 'Do you want to remove the following channel URL?',
     },
     discord_user_management: 'Discord User Management',
+    discord_user_management_short: 'Discord Users',
     discord: {
       description:
         'To obtain Discord User IDs, first make sure that "User Settings" → "Advanced" → "Developer Mode" is enabled on Discord.' +
@@ -120,6 +122,7 @@ const en = {
       confirm_removal: 'Do you want to remove the following user?',
     },
     feign_player_settings: 'Feign Players',
+    feign_player_settings_short: 'Feign Players',
     player: {
       filter_by_group: 'Filter by group',
       no_groups: 'No groups',
@@ -128,6 +131,7 @@ const en = {
       no_options: 'Add Discord users first',
     },
     overlay_settings: 'Overlay Settings',
+    overlay_settings_short: 'Overlay Settings',
     overlay: {
       initialize: 'Initialize',
       initialization: 'Overlay Settings Initialization',
