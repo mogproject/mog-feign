@@ -75,7 +75,7 @@ const LabeledTextField: React.FC<LabeledTextFieldProps> = (props) => {
             props.clearable &&
             !isEmpty && (
               <IconButton
-                icon={CrossCircleIcon}
+                icon={() => <CrossCircleIcon size='small' color={token('color.text.subtlest')}/>}
                 spacing="compact"
                 appearance="subtle"
                 label={t('clear')}
