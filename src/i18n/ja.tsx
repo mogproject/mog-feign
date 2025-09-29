@@ -15,6 +15,7 @@ const ja = {
   groups: 'グループ',
   action: 'アクション',
   home: 'ホーム',
+  clear: '消去',
 
   app_title: 'もぐぷろふぇいん',
 
