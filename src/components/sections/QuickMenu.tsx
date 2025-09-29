@@ -4,7 +4,7 @@ import { css } from '@emotion/react';
 import invariant from 'tiny-invariant';
 
 import { token } from '@atlaskit/tokens';
-import { Inline, Stack, Text, xcss } from '@atlaskit/primitives';
+import { Box, Inline, Stack, Text, xcss } from '@atlaskit/primitives';
 import Heading from '@atlaskit/heading';
 import Select from '@atlaskit/select';
 
@@ -227,18 +227,25 @@ const QuickMenu: React.FC = () => {
             {t('obs.obs_settings')}
           </Text>
 
-          <Inline alignBlock="center">
-            <label htmlFor="quick-url-copy" css={[labelStyles, buttonGroupNotLastStyles]}>
-              {'URL' + (channelName ? ` (${channelName.name})` : '')}
-            </label>
+          <Box space="space.025">
+            <Inline alignBlock="center">
+              <label htmlFor="quick-url-copy" css={[labelStyles, buttonGroupNotLastStyles]}>
+                {'URL'}
+              </label>
 
-            <CopyButton
-              id="quick-url-copy"
-              content={obsURL}
-              disabled={channelID === ''}
-              style={css([iconButtonStyles, buttonGroupNotFirstStyles])}
-            />
-          </Inline>
+              <CopyButton
+                id="quick-url-copy"
+                content={obsURL}
+                disabled={channelID === ''}
+                style={css([iconButtonStyles, buttonGroupNotFirstStyles])}
+              />
+            </Inline>
+            <Box xcss={xcss({ overflowY: 'clip', textOverflow: 'ellipsis', width: '240px' })}>
+              <Text size="small" color="color.text.subtlest">
+                {channelName?.name || ''}
+              </Text>
+            </Box>
+          </Box>
 
           <Inline alignBlock="center">
             <label htmlFor="quick-css-copy" css={[labelStyles, buttonGroupNotLastStyles]}>
