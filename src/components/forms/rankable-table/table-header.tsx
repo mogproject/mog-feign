@@ -112,6 +112,7 @@ const thStyles = xcss({
   paddingBottom: 'space.0',
   whiteSpace: 'nowrap',
   textOverflow: 'ellipsis',
+  overflowY: 'visible',
 });
 
 const idleState: HeaderState = { type: 'idle' };
@@ -277,6 +278,16 @@ const TableHeader: React.FC<TableHeaderProps> = ({ cell, index, sortKey, sortOrd
       </Pressable>
     </Tooltip>
   );
+
+  if (cell?.defaultWidth) {
+    React.useEffect(() => {
+      const header = ref.current;
+      invariant(header);
+      invariant(cell.defaultWidth);
+      const w = cell.defaultWidth + (index == 0 ? firstColumnAdditionalPadding : 0);
+      header.style.setProperty('--local-resizing-width', `${w}px`);
+    }, []);
+  }
 
   return (
     <Box as="th" ref={ref} xcss={thStyles} key={index}>

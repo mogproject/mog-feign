@@ -14,10 +14,17 @@ export interface RowCellType {
 }
 
 export interface HeadCellType {
+  /** Key that is unique among the columns. */
   key: string;
+
+  /** Header content. */
   content: React.ReactNode | string;
+
   /** Whether the column the cell sits above is sortable. */
   isSortable?: boolean;
+
+  /** Default width of the column in pixels. */
+  defaultWidth?: number;
 }
 
 export interface HeadType {

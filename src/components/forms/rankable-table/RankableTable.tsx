@@ -13,6 +13,8 @@ import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/ad
 import { autoScrollForElements } from '@atlaskit/pragmatic-drag-and-drop-auto-scroll/element';
 import { triggerPostMoveFlash } from '@atlaskit/pragmatic-drag-and-drop-flourish/trigger-post-move-flash';
 import { extractClosestEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge';
+import { useLayoutState } from '../../layout/LayoutContext';
+import { firstColumnAdditionalPadding, minColumnWidth } from './constants';
 
 //------------------------------------------------------------------------------
 //    Utility Functions
@@ -53,6 +55,9 @@ interface RankableTableProps {
 //------------------------------------------------------------------------------
 
 const RankableTable: React.FC<RankableTableProps> = (props) => {
+  // Layout
+  const layout = useLayoutState();
+
   // Elements
   const tableRef = React.useRef<HTMLTableElement | null>(null);
   const scrollableRef = React.useRef<HTMLDivElement | null>(null);
@@ -105,7 +110,7 @@ const RankableTable: React.FC<RankableTableProps> = (props) => {
   React.useEffect(() => {
     const table = tableRef.current;
     invariant(table);
-    const height = table.getBoundingClientRect().height + 8;
+    const height = table.getBoundingClientRect().height;
     table.style.setProperty('--table-height', `${height}px`);
 
     // be sure to recompute the table height when changes occur that an impact its height
@@ -145,6 +150,39 @@ const RankableTable: React.FC<RankableTableProps> = (props) => {
     );
   }, [instanceId, reorderItem]);
 
+  //----------------------------------------------------------------------------
+  //    Visual Effects After Resizing
+  //----------------------------------------------------------------------------
+  React.useEffect(() => {
+    const tableWidth = layout.mainWidth - 63; // FIXME: find a better way
+    if (tableRef.current) {
+      const ths = tableRef.current.querySelectorAll<HTMLTableCellElement>('thead th');
+      var widths: number[] = [];
+      var requiredWidth = 0;
+
+      ths.forEach((th, i) => {
+        const currentWidth = parseInt(th.style.getPropertyValue('--local-resizing-width')) || 0;
+        const minWidth = minColumnWidth + (i == 0 ? firstColumnAdditionalPadding : 0);
+        widths.push(currentWidth);
+        requiredWidth += Math.max(minWidth, currentWidth);
+      });
+
+      // Check the minimum required
+      if (tableWidth >= requiredWidth) return; //ok
+
+      ths.forEach((th, i) => {
+        if (i === 0) {
+          th.style.setProperty('--local-resizing-width', `${minColumnWidth + firstColumnAdditionalPadding}px`);
+        } else if (widths[i] > minColumnWidth) {
+          th.style.removeProperty('--local-resizing-width');
+        }
+      });
+    }
+  }, [layout.mainWidth]);
+
+  //----------------------------------------------------------------------------
+  //    Sorting
+  //----------------------------------------------------------------------------
   const sortColumnIndex = props.head.cells.findIndex((cell) => cell.key === props.sortKey);
   const rowCompare = React.useCallback(
     (a: RowType, b: RowType) => {

@@ -145,10 +145,10 @@ function DiscordUsers() {
   // Define header.
   const head: HeadType = {
     cells: [
-      { key: 'name', content: <Box xcss={xcss({ paddingLeft: 'space.100' })}>{tt('name')}</Box>, isSortable: true },
-      { key: 'id', content: <Box xcss={xcss({ paddingLeft: 'space.100' })}>{'Discord ID'}</Box>, isSortable: true },
+      { key: 'name', content: <Box xcss={xcss({ paddingLeft: 'space.100' })}>{tt('name')}</Box>, isSortable: true, defaultWidth: 220 },
+      { key: 'id', content: <Box xcss={xcss({ paddingLeft: 'space.100' })}>{'Discord ID'}</Box>, isSortable: true, defaultWidth: 220 },
       { key: 'groups', content: tt('groups'), isSortable: true },
-      { key: 'action', content: tt('remove'), isSortable: false },
+      { key: 'action', content: tt('remove'), isSortable: false, defaultWidth: 50 },
     ],
   };
 

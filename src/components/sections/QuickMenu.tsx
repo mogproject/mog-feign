@@ -12,7 +12,13 @@ import { useAppDispatch, useAppState, useCustomCss, useUserGroups } from '../../
 import CopyButton from '../forms/CopyButton';
 import { buildFeignImageCss } from '../../models/FeignImageCss';
 import { createUrl, retrieveChannelIDs } from '../../models/detail/ChannelSettings';
-import { buttonGroupNotFirstStyles, buttonGroupNotLastStyles, iconButtonStyles, labelStyles } from '../forms/button-group-styles';
+import {
+  buttonGroupNotFirstStyles,
+  buttonGroupNotLastStyles,
+  compactLabelStyles,
+  iconButtonStyles,
+  labelStyles,
+} from '../forms/button-group-styles';
 import { FEI_COLORS, NUMBER_OF_FEI_COLORS } from '../../models/app-context';
 
 const containerStyles = xcss({
@@ -48,18 +54,32 @@ const containerContentStyles = xcss({
 const unselectedStyles = {
   control: (base: any) => ({
     ...base,
-    backgroundColor: token('color.background.accent.gray.bolder'),
+    backgroundColor: token('color.background.accent.gray.subtler'),
     opacity: 0.8,
     marginLeft: '-1px',
     borderTopLeftRadius: '0',
     borderBottomLeftRadius: '0',
+    minHeight: '24px',
+    height: '24px',
   }),
   placeholder: (base: any) => ({
     ...base,
-    color: token('color.text.inverse'),
+    // color: token('color.text.inverse'),
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
+  }),
+  valueContainer: (base: any) => ({
+    ...base,
+    paddingTop: 0,
+    paddingBottom: 0,
+    paddingRight: 0,
+    marginRight: 0,
+    marginTop: -3,
+  }),
+  indicatorsContainer: (base: any) => ({
+    ...base,
+    height: '22px',
   }),
 };
 
@@ -70,6 +90,20 @@ const selectedStyles = {
     marginLeft: '-1px',
     borderTopLeftRadius: '0',
     borderBottomLeftRadius: '0',
+    minHeight: '24px',
+    height: '24px',
+  }),
+  valueContainer: (base: any) => ({
+    ...base,
+    paddingTop: 0,
+    paddingBottom: 0,
+    paddingRight: 0,
+    marginRight: 0,
+    marginTop: -3,
+  }),
+  indicatorsContainer: (base: any) => ({
+    ...base,
+    height: '22px',
   }),
 };
 
@@ -182,6 +216,7 @@ const QuickMenu: React.FC = () => {
       noOptionsMessage={() => t('settings.player.no_groups')}
       value={state.feignPlayers.group === '' ? null : { label: state.feignPlayers.group, value: state.feignPlayers.group }}
       isDisabled={groups.length === 0}
+      css={css({ width: '100%' })}
       onChange={(e: { label: string; value: string }) => {
         dispatch((prev) => ({ ...prev, feignPlayers: { ...prev.feignPlayers, group: e === null ? '' : e.value } }));
       }}
@@ -195,7 +230,7 @@ const QuickMenu: React.FC = () => {
 
     return (
       <Inline key={inputId} alignBlock="center">
-        <label htmlFor={inputId} css={[labelStyles, buttonGroupNotLastStyles, fixedSizeLabelStyles, coloredLabelStyles[color]]}>
+        <label htmlFor={inputId} css={[compactLabelStyles, buttonGroupNotLastStyles, fixedSizeLabelStyles, coloredLabelStyles[color]]}>
           {t(`colors.${FEI_COLORS[color]}`)}
         </label>
         <Select
@@ -227,38 +262,40 @@ const QuickMenu: React.FC = () => {
             {t('obs.obs_settings')}
           </Text>
 
-          <Box space="space.025">
-            <Inline alignBlock="center">
-              <label htmlFor="quick-url-copy" css={[labelStyles, buttonGroupNotLastStyles]}>
-                {'URL'}
-              </label>
+          <Stack space="space.025">
+            <Inline spread="space-between">
+              <Inline alignBlock="center">
+                <label htmlFor="quick-url-copy" css={[labelStyles, buttonGroupNotLastStyles]}>
+                  {'URL'}
+                </label>
 
-              <CopyButton
-                id="quick-url-copy"
-                content={obsURL}
-                disabled={channelID === ''}
-                style={css([iconButtonStyles, buttonGroupNotFirstStyles])}
-              />
+                <CopyButton
+                  id="quick-url-copy"
+                  content={obsURL}
+                  disabled={channelID === ''}
+                  style={css([iconButtonStyles, buttonGroupNotFirstStyles])}
+                />
+              </Inline>
+
+              <Inline alignBlock="center">
+                <label htmlFor="quick-css-copy" css={[labelStyles, buttonGroupNotLastStyles]}>
+                  {t('obs.custom_css')}
+                </label>
+
+                <CopyButton
+                  id="quick-css-copy"
+                  content={cssContent}
+                  disabled={!isValid}
+                  style={css([iconButtonStyles, buttonGroupNotFirstStyles])}
+                />
+              </Inline>
             </Inline>
             <Box xcss={xcss({ overflowY: 'clip', textOverflow: 'ellipsis', width: '240px' })}>
               <Text size="small" color="color.text.subtlest">
                 {channelName?.name || ''}
               </Text>
             </Box>
-          </Box>
-
-          <Inline alignBlock="center">
-            <label htmlFor="quick-css-copy" css={[labelStyles, buttonGroupNotLastStyles]}>
-              {t('obs.custom_css')}
-            </label>
-
-            <CopyButton
-              id="quick-css-copy"
-              content={cssContent}
-              disabled={!isValid}
-              style={css([iconButtonStyles, buttonGroupNotFirstStyles])}
-            />
-          </Inline>
+          </Stack>
         </Stack>
 
         <Stack space="space.100">
@@ -270,7 +307,7 @@ const QuickMenu: React.FC = () => {
             {groupSelection}
           </Inline>
 
-          <Stack space="space.100">
+          <Stack space="space.050">
             {Array(13)
               .fill(0)
               .map((_, i) => feignPlayer(i))}
