@@ -162,11 +162,11 @@ const DiscordChannels: React.FC = () => {
   // Create table.
   const head: HeadType = {
     cells: [
-      { key: 'name', content: <Box xcss={xcss({ paddingLeft: 'space.100' })}>{tt('name')}</Box>, isSortable: true },
+      { key: 'name', content: <Box xcss={xcss({ paddingLeft: 'space.100' })}>{tt('name')}</Box>, isSortable: true, defaultWidth: 220 },
       { key: 'url', content: <span>URL</span>, isSortable: true },
-      { key: 'createdAt', content: t('created_at'), isSortable: true },
-      { key: 'select', content: t('select'), isSortable: false },
-      { key: 'select', content: tt('remove'), isSortable: false },
+      { key: 'createdAt', content: t('created_at'), isSortable: true, defaultWidth: 180 },
+      { key: 'select', content: t('select'), isSortable: false, defaultWidth: 50 },
+      { key: 'select', content: tt('remove'), isSortable: false, defaultWidth: 50 },
     ],
   };
   const rows: RowType[] = namedChannels.map((channel, index) => ({
@@ -204,7 +204,7 @@ const DiscordChannels: React.FC = () => {
         key: channel.createdAt,
         content: (
           <Inline alignBlock="center" xcss={[readViewContainerStyles, readViewReadonlyStyles]}>
-            {new Date(channel.createdAt).toLocaleString()}
+            {new Date(channel.createdAt).toLocaleString('ja-JP')}
           </Inline>
         ),
       },
