@@ -18,7 +18,7 @@ import { FEI_COLORS, NUMBER_OF_FEI_COLORS } from '../../models/app-context';
 const containerStyles = xcss({
   minWidth: '220px',
   marginBlockStart: 'space.500',
-  marginInline: 'space.300',
+  marginInlineEnd: 'space.300',
 
   borderRadius: '12px',
   borderWidth: '1px',
@@ -41,6 +41,9 @@ const containerTitleStyles = xcss({
 const containerContentStyles = xcss({
   paddingBlock: 'space.200',
   paddingInline: 'space.200',
+  backgroundColor: '#fcfcfc' as any,
+  borderRadius: '0 0 12px 12px',
+  zIndex: 'navigation',
 });
 
 const unselectedStyles = {
@@ -216,7 +219,7 @@ const QuickMenu: React.FC = () => {
   return (
     <Stack xcss={containerStyles}>
       <Inline alignInline="center" xcss={containerTitleStyles}>
-        <Heading size="medium">{t('quick.quick_menu')}</Heading>
+        <Heading size="small">{t('quick.quick_menu')}</Heading>
       </Inline>
 
       <Stack space="space.300" xcss={containerContentStyles}>

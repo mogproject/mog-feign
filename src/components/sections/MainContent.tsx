@@ -14,10 +14,9 @@ import Accordion from '../accordion/Accordion';
 import AccordionItem from '../accordion/AccordionItem';
 
 const containerStyles = xcss({
-  display: 'flex',
-  flexDirection: 'column',
-  maxWidth: '1200px',
-  marginInline: 'auto', // centering
+  // maxWidth: '1200px',
+  // marginInline: 'auto', // centering
+  margin: 'space.0',
   paddingInline: 'space.200', // left & right padding
   paddingBlockStart: 'space.100',
   paddingBlockEnd: 'space.300',

@@ -2,6 +2,8 @@ import React from 'react';
 import invariant from 'tiny-invariant';
 
 type LayoutState = {
+  windowWidth: number;
+
   /** Height of the top nav section. */
   topNavHeight: number;
 
@@ -11,11 +13,20 @@ type LayoutState = {
   /** Width of the side nav section. */
   sideNavWidth: number;
 
+  /** True if the side nav is shown. */
+  showSideNav: boolean;
+
   /** The side nav is expanded when true, and collapsed when false. */
   sideNavExpanded: boolean;
 
   /** Width of the aside section. */
   asideWidth: number;
+
+  /** True if the aside section is shown. */
+  showAside: boolean;
+
+  /** Width of the main section. */
+  mainWidth: number;
 };
 
 type LayoutAction = (prev: LayoutState) => LayoutState;
@@ -37,6 +48,11 @@ export function useLayoutDispatch(): React.Dispatch<LayoutAction> {
   return context;
 }
 
+function getMainWidth(windowWidth: number, sideNavWidth: number, asideWidth: number): number {
+  const sideWidth = windowWidth < 1280 ? 0 : sideNavWidth + asideWidth;
+  return Math.min(1200, windowWidth - sideWidth);
+}
+
 // Context provider.
 type LayoutContextProviderProps = {
   children: React.ReactNode;
@@ -47,17 +63,48 @@ type LayoutContextProviderProps = {
 };
 
 export function LayoutContextProvider(props: LayoutContextProviderProps) {
+  const initialWindowWidth = document.documentElement.clientWidth;
+  // console.log(window.innerWidth, initialWindowWidth);
+
   const [state, dispatch] = React.useReducer((s, a) => a(s), {
     topNavHeight: props.defaultTopNavHeight,
     defaultSideNavWidth: props.defaultSideNavWidth,
-    sideNavWidth: props.defaultSideNavWidth,
+    sideNavWidth: props.defaultSideNavExpanded ? props.defaultSideNavWidth : 0,
     sideNavExpanded: props.defaultSideNavExpanded,
     asideWidth: props.defaultAsideWidth,
+    windowWidth: initialWindowWidth,
+    showSideNav: initialWindowWidth >= 1280,
+    showAside: initialWindowWidth >= 1280,
+    mainWidth: getMainWidth(initialWindowWidth, props.defaultSideNavExpanded ? props.defaultSideNavWidth : 0, props.defaultAsideWidth),
   });
+
+  // Monitor window width
+  React.useEffect(() => {
+    const observer = new ResizeObserver(() => {
+      const windowWidth = document.documentElement.clientWidth;
+
+      dispatch((prev: LayoutState) => {
+        return {
+          ...prev,
+          windowWidth: windowWidth,
+          showSideNav: windowWidth >= 1280,
+          showAside: windowWidth >= 1280,
+          mainWidth: getMainWidth(windowWidth, prev.sideNavWidth, prev.asideWidth),
+        };
+      });
+    });
+
+    observer.observe(document.documentElement);
+
+    return () => observer.disconnect();
+  }, []);
 
   // Define chains
   React.useEffect(() => {
-    dispatch((prev: LayoutState) => ({ ...prev, sideNavWidth: state.sideNavExpanded ? prev.defaultSideNavWidth : 0 }));
+    dispatch((prev: LayoutState) => {
+      const sideNavWidth = state.sideNavExpanded ? prev.defaultSideNavWidth : 0;
+      return { ...prev, sideNavWidth: sideNavWidth, mainWidth: getMainWidth(prev.windowWidth, sideNavWidth, prev.asideWidth) };
+    });
   }, [state.sideNavExpanded]);
 
   return (

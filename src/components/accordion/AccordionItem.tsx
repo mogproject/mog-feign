@@ -2,6 +2,7 @@ import React from 'react';
 
 import { Box, Inline, Pressable, xcss } from '@atlaskit/primitives';
 import ChevronDownIcon from '@atlaskit/icon/glyph/chevron-down';
+import { useLayoutState } from '../layout/LayoutContext';
 
 const borderStyles = xcss({
   borderBottomColor: 'color.border',
@@ -41,6 +42,7 @@ const AccordionItem: React.FC<AccordionItemProps> = ({ defaultOpen = true, heade
   const [isOpen, setIsOpen] = React.useState(defaultOpen);
   const [bodyHeight, setBodyHeight] = React.useState(0);
 
+  const layout = useLayoutState();
   const bodyRef = React.useRef<HTMLDivElement>(null);
 
   const bodyHeightStyles = xcss({
@@ -51,7 +53,7 @@ const AccordionItem: React.FC<AccordionItemProps> = ({ defaultOpen = true, heade
     if (bodyRef.current) {
       setBodyHeight(bodyRef.current.scrollHeight);
     }
-  }, [body, bodyRef.current]);
+  }, [body, bodyRef.current?.scrollHeight, layout.mainWidth]);
 
   return (
     <>

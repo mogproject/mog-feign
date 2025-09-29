@@ -31,6 +31,7 @@
     "@atlaskit/pragmatic-drag-and-drop-react-accessibility": "2.0.7",
     "@atlaskit/pragmatic-drag-and-drop-react-drop-indicator": "3.2.4",
     "@atlaskit/primitives": "14.11.3",
+    "@atlaskit/range": "^9.2.10",
     "@atlaskit/select": "^21.2.6",
     "@atlaskit/textfield": "^8.0.10",
     "@atlaskit/theme": "^20.0.0",

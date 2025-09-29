@@ -39,7 +39,7 @@ const SideNavToggleButton: React.FC<SideNavToggleButtonProps> = (props) => {
     ignoreTooltipPointerEvents: true,
   };
 
-  return (
+  return state.showSideNav ? (
     <IconButton
       appearance="subtle"
       label={state.sideNavExpanded ? props.collapseLabel : props.expandLabel}
@@ -48,6 +48,8 @@ const SideNavToggleButton: React.FC<SideNavToggleButtonProps> = (props) => {
       isTooltipDisabled={false}
       tooltip={toggleButtonTooltipOptions}
     />
+  ) : (
+    <></>
   );
 };
 

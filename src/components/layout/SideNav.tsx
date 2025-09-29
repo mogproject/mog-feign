@@ -2,8 +2,7 @@ import React from 'react';
 import { css } from '@emotion/react';
 
 import { useLayoutState } from './LayoutContext';
-import { Hide } from '@atlaskit/primitives/responsive';
-import { xcss } from '@atlaskit/primitives';
+import { Box, xcss } from '@atlaskit/primitives';
 
 type SideNavProps = {
   children: React.ReactNode;
@@ -11,31 +10,33 @@ type SideNavProps = {
 
 const SideNav: React.FC<SideNavProps> = (props) => {
   const state = useLayoutState();
+
   const navStyles = React.useMemo(
     () =>
       xcss({
         position: 'sticky',
-        zIndex: 'navigation',
+        // zIndex: '0',
 
+        whiteSpace: 'nowrap',
         overflowX: 'hidden',
         overflowY: 'auto',
 
         // Position
-        top: `${state.topNavHeight}px`,
         height: `calc(100vh - ${state.topNavHeight + 1}px)`,
+        top: `${state.topNavHeight}px`,
         width: `${state.sideNavWidth}px`,
+        flexShrink: '0',
 
         // Animation
         transition: 'width 0.3s ease',
-        whiteSpace: 'nowrap',
       }),
-    [state.topNavHeight, state.sideNavWidth]
+    [state.sideNavWidth, state.topNavHeight]
   );
 
   return (
-    <Hide below="md" as="nav" xcss={navStyles}>
+    <Box as="nav" xcss={navStyles}>
       {props.children}
-    </Hide>
+    </Box>
   );
 };
 

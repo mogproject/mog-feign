@@ -1,16 +1,24 @@
 import React from 'react';
 import { css } from '@emotion/react';
-
-const mainStyles = css({
-  flex: 1,
-});
+import { useLayoutState } from './LayoutContext';
 
 type MainProps = {
   children: React.ReactNode;
 };
 
 const Main: React.FC<MainProps> = (props) => {
-  return <div css={mainStyles}>{props.children}</div>;
+  const state = useLayoutState();
+
+  const styles = React.useMemo(
+    () =>
+      css({
+        marginInline: 'auto',
+        width: state.mainWidth,
+        transition: 'width 0.3s ease',
+      }),
+    [state.mainWidth]
+  );
+  return <div css={[styles]}>{props.children}</div>;
 };
 
 export default Main;

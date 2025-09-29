@@ -5,7 +5,8 @@ import { Inline, Stack, Text, xcss } from '@atlaskit/primitives';
 import { LinkButton } from '@atlaskit/button/new';
 
 const containerStyles = xcss({
-  padding: 'space.200',
+  paddingBlock: 'space.200',
+  paddingInline: 'space.050',
   height: '100%',
   backgroundColor: 'color.background.neutral',
 });
@@ -34,10 +35,10 @@ const LeftSideMenu: React.FC = () => {
         {createLink(t('home'), '#', false)}
         {createLink(t('features.features'), '#features', false)}
         {createLink(t('settings.settings'), '#settings', false)}
-        {createLink(t('settings.discord_voice_channel'), '#channels', true)}
-        {createLink(t('settings.discord_user_management'), '#users', true)}
-        {createLink(t('settings.feign_player_settings'), '#players', true)}
-        {createLink(t('settings.overlay_settings'), '#overlay', true)}
+        {createLink(t('settings.discord_voice_channel_short'), '#channels', true)}
+        {createLink(t('settings.discord_user_management_short'), '#users', true)}
+        {createLink(t('settings.feign_player_settings_short'), '#players', true)}
+        {createLink(t('settings.overlay_settings_short'), '#overlay', true)}
         {createLink(t('preview.preview'), '#preview', false)}
         {createLink(t('obs.obs_settings'), '#obs', false)}
       </Stack>

@@ -6,7 +6,6 @@ import { css } from '@emotion/react';
 import Button from '@atlaskit/button/new';
 import Modal, { ModalBody, ModalFooter, ModalHeader, ModalTitle, ModalTransition } from '@atlaskit/modal-dialog';
 import Toggle from '@atlaskit/toggle';
-import Textfield from '@atlaskit/textfield';
 
 import { useAppDispatch, useAppState } from '../../models/ContextProvider';
 import {
@@ -25,6 +24,7 @@ import { token } from '@atlaskit/tokens';
 import SettingsCard from './detail/SettingsCard';
 import { toggleLabelStyles } from '../forms/LabeledToggle';
 import TextSettingsButtons from './detail/TextSettingsButtons';
+import CompactRange from '../forms/CompactRange';
 
 const gridStyles = css({
   display: 'grid',
@@ -176,16 +176,13 @@ const ViewSettingsPane: React.FC = () => {
             <div css={css({ textAlign: 'end', alignContent: 'center' })}>
               <Label htmlFor="fei-interval">{t('interval')}</Label>
             </div>
-            <Textfield
+            <CompactRange
               id="fei-interval"
-              type="number"
               min={0}
               max={50}
-              width={80}
               value={state.viewSettings.fei.interval}
-              isCompact
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                updateFeiSettings({ interval: parseInt(e.target.value) });
+              onChange={(x) => {
+                updateFeiSettings({ interval: x });
               }}
             />
 
@@ -218,16 +215,13 @@ const ViewSettingsPane: React.FC = () => {
             <div css={css({ textAlign: 'end', alignContent: 'center' })}>
               <Label htmlFor="avatar-offset">{t('vertical_offset')}</Label>
             </div>
-            <Textfield
+            <CompactRange
               id="avatar-offset"
-              type="number"
               min={-300}
               max={300}
-              width={80}
               value={state.viewSettings.avatar.offsetY}
-              isCompact
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                updateAvatarSettings({ offsetY: parseInt(e.target.value) });
+              onChange={(value) => {
+                updateAvatarSettings({ offsetY: value });
               }}
             />
 
@@ -284,20 +278,16 @@ const ViewSettingsPane: React.FC = () => {
             <div css={css({ textAlign: 'end', alignContent: 'center' })}>
               <Label htmlFor="username-offset">{t('vertical_offset')}</Label>
             </div>
-            <Textfield
+            <CompactRange
               id="username-offset"
-              type="number"
               min={-300}
               max={300}
-              width={80}
               value={state.viewSettings.username.offsetY}
-              isCompact
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                updateUsernameSettings({ offsetY: parseInt(e.target.value) });
+              onChange={(value) => {
+                updateUsernameSettings({ offsetY: value });
               }}
             />
-
-            <div css={css({ textAlign: 'end', alignContent: 'center' })}>
+            <div css={css({ textAlign: 'end', alignContent: 'start', marginTop: '6px' })}>
               <Text size="small" weight="bold">
                 {t('font')}
               </Text>

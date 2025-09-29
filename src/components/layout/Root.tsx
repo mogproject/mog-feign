@@ -41,11 +41,11 @@ const RootInner: React.FC<RootInnerProps> = (props: RootInnerProps) => {
       <Global styles={globalScrollStyles} />
       <TopNav>{props.topNavContent}</TopNav>
       <Inline space="space.0" alignBlock="start">
-        <SideNav>{props.sideNavContent}</SideNav>
+        {state.showSideNav && <SideNav>{props.sideNavContent}</SideNav>}
         <Stack xcss={xcss({ flex: 1 })}>
-          <Inline spread="space-between">
+          <Inline>
             <Main>{props.mainContent}</Main>
-            <Aside>{props.asideContent}</Aside>
+            {state.showAside && <Aside>{props.asideContent}</Aside>}
           </Inline>
           <div css={footerStyles}>{props.footerContent}</div>
         </Stack>
