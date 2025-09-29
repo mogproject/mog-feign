@@ -283,7 +283,9 @@ const TableHeader: React.FC<TableHeaderProps> = ({ cell, index, sortKey, sortOrd
     React.useEffect(() => {
       const header = ref.current;
       invariant(header);
-      header.style.setProperty('--local-resizing-width', `${cell.defaultWidth}px`);
+      invariant(cell.defaultWidth);
+      const w = cell.defaultWidth + (index == 0 ? firstColumnAdditionalPadding : 0);
+      header.style.setProperty('--local-resizing-width', `${w}px`);
     }, []);
   }
 

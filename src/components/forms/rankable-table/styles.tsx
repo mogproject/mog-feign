@@ -32,7 +32,7 @@ export const tableHeaderStyles = xcss({
   position: 'sticky',
   top: 'space.0',
   height: token('space.400'),
-  // zIndex: '1',
+  zIndex: '1', // necessary for the scroll feature
 });
 
 export const rowStyles = css({

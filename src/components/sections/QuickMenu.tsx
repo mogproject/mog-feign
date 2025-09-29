@@ -262,38 +262,40 @@ const QuickMenu: React.FC = () => {
             {t('obs.obs_settings')}
           </Text>
 
-          <Box space="space.025">
-            <Inline alignBlock="center">
-              <label htmlFor="quick-url-copy" css={[labelStyles, buttonGroupNotLastStyles]}>
-                {'URL'}
-              </label>
+          <Stack space="space.025">
+            <Inline spread="space-between">
+              <Inline alignBlock="center">
+                <label htmlFor="quick-url-copy" css={[labelStyles, buttonGroupNotLastStyles]}>
+                  {'URL'}
+                </label>
 
-              <CopyButton
-                id="quick-url-copy"
-                content={obsURL}
-                disabled={channelID === ''}
-                style={css([iconButtonStyles, buttonGroupNotFirstStyles])}
-              />
+                <CopyButton
+                  id="quick-url-copy"
+                  content={obsURL}
+                  disabled={channelID === ''}
+                  style={css([iconButtonStyles, buttonGroupNotFirstStyles])}
+                />
+              </Inline>
+
+              <Inline alignBlock="center">
+                <label htmlFor="quick-css-copy" css={[labelStyles, buttonGroupNotLastStyles]}>
+                  {t('obs.custom_css')}
+                </label>
+
+                <CopyButton
+                  id="quick-css-copy"
+                  content={cssContent}
+                  disabled={!isValid}
+                  style={css([iconButtonStyles, buttonGroupNotFirstStyles])}
+                />
+              </Inline>
             </Inline>
             <Box xcss={xcss({ overflowY: 'clip', textOverflow: 'ellipsis', width: '240px' })}>
               <Text size="small" color="color.text.subtlest">
                 {channelName?.name || ''}
               </Text>
             </Box>
-          </Box>
-
-          <Inline alignBlock="center">
-            <label htmlFor="quick-css-copy" css={[labelStyles, buttonGroupNotLastStyles]}>
-              {t('obs.custom_css')}
-            </label>
-
-            <CopyButton
-              id="quick-css-copy"
-              content={cssContent}
-              disabled={!isValid}
-              style={css([iconButtonStyles, buttonGroupNotFirstStyles])}
-            />
-          </Inline>
+          </Stack>
         </Stack>
 
         <Stack space="space.100">
