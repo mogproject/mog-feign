@@ -1,6 +1,6 @@
 import React from 'react';
 import { Global, css } from '@emotion/react';
-import { LayoutContextProvider, useLayoutDispatch, useLayoutState } from './LayoutContext';
+import { LayoutContextProvider, useLayoutState } from './LayoutContext';
 import { Box, Inline, Stack, xcss } from '@atlaskit/primitives';
 import TopNav from './TopNav';
 import SideNav from './SideNav';
@@ -41,11 +41,11 @@ const RootInner: React.FC<RootInnerProps> = (props: RootInnerProps) => {
       <Global styles={globalScrollStyles} />
       <TopNav>{props.topNavContent}</TopNav>
       <Inline space="space.0" alignBlock="start">
-        <SideNav>{props.sideNavContent}</SideNav>
+        {state.showSideNav && <SideNav>{props.sideNavContent}</SideNav>}
         <Stack xcss={xcss({ flex: 1 })}>
-          <Inline spread="space-between">
+          <Inline>
             <Main>{props.mainContent}</Main>
-            <Aside>{props.asideContent}</Aside>
+            {state.showAside && <Aside>{props.asideContent}</Aside>}
           </Inline>
           <div css={footerStyles}>{props.footerContent}</div>
         </Stack>

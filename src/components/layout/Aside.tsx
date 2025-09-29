@@ -3,17 +3,7 @@ import { css } from '@emotion/react';
 import { token } from '@atlaskit/tokens';
 
 import { useLayoutState } from './LayoutContext';
-import { Hide } from '@atlaskit/primitives/responsive';
-import { XCSS, xcss } from '@atlaskit/primitives';
-
-const asideStyles: XCSS = xcss({
-  // borderInlineStart: `1px solid ${token('color.border')}`,
-  top: '0',
-  position: 'sticky',
-  overflowX: 'hidden',
-  overflowY: 'auto',
-  whiteSpace: 'nowrap',
-});
+import { Box, xcss } from '@atlaskit/primitives';
 
 type AsideProps = {
   children: React.ReactNode;
@@ -21,20 +11,29 @@ type AsideProps = {
 
 const Aside: React.FC<AsideProps> = (props) => {
   const state = useLayoutState();
-  const topStyles: XCSS = React.useMemo(
+  const asideStyles = React.useMemo(
     () =>
       xcss({
+        position: 'sticky',
+        // position: 'fixed',
+        overflowX: 'hidden',
+        overflowY: 'auto',
+        whiteSpace: 'nowrap',
+
         top: `${state.topNavHeight}px`,
+        right: '0',
         height: `calc(100vh - ${state.topNavHeight + 1}px)`,
+        width: `${state.asideWidth}px`,
+        flexShrink: '0',
+        zIndex: 'card',
       }),
-    [state.topNavHeight]
+    [state.topNavHeight, state.asideWidth]
   );
-  const widthStyles: XCSS = React.useMemo(() => xcss({ width: `${state.asideWidth}px` }), [state.asideWidth]);
 
   return (
-    <Hide below="lg" as="aside" xcss={[asideStyles, topStyles, widthStyles] as XCSS[]}>
+    <Box as="aside" xcss={asideStyles}>
       {props.children}
-    </Hide>
+    </Box>
   );
 };
 

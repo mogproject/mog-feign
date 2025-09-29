@@ -7,6 +7,7 @@ import Flag from '@atlaskit/flag';
 import { useAppDispatch, useAppState, useCustomCss } from '../../models/ContextProvider';
 import { Inline, Stack, xcss } from '@atlaskit/primitives';
 import { buildFeignImageCss } from '../../models/FeignImageCss';
+import { useLayoutState } from '../layout/LayoutContext';
 
 const Preview = () => {
   const { t: translate, i18n } = useTranslation('translation', { keyPrefix: 'preview' });
@@ -15,6 +16,7 @@ const Preview = () => {
 
   const state = useAppState();
   const dispatch = useAppDispatch();
+  const layout = useLayoutState();
 
   const players = state.feignPlayers.players.get(state.feignPlayers.group);
   invariant(players !== undefined);
@@ -66,7 +68,16 @@ const Preview = () => {
   const validPreview = (
     <Stack>
       <Inline xcss={xcss({ marginBottom: 'space.100' })}>{t('description')}</Inline>
-      <div className="discord_preview user-select-none" style={{ overflowX: 'scroll', backgroundColor: '#cccccc', height: paneHeight }}>
+      <div
+        className="discord_preview"
+        style={{
+          overflowX: 'auto',
+          backgroundColor: '#cccccc',
+          height: paneHeight,
+          whiteSpace: 'nowrap',
+          width: `${layout.mainWidth - 32}px`, // max main width - padding 16 * 2
+        }}
+      >
         <div className="Voice_voiceContainer__aaaaa voice_container">
           <ul className="Voice_voiceStates__aaaaa voice_states">
             {Array(activeUsers.length)
