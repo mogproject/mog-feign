@@ -43,7 +43,6 @@ const containerContentStyles = xcss({
   paddingInline: 'space.200',
   backgroundColor: '#fcfcfc' as any,
   borderRadius: '0 0 12px 12px',
-  zIndex: 'navigation',
 });
 
 const unselectedStyles = {
