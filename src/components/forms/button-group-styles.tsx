@@ -31,6 +31,16 @@ export const labelStyles = css({
   textWrap: 'nowrap',
 });
 
+export const compactLabelStyles = css({
+  padding: '1px 8px',
+  backgroundColor: token('color.background.input.hovered'),
+  borderWidth: '1px',
+  borderColor: token('color.border.disabled'),
+  borderStyle: 'solid',
+  borderRadius: '3px',
+  textWrap: 'nowrap',
+});
+
 export const iconButtonStyles = css({
   cursor: 'pointer',
   padding: '7px 8px',

@@ -12,7 +12,13 @@ import { useAppDispatch, useAppState, useCustomCss, useUserGroups } from '../../
 import CopyButton from '../forms/CopyButton';
 import { buildFeignImageCss } from '../../models/FeignImageCss';
 import { createUrl, retrieveChannelIDs } from '../../models/detail/ChannelSettings';
-import { buttonGroupNotFirstStyles, buttonGroupNotLastStyles, iconButtonStyles, labelStyles } from '../forms/button-group-styles';
+import {
+  buttonGroupNotFirstStyles,
+  buttonGroupNotLastStyles,
+  compactLabelStyles,
+  iconButtonStyles,
+  labelStyles,
+} from '../forms/button-group-styles';
 import { FEI_COLORS, NUMBER_OF_FEI_COLORS } from '../../models/app-context';
 
 const containerStyles = xcss({
@@ -53,6 +59,8 @@ const unselectedStyles = {
     marginLeft: '-1px',
     borderTopLeftRadius: '0',
     borderBottomLeftRadius: '0',
+    minHeight: '24px',
+    height: '24px',
   }),
   placeholder: (base: any) => ({
     ...base,
@@ -60,6 +68,17 @@ const unselectedStyles = {
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
+  }),
+  valueContainer: (base: any) => ({
+    ...base,
+    paddingTop: 0,
+    paddingBottom: 0,
+    paddingRight: 0,
+    marginRight: 0,
+  }),
+  indicatorsContainer: (base: any) => ({
+    ...base,
+    height: '22px',
   }),
 };
 
@@ -70,6 +89,20 @@ const selectedStyles = {
     marginLeft: '-1px',
     borderTopLeftRadius: '0',
     borderBottomLeftRadius: '0',
+    minHeight: '24px',
+    height: '24px',
+  }),
+  valueContainer: (base: any) => ({
+    ...base,
+    paddingTop: 0,
+    paddingBottom: 0,
+    paddingRight: 0,
+    marginTop: -2,
+    marginRight: 0,
+  }),
+  indicatorsContainer: (base: any) => ({
+    ...base,
+    height: '22px',
   }),
 };
 
@@ -182,6 +215,7 @@ const QuickMenu: React.FC = () => {
       noOptionsMessage={() => t('settings.player.no_groups')}
       value={state.feignPlayers.group === '' ? null : { label: state.feignPlayers.group, value: state.feignPlayers.group }}
       isDisabled={groups.length === 0}
+      css={css({ width: '100%' })}
       onChange={(e: { label: string; value: string }) => {
         dispatch((prev) => ({ ...prev, feignPlayers: { ...prev.feignPlayers, group: e === null ? '' : e.value } }));
       }}
@@ -195,7 +229,7 @@ const QuickMenu: React.FC = () => {
 
     return (
       <Inline key={inputId} alignBlock="center">
-        <label htmlFor={inputId} css={[labelStyles, buttonGroupNotLastStyles, fixedSizeLabelStyles, coloredLabelStyles[color]]}>
+        <label htmlFor={inputId} css={[compactLabelStyles, buttonGroupNotLastStyles, fixedSizeLabelStyles, coloredLabelStyles[color]]}>
           {t(`colors.${FEI_COLORS[color]}`)}
         </label>
         <Select
@@ -270,7 +304,7 @@ const QuickMenu: React.FC = () => {
             {groupSelection}
           </Inline>
 
-          <Stack space="space.100">
+          <Stack space="space.050">
             {Array(13)
               .fill(0)
               .map((_, i) => feignPlayer(i))}
