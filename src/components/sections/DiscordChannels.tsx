@@ -23,6 +23,8 @@ import { isValidVoiceChannelURL, NamedChannel } from '../../models/detail/Channe
 import { HeadType, RowType } from '../forms/rankable-table/types';
 import EditableText from '../forms/EditableText';
 import RankableTable from '../forms/rankable-table/RankableTable';
+import { Hide } from '@atlaskit/primitives/responsive';
+import { useLayoutState } from '../layout/LayoutContext';
 
 const compactTextFieldStyles = css({
   height: '32px',
@@ -63,6 +65,8 @@ const DiscordChannels: React.FC = () => {
 
   const { channelURL, namedChannels, namedChannelsTableSettings } = useAppState();
   const dispatch = useAppDispatch();
+  const layout = useLayoutState();
+
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [removeIndex, setRemoveIndex] = React.useState(-1);
   const openModal = React.useCallback(() => setIsModalOpen(true), []);
@@ -127,9 +131,11 @@ const DiscordChannels: React.FC = () => {
           <Inline space="space.200" alignInline="center" alignBlock="start" shouldWrap xcss={newEntryStyles}>
             <Inline space="space.100" alignBlock="center" xcss={xcss({ paddingTop: 'space.075' })}>
               <ArrowDownIcon label="" />
-              <Text weight={'semibold'} color={'color.text'}>
-                {t('register')}
-              </Text>
+              <Hide below="sm">
+                <Text weight={'semibold'} color={'color.text'}>
+                  {t('register')}
+                </Text>
+              </Hide>
             </Inline>
             {/* name */}
             <Field<string> name="name" isRequired defaultValue="" validate={(s) => validateName((s || '').trim(), -1)}>
@@ -290,11 +296,12 @@ const DiscordChannels: React.FC = () => {
         value={channelURL}
         validate={isValidVoiceChannelURL}
         setValue={(v: string) => dispatch((prev) => ({ ...prev, channelURL: v.trim() }))}
-        width={540}
+        width={Math.min(layout.mainWidth - 120, 560)}
         placeholder={t('placeholder')}
         id="discord-channel-url"
         feedback={t('feedback')}
         showStatus
+        clearable
       />
       <Inline alignBlock="end" spread="space-between">
         <Inline alignBlock="end">

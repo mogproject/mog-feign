@@ -21,6 +21,11 @@ const gridStyles = css({
   '@media (max-width: 1024px)': {
     gridTemplateColumns: 'repeat(5, 1fr)',
   },
+
+  // very small screen: 4 columns
+  '@media (max-width: 768px)': {
+    gridTemplateColumns: 'repeat(4, 1fr)',
+  },
 });
 
 const playerStyles = xcss({
@@ -29,6 +34,7 @@ const playerStyles = xcss({
 });
 
 const unselectedStyles = {
+  menuPortal: (base: any) => ({ ...base, zIndex: 9999 }),
   control: (base: any) => ({
     ...base,
     backgroundColor: token('color.background.accent.gray.bolder'),
@@ -44,6 +50,7 @@ const unselectedStyles = {
 };
 
 const selectedStyles = {
+  menuPortal: (base: any) => ({ ...base, zIndex: 9999 }),
   control: (base: any) => ({
     ...base,
     opacity: 0.9,
@@ -51,6 +58,7 @@ const selectedStyles = {
 };
 
 const groupSelectStyles = {
+  menuPortal: (base: any) => ({ ...base, zIndex: 9999 }),
   control: (base: any) => ({
     ...base,
     borderRadius: `0 3px 3px 0`,
@@ -100,6 +108,7 @@ const FeignPlayers: React.FC = () => {
       noOptionsMessage={() => t('no_groups')}
       value={state.feignPlayers.group === '' ? null : { label: state.feignPlayers.group, value: state.feignPlayers.group }}
       isDisabled={groups.length === 0}
+      menuPortalTarget={document.body}
       onChange={(e: { label: string; value: string }) => {
         dispatch((prev) => ({ ...prev, feignPlayers: { ...prev.feignPlayers, group: e === null ? '' : e.value } }));
       }}
@@ -125,6 +134,7 @@ const FeignPlayers: React.FC = () => {
           options={players}
           placeholder={''}
           noOptionsMessage={() => t('no_options')}
+          menuPortalTarget={document.body}
           onChange={(e: { label: string; value: string }) => handleUpdate(color, e === null ? '' : e.value)}
         />
       </Stack>

@@ -15,6 +15,7 @@ const ja = {
   groups: 'グループ',
   action: 'アクション',
   home: 'ホーム',
+  clear: '消去',
 
   app_title: 'もぐぷろふぇいん',
 
@@ -115,9 +116,9 @@ const ja = {
         ' ここで登録する名前は、Discord 上の名前と異なっていても問題ありません。',
       already_exists: '既に存在します',
       number_only: 'ID には数字のみ含まれます',
-      name_placeholder: '名前を入力',
-      id_placeholder: 'Discord ID を入力',
-      group_placeholder: 'グループを入力',
+      name_placeholder: '名前',
+      id_placeholder: 'Discord ID',
+      group_placeholder: 'グループ',
       removal: 'Discord ユーザーの削除',
       confirm_removal: '以下のユーザーを削除します。よろしいですか?',
     },

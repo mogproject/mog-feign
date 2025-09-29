@@ -22,6 +22,7 @@ import { createOption } from '../forms/select-helper';
 import RankableTable from '../forms/rankable-table/RankableTable';
 import { reorder } from '@atlaskit/pragmatic-drag-and-drop/reorder';
 import { useAppDispatch, useAppState, useUserGroups } from '../../models/ContextProvider';
+import { useLayoutState } from '../layout/LayoutContext';
 
 const readViewContainerStyles = xcss({
   display: 'flex',
@@ -81,6 +82,7 @@ function DiscordUsers() {
   const { discordUsers, discordUsersTableSettings } = useAppState();
   const userGroups = useUserGroups();
   const dispatch = useAppDispatch();
+  const layout = useLayoutState();
 
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [removeIndex, setRemoveIndex] = React.useState(-1);
@@ -288,7 +290,7 @@ function DiscordUsers() {
             {/* name */}
             <Field<string> name="name" isRequired validate={(value) => validateName(value || '', -1, false)} defaultValue="">
               {({ fieldProps, error }) => (
-                <Box xcss={xcss({ width: '144px' })}>
+                <Box xcss={xcss({ width: `${layout.mainWidth >= 600 ? 144 : 80}px` })}>
                   <TextField {...fieldProps} css={compactTextFieldStyles} placeholder={t('name_placeholder')} autoComplete="off" />
                   <MessageWrapper>{error && <ErrorMessage>{error}</ErrorMessage>}</MessageWrapper>
                 </Box>

@@ -25,7 +25,7 @@ const Aside: React.FC<AsideProps> = (props) => {
         height: `calc(100vh - ${state.topNavHeight + 1}px)`,
         width: `${state.asideWidth}px`,
         flexShrink: '0',
-        zIndex: 'card',
+        zIndex: '90',
       }),
     [state.topNavHeight, state.asideWidth]
   );
