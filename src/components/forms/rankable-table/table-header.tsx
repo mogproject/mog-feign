@@ -112,7 +112,7 @@ const thStyles = xcss({
   paddingBottom: 'space.0',
   whiteSpace: 'nowrap',
   textOverflow: 'ellipsis',
-  overflowY: 'clip',
+  overflowY: 'visible',
 });
 
 const idleState: HeaderState = { type: 'idle' };

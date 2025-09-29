@@ -105,7 +105,7 @@ const RankableTable: React.FC<RankableTableProps> = (props) => {
   React.useEffect(() => {
     const table = tableRef.current;
     invariant(table);
-    const height = table.getBoundingClientRect().height + 8;
+    const height = table.getBoundingClientRect().height;
     table.style.setProperty('--table-height', `${height}px`);
 
     // be sure to recompute the table height when changes occur that an impact its height
