@@ -54,7 +54,7 @@ const containerContentStyles = xcss({
 const unselectedStyles = {
   control: (base: any) => ({
     ...base,
-    backgroundColor: token('color.background.accent.gray.bolder'),
+    backgroundColor: token('color.background.accent.gray.subtler'),
     opacity: 0.8,
     marginLeft: '-1px',
     borderTopLeftRadius: '0',
@@ -64,7 +64,7 @@ const unselectedStyles = {
   }),
   placeholder: (base: any) => ({
     ...base,
-    color: token('color.text.inverse'),
+    // color: token('color.text.inverse'),
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
@@ -75,6 +75,7 @@ const unselectedStyles = {
     paddingBottom: 0,
     paddingRight: 0,
     marginRight: 0,
+    marginTop: -3,
   }),
   indicatorsContainer: (base: any) => ({
     ...base,
@@ -97,8 +98,8 @@ const selectedStyles = {
     paddingTop: 0,
     paddingBottom: 0,
     paddingRight: 0,
-    marginTop: -2,
     marginRight: 0,
+    marginTop: -3,
   }),
   indicatorsContainer: (base: any) => ({
     ...base,
