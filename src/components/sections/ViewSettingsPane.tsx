@@ -31,6 +31,14 @@ const gridStyles = css({
   gap: token('space.200'),
   // default: 3 columns
   gridTemplateColumns: 'auto auto auto 1fr',
+
+  // small screen
+  '@media (max-width: 1024px)': {
+    gridTemplateColumns: 'auto auto',
+  },
+  '@media (max-width: 768px)': {
+    gridTemplateColumns: '1fr',
+  },
 });
 
 const ViewSettingsPane: React.FC = () => {
@@ -181,9 +189,7 @@ const ViewSettingsPane: React.FC = () => {
               min={0}
               max={50}
               value={state.viewSettings.fei.interval}
-              onChange={(x) => {
-                updateFeiSettings({ interval: x });
-              }}
+              onChange={(value: number) => updateFeiSettings({ interval: value })}
             />
 
             <div css={css({ marginTop: '4px', textAlign: 'end' })}>
@@ -220,9 +226,7 @@ const ViewSettingsPane: React.FC = () => {
               min={-300}
               max={300}
               value={state.viewSettings.avatar.offsetY}
-              onChange={(value) => {
-                updateAvatarSettings({ offsetY: value });
-              }}
+              onChange={(value: number) => updateAvatarSettings({ offsetY: value })}
             />
 
             <div css={[toggleLabelStyles, css({ textAlign: 'end' })]}>
@@ -283,9 +287,7 @@ const ViewSettingsPane: React.FC = () => {
               min={-300}
               max={300}
               value={state.viewSettings.username.offsetY}
-              onChange={(value) => {
-                updateUsernameSettings({ offsetY: value });
-              }}
+              onChange={(value: number) => updateUsernameSettings({ offsetY: value })}
             />
             <div css={css({ textAlign: 'end', alignContent: 'start', marginTop: '6px' })}>
               <Text size="small" weight="bold">

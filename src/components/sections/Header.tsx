@@ -23,6 +23,7 @@ const topBarStyles = xcss({
 });
 
 const compactSelectStyles = {
+  menuPortal: (base: any) => ({ ...base, zIndex: 9999 }),
   control: (base: any) => ({
     ...base,
     minHeight: '28px',
@@ -86,6 +87,7 @@ const Header: React.FC = () => {
           appearance="subtle"
           value={selected}
           options={options}
+          menuPortalTarget={document.body}
         />
 
         <Box>
