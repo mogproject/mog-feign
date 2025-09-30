@@ -15,6 +15,7 @@ const Main: React.FC<MainProps> = (props) => {
         marginInline: 'auto',
         width: state.mainWidth,
         transition: 'width 0.3s ease',
+        paddingBottom: '50px', // save space for footer
       }),
     [state.mainWidth]
   );

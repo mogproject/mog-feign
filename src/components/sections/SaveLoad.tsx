@@ -1,9 +1,10 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { css } from '@emotion/react';
 
 import Button, { IconButton, SplitButton } from '@atlaskit/button/new';
 import DropdownMenu, { DropdownItem, DropdownItemGroup } from '@atlaskit/dropdown-menu';
-import { Inline, Stack, Text, xcss } from '@atlaskit/primitives';
+import { Inline, Stack, Text } from '@atlaskit/primitives';
 import { HelperMessage, ValidMessage, ErrorMessage, MessageWrapper } from '@atlaskit/form';
 import Modal, { ModalBody, ModalFooter, ModalHeader, ModalTitle, ModalTransition } from '@atlaskit/modal-dialog';
 
@@ -15,6 +16,19 @@ import FileLoader, { FileLoaderMessage } from '../../io/FileLoader';
 import FileSaver from '../../io/FileSaver';
 import { useAppDispatch, useAppState } from '../../models/ContextProvider';
 import { appStateToJSON, initializeAppState, loadJSONString } from '../../io/AppStateIO';
+import { token } from '@atlaskit/tokens';
+
+const gridStyles = css({
+  display: 'grid',
+  columnGap: token('space.400'),
+  rowGap: token('space.100'),
+  alignContent: 'center',
+  gridTemplateColumns: 'auto auto 1fr',
+
+  '@media (max-width: 768px)': {
+    gridTemplateColumns: '1fr',
+  },
+});
 
 const SaveButton: React.FC = () => {
   const { t: translate } = useTranslation('translation', { keyPrefix: 'settings.saveload' });
@@ -83,7 +97,7 @@ const SaveButton: React.FC = () => {
   //----------------------------------------------------------------------------
   return (
     <>
-      <Inline space="space.400" alignBlock="center">
+      <div css={gridStyles}>
         <SplitButton>
           <Button onClick={() => fileSaver.saveTextToFile(() => appStateToJSON(state, false, true, true), 'feign-discord.json')}>
             <Inline space="space.100" alignBlock="center">
@@ -157,7 +171,7 @@ const SaveButton: React.FC = () => {
           </SplitButton>
           {loaderMessageComponent}
         </Inline>
-      </Inline>
+      </div>
       {initModal}
     </>
   );

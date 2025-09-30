@@ -8,7 +8,17 @@ import Main from './Main';
 import Aside from './Aside';
 import { token } from '@atlaskit/tokens';
 
+const rightPaneStyles = xcss({
+  flex: '1',
+  height: '100%',
+  position: 'relative',
+});
+
 const footerStyles = css({
+  position: 'absolute',
+  bottom: '0',
+  left: '0',
+  width: '100%',
   borderBlockStart: `1px solid ${token('color.border')}`,
 });
 
@@ -42,7 +52,7 @@ const RootInner: React.FC<RootInnerProps> = (props: RootInnerProps) => {
       <TopNav>{props.topNavContent}</TopNav>
       <Inline space="space.0" alignBlock="start">
         {state.showSideNav && <SideNav>{props.sideNavContent}</SideNav>}
-        <Stack xcss={xcss({ flex: 1 })}>
+        <Stack xcss={rightPaneStyles}>
           <Inline>
             <Main>{props.mainContent}</Main>
             {state.showAside && <Aside>{props.asideContent}</Aside>}

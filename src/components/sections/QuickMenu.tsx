@@ -23,13 +23,16 @@ import { FEI_COLORS, NUMBER_OF_FEI_COLORS } from '../../models/app-context';
 
 const containerStyles = xcss({
   minWidth: '220px',
-  marginBlockStart: 'space.500',
+  marginBlockStart: 'space.200',
+  marginInlineStart: 'space.100',
   marginInlineEnd: 'space.300',
 
   borderRadius: '12px',
   borderWidth: '1px',
-  borderColor: 'color.border.bold',
+  borderColor: 'color.border.input',
   borderStyle: 'solid',
+
+  boxShadow: 'elevation.shadow.overlay',
 });
 
 const containerTitleStyles = xcss({
