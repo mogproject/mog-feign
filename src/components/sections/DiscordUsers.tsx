@@ -290,7 +290,7 @@ function DiscordUsers() {
             {/* name */}
             <Field<string> name="name" isRequired validate={(value) => validateName(value || '', -1, false)} defaultValue="">
               {({ fieldProps, error }) => (
-                <Box xcss={xcss({ width: `${layout.mainWidth >= 600 ? 144 : 80}px` })}>
+                <Box xcss={xcss({ width: `${layout.mainWidth >= 600 ? 144 : 120}px`, minHeight: '60px' })}>
                   <TextField {...fieldProps} css={compactTextFieldStyles} placeholder={t('name_placeholder')} autoComplete="off" />
                   <MessageWrapper>{error && <ErrorMessage>{error}</ErrorMessage>}</MessageWrapper>
                 </Box>
@@ -300,7 +300,7 @@ function DiscordUsers() {
             {/* ID */}
             <Field<string> name="id" isRequired validate={(value) => validateId(value || '', -1, false)} defaultValue="">
               {({ fieldProps, error }) => (
-                <Box xcss={xcss({ width: '144px' })}>
+                <Box xcss={xcss({ width: `${layout.mainWidth >= 600 ? 172 : 124}px`, minHeight: '60px' })}>
                   <TextField {...fieldProps} css={compactTextFieldStyles} placeholder={t('id_placeholder')} />
                   <MessageWrapper>{error && <ErrorMessage>{error}</ErrorMessage>}</MessageWrapper>
                 </Box>
@@ -324,6 +324,7 @@ function DiscordUsers() {
                     options={userGroups.map(createOption)}
                     autoFocus={false}
                     openMenuOnFocus={false}
+                    menuPortalTarget={document.body}
                   />
                 )}
               </Field>

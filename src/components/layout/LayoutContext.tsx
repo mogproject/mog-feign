@@ -82,6 +82,7 @@ export function LayoutContextProvider(props: LayoutContextProviderProps) {
   React.useEffect(() => {
     const observer = new ResizeObserver(() => {
       const windowWidth = document.documentElement.clientWidth;
+      if (windowWidth === window.innerWidth) return;
 
       dispatch((prev: LayoutState) => {
         return {

@@ -264,7 +264,7 @@ const DiscordChannels: React.FC = () => {
               </li>
               <li>URL: {namedChannels[removeIndex].url}</li>
               <li>
-                {t('created_at')}: {new Date(namedChannels[removeIndex].createdAt).toLocaleString()}
+                {t('created_at')}: {new Date(namedChannels[removeIndex].createdAt).toLocaleString('ja-JP')}
               </li>
             </ul>
           </ModalBody>
@@ -301,7 +301,7 @@ const DiscordChannels: React.FC = () => {
         id="discord-channel-url"
         feedback={t('feedback')}
         showStatus
-        clearable
+        isClearable
       />
       <Inline alignBlock="end" spread="space-between">
         <Inline alignBlock="end">
