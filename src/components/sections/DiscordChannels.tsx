@@ -301,7 +301,7 @@ const DiscordChannels: React.FC = () => {
         id="discord-channel-url"
         feedback={t('feedback')}
         showStatus
-        clearable
+        isClearable
       />
       <Inline alignBlock="end" spread="space-between">
         <Inline alignBlock="end">

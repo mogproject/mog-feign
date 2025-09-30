@@ -37,7 +37,7 @@ type LabeledTextFieldProps = {
   feedback: string;
   // fontSize?: number;
   showStatus: boolean;
-  clearable?: boolean;
+  isClearable?: boolean;
 };
 
 const LabeledTextField: React.FC<LabeledTextFieldProps> = (props) => {
@@ -72,10 +72,10 @@ const LabeledTextField: React.FC<LabeledTextFieldProps> = (props) => {
             props.setValue((e.target as HTMLInputElement).value);
           }}
           elemAfterInput={
-            props.clearable &&
+            props.isClearable &&
             !isEmpty && (
               <IconButton
-                icon={() => <CrossCircleIcon size='small' color={token('color.text.subtlest')}/>}
+                icon={() => <CrossCircleIcon size="small" color={token('color.text.subtlest')} />}
                 spacing="compact"
                 appearance="subtle"
                 label={t('clear')}
