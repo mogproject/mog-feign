@@ -146,7 +146,14 @@ const DiscordChannels: React.FC = () => {
             <Field<string> name="name" isRequired defaultValue="" validate={(s) => validateName((s || '').trim(), -1)}>
               {({ fieldProps, error }) => (
                 <Box xcss={xcss({ width: '180px', marginTop: 'space.negative.100' })}>
-                  <TextField {...fieldProps} css={compactTextFieldStyles} placeholder={t('register_placeholder')} autoComplete="off" />
+                  <TextField
+                    {...fieldProps}
+                    css={compactTextFieldStyles}
+                    placeholder={t('register_placeholder')}
+                    autoComplete="off"
+                    aria-label="name"
+                    aria-labelledby=""
+                  />
                   <MessageWrapper>{error && <ErrorMessage>{error}</ErrorMessage>}</MessageWrapper>
                 </Box>
               )}

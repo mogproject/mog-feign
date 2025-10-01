@@ -121,6 +121,7 @@ const ja = {
       group_placeholder: 'グループ',
       removal: 'Discord ユーザーの削除',
       confirm_removal: '以下のユーザーを削除します。よろしいですか?',
+      no_groups: '(なし)',
     },
     feign_player_settings: 'Feign プレイヤー設定',
     feign_player_settings_short: 'プレイヤー設定',

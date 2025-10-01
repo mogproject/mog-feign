@@ -91,6 +91,11 @@ function DiscordUsers() {
   const openModal = React.useCallback(() => setIsModalOpen(true), []);
   const closeModal = React.useCallback(() => setIsModalOpen(false), []);
 
+  const groupString = (user: DiscordUser): string => {
+    const ret = user.groups.join(', ');
+    return ret.length === 0 ? t('no_groups') : ret;
+  };
+
   const setEditValue = (index: number, key: string, value: string) => {
     dispatch((prev) => {
       const newUsers = prev.discordUsers.map((user: DiscordUser, i: number) => (i == index ? { ...user, [key]: value } : user));
@@ -244,7 +249,7 @@ function DiscordUsers() {
               </li>
               <li>ID: {discordUsers[removeIndex].id}</li>
               <li>
-                {tt('groups')}: {discordUsers[removeIndex].groups.join(', ')}
+                {tt('groups')}: {groupString(discordUsers[removeIndex])}
               </li>
             </ul>
           </ModalBody>
@@ -301,7 +306,14 @@ function DiscordUsers() {
             <Field<string> name="name" isRequired validate={(value) => validateName(value || '', -1, false)} defaultValue="">
               {({ fieldProps, error }) => (
                 <Box xcss={xcss({ width: `${layout.mainWidth >= 600 ? 144 : 120}px`, minHeight: '60px' })}>
-                  <TextField {...fieldProps} css={compactTextFieldStyles} placeholder={t('name_placeholder')} autoComplete="off" />
+                  <TextField
+                    {...fieldProps}
+                    css={compactTextFieldStyles}
+                    placeholder={t('name_placeholder')}
+                    autoComplete="off"
+                    aria-label="name"
+                    aria-labelledby=""
+                  />
                   <MessageWrapper>{error && <ErrorMessage>{error}</ErrorMessage>}</MessageWrapper>
                 </Box>
               )}
@@ -311,7 +323,13 @@ function DiscordUsers() {
             <Field<string> name="id" isRequired validate={(value) => validateId(value || '', -1, false)} defaultValue="">
               {({ fieldProps, error }) => (
                 <Box xcss={xcss({ width: `${layout.mainWidth >= 600 ? 172 : 124}px`, minHeight: '60px' })}>
-                  <TextField {...fieldProps} css={compactTextFieldStyles} placeholder={t('id_placeholder')} />
+                  <TextField
+                    {...fieldProps}
+                    css={compactTextFieldStyles}
+                    placeholder={t('id_placeholder')}
+                    aria-label="id"
+                    aria-labelledby=""
+                  />
                   <MessageWrapper>{error && <ErrorMessage>{error}</ErrorMessage>}</MessageWrapper>
                 </Box>
               )}
@@ -335,6 +353,8 @@ function DiscordUsers() {
                     autoFocus={false}
                     openMenuOnFocus={false}
                     menuPortalTarget={document.body}
+                    aria-label="groups"
+                    aria-labelledby=""
                   />
                 )}
               </Field>
