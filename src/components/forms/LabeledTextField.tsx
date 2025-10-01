@@ -40,7 +40,7 @@ type LabeledTextFieldProps = {
   isClearable?: boolean;
 };
 
-const LabeledTextField: React.FC<LabeledTextFieldProps> = (props) => {
+const LabeledTextField = React.forwardRef<HTMLInputElement, LabeledTextFieldProps>((props, ref) => {
   const { t: translate } = useTranslation('translation');
   const t = translate as (s: string, o?: Record<string, string | boolean>) => string;
 
@@ -62,6 +62,7 @@ const LabeledTextField: React.FC<LabeledTextFieldProps> = (props) => {
         ----------------------------------------------------------------------*/}
       <span>
         <Textfield
+          ref={ref}
           id={props.id}
           isCompact
           css={[css({ width: props.width }), buttonGroupNotFirstStyles]}
@@ -111,6 +112,6 @@ const LabeledTextField: React.FC<LabeledTextFieldProps> = (props) => {
       trigger={mainContent}
     />
   );
-};
+});
 
 export default LabeledTextField;

@@ -10,6 +10,7 @@ import Button, { IconButton } from '@atlaskit/button/new';
 import TextField from '@atlaskit/textfield';
 import Modal, { ModalBody, ModalFooter, ModalHeader, ModalTitle, ModalTransition } from '@atlaskit/modal-dialog';
 import { reorder } from '@atlaskit/pragmatic-drag-and-drop/reorder';
+import { triggerPostMoveFlash } from '@atlaskit/pragmatic-drag-and-drop-flourish/trigger-post-move-flash';
 
 // Icons
 import ArrowDownIcon from '@atlaskit/icon/core/arrow-down';
@@ -66,6 +67,8 @@ const DiscordChannels: React.FC = () => {
   const { channelURL, namedChannels, namedChannelsTableSettings } = useAppState();
   const dispatch = useAppDispatch();
   const layout = useLayoutState();
+
+  const urlInputRef = React.useRef<HTMLInputElement>(null);
 
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [removeIndex, setRemoveIndex] = React.useState(-1);
@@ -222,6 +225,9 @@ const DiscordChannels: React.FC = () => {
             onClick={() => {
               if (channelURL !== channel.url) {
                 dispatch((prev) => ({ ...prev, channelURL: channel.url }));
+                if (urlInputRef.current) {
+                  triggerPostMoveFlash(urlInputRef.current);
+                }
               }
             }}
           />
@@ -292,6 +298,7 @@ const DiscordChannels: React.FC = () => {
     <Stack>
       <p css={css({ paddingBottom: '8px' })}>{t('description')}</p>
       <LabeledTextField
+        ref={urlInputRef}
         label="URL"
         value={channelURL}
         validate={isValidVoiceChannelURL}
