@@ -37,12 +37,12 @@ const unselectedStyles = {
   menuPortal: (base: any) => ({ ...base, zIndex: 9999 }),
   control: (base: any) => ({
     ...base,
-    backgroundColor: token('color.background.accent.gray.bolder'),
+    backgroundColor: token('color.background.accent.gray.subtler'),
     opacity: 0.8,
   }),
   placeholder: (base: any) => ({
     ...base,
-    color: token('color.text.inverse'),
+    // color: token('color.text.inverse'),
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
