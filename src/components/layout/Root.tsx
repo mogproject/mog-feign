@@ -52,7 +52,7 @@ const RootInner: React.FC<RootInnerProps> = (props: RootInnerProps) => {
     <>
       <Global styles={globalScrollStyles} />
       <TopNav>{props.topNavContent}</TopNav>
-      <Inline space="space.0" alignBlock="start">
+      <Inline space="space.0" alignBlock="start" xcss={xcss({marginTop: `${state.topNavHeight}px`})}>
         {state.showSideNav && <SideNav>{props.sideNavContent}</SideNav>}
         <Stack xcss={rightPaneStyles}>
           <Inline>
