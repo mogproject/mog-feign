@@ -238,7 +238,7 @@ const RankableTable: React.FC<RankableTableProps> = (props) => {
           </Box>
           <tbody ref={tbodyRef}>
             {sortedRows.map((row, rowIndex) => (
-              <Row key={rowIndex} rowIndex={rowIndex} {...row} />
+              <Row key={rowIndex} rowIndex={rowIndex} cells={row.cells} rowRef={row?.ref} />
             ))}
           </tbody>
         </table>

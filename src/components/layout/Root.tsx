@@ -20,6 +20,8 @@ const footerStyles = css({
   left: '0',
   width: '100%',
   borderBlockStart: `1px solid ${token('color.border')}`,
+  backgroundColor: '#ffffff',
+  zIndex: 91,
 });
 
 type RootInnerProps = {
