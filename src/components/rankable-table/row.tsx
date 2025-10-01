@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import invariant from 'tiny-invariant';
 
 import { RowCellType } from './types';

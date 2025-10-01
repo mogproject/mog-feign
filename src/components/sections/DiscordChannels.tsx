@@ -10,6 +10,7 @@ import Button, { IconButton } from '@atlaskit/button/new';
 import TextField from '@atlaskit/textfield';
 import Modal, { ModalBody, ModalFooter, ModalHeader, ModalTitle, ModalTransition } from '@atlaskit/modal-dialog';
 import { reorder } from '@atlaskit/pragmatic-drag-and-drop/reorder';
+import { triggerPostMoveFlash } from '@atlaskit/pragmatic-drag-and-drop-flourish/trigger-post-move-flash';
 
 // Icons
 import ArrowDownIcon from '@atlaskit/icon/core/arrow-down';
@@ -67,6 +68,10 @@ const DiscordChannels: React.FC = () => {
   const dispatch = useAppDispatch();
   const layout = useLayoutState();
 
+  const [newChannelAdded, setNewChannelAdded] = React.useState(false);
+  const urlInputRef = React.useRef<HTMLInputElement>(null);
+  const lastEntryRef = React.useRef<HTMLTableRowElement>(null);
+
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [removeIndex, setRemoveIndex] = React.useState(-1);
   const openModal = React.useCallback(() => setIsModalOpen(true), []);
@@ -122,7 +127,7 @@ const DiscordChannels: React.FC = () => {
           };
           return { ...prev, namedChannels: [...prev.namedChannels, newNamedChannel] };
         });
-
+        setNewChannelAdded(true);
         form.reset(); // clear all fields
       }}
     >
@@ -170,6 +175,7 @@ const DiscordChannels: React.FC = () => {
     ],
   };
   const rows: RowType[] = namedChannels.map((channel, index) => ({
+    ref: index === namedChannels.length - 1 ? lastEntryRef : undefined,
     cells: [
       //------------------------------------------------------------------------
       //    Name
@@ -222,6 +228,9 @@ const DiscordChannels: React.FC = () => {
             onClick={() => {
               if (channelURL !== channel.url) {
                 dispatch((prev) => ({ ...prev, channelURL: channel.url }));
+                if (urlInputRef.current) {
+                  triggerPostMoveFlash(urlInputRef.current);
+                }
               }
             }}
           />
@@ -287,11 +296,31 @@ const DiscordChannels: React.FC = () => {
     </ModalTransition>
   );
 
+  //----------------------------------------------------------------------------
+  //    Effect on new users
+  //----------------------------------------------------------------------------
+  React.useEffect(() => {
+    if (newChannelAdded && lastEntryRef.current) {
+      lastEntryRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+      });
+      setTimeout(() => {
+        if (lastEntryRef.current) {
+          triggerPostMoveFlash(lastEntryRef.current);
+        }
+      }, 200);
+
+      setNewChannelAdded(false); // reset the flag
+    }
+  }, [newChannelAdded]);
+
   // Output.
   return (
     <Stack>
       <p css={css({ paddingBottom: '8px' })}>{t('description')}</p>
       <LabeledTextField
+        ref={urlInputRef}
         label="URL"
         value={channelURL}
         validate={isValidVoiceChannelURL}
