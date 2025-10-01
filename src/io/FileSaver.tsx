@@ -1,26 +1,10 @@
+import { getDataType } from './data-type';
+
 class FileSaver {
   readonly isFileSystemAccessApiSupported: boolean;
 
   constructor() {
     this.isFileSystemAccessApiSupported = !!window.showSaveFilePicker;
-  }
-
-  inferDataType(extension: string): FilePickerAcceptType {
-    if (extension === 'txt') return { description: 'Text file', accept: { 'text/plain': ['.txt'] } };
-    if (extension === 'json') return { description: 'JSON file', accept: { 'application/json': ['.json'] } };
-    if (extension === 'css') return { description: 'CSS file', accept: { 'text/css': ['.css'] } };
-
-    // not implemented yet
-    return { description: 'Unknown', accept: {} };
-  }
-
-  inferDataTypeLegacy(extension: string): string {
-    if (extension === 'txt') return 'text/plain;charset=utf-8';
-    if (extension === 'json') return 'application/json;charset=utf-8';
-    if (extension === 'css') return 'text/css;charset=utf-8';
-
-    // not implemented yet
-    return 'text/plain;charset=utf-8';
   }
 
   async saveTextToFile(content: () => string, suggestedName: string) {
@@ -32,9 +16,10 @@ class FileSaver {
     const ext = suggestedName.split('.').pop()?.toLowerCase() || '';
     try {
       // Open the file save dialog.
+      const accept = getDataType(ext);
       const fileHandle = await window.showSaveFilePicker({
         suggestedName: suggestedName,
-        types: [this.inferDataType(ext)],
+        types: [{ description: accept.description, accept: accept.accept }],
       });
 
       // Create a writable stream to the file
@@ -50,11 +35,12 @@ class FileSaver {
     }
   }
 
-  /** For browsers that do support File System Access API. */
+  /** For browsers that do support File System Access API (e.g. Firefox). */
   saveTextToFileLegacy(content: () => string, suggestedName: string) {
     const ext = suggestedName.split('.').pop()?.toLowerCase() || '';
 
-    const file = new Blob([content()], { type: this.inferDataTypeLegacy(ext) });
+    const accept = getDataType(ext);
+    const file = new Blob([content()], { type: accept.acceptLegacy });
     const url = URL.createObjectURL(file);
 
     const element = document.createElement('a');

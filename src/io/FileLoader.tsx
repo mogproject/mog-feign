@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import invariant from 'tiny-invariant';
+import { getDataType } from './data-type';
 
 export interface FileLoaderMessage {
   level: 'info' | 'success' | 'danger';
@@ -34,13 +34,14 @@ class FileLoader {
       return;
     }
 
+    const accept = getDataType(extension).accept;
     window
       .showOpenFilePicker({
         multiple: false,
         types: [
           {
             description: this.t('text_files'),
-            accept: { 'text/plain': [`.${extension}`] },
+            accept: accept,
           },
         ],
       })
@@ -76,6 +77,7 @@ class FileLoader {
       });
   }
 
+  /** For browsers that do support File System Access API (e.g. Firefox). */
   loadTextFromFileLegacy(
     contentHandler: (content: string) => boolean,
     messageHandler: (m: FileLoaderMessage) => void,
