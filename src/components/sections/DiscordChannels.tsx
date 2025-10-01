@@ -68,7 +68,9 @@ const DiscordChannels: React.FC = () => {
   const dispatch = useAppDispatch();
   const layout = useLayoutState();
 
+  const [newChannelAdded, setNewChannelAdded] = React.useState(false);
   const urlInputRef = React.useRef<HTMLInputElement>(null);
+  const lastEntryRef = React.useRef<HTMLTableRowElement>(null);
 
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [removeIndex, setRemoveIndex] = React.useState(-1);
@@ -125,7 +127,7 @@ const DiscordChannels: React.FC = () => {
           };
           return { ...prev, namedChannels: [...prev.namedChannels, newNamedChannel] };
         });
-
+        setNewChannelAdded(true);
         form.reset(); // clear all fields
       }}
     >
@@ -173,6 +175,7 @@ const DiscordChannels: React.FC = () => {
     ],
   };
   const rows: RowType[] = namedChannels.map((channel, index) => ({
+    ref: index === namedChannels.length - 1 ? lastEntryRef : undefined,
     cells: [
       //------------------------------------------------------------------------
       //    Name
@@ -292,6 +295,25 @@ const DiscordChannels: React.FC = () => {
       )}
     </ModalTransition>
   );
+
+  //----------------------------------------------------------------------------
+  //    Effect on new users
+  //----------------------------------------------------------------------------
+  React.useEffect(() => {
+    if (newChannelAdded && lastEntryRef.current) {
+      lastEntryRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+      });
+      setTimeout(() => {
+        if (lastEntryRef.current) {
+          triggerPostMoveFlash(lastEntryRef.current);
+        }
+      }, 200);
+
+      setNewChannelAdded(false); // reset the flag
+    }
+  }, [newChannelAdded]);
 
   // Output.
   return (
