@@ -33,7 +33,7 @@ export interface HeadType {
 
 export interface RowType extends React.ComponentPropsWithoutRef<'tr'> {
   cells: Array<RowCellType>;
-  ref?: React.Ref<HTMLTableRowElement>;
+  ref?: React.RefObject<HTMLTableRowElement | null>;
 }
 
 /**

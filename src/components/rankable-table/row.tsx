@@ -24,12 +24,25 @@ type State =
       closestEdge: Edge | null;
     };
 
-const Row = React.memo(function Row({ cells, rowIndex }: { cells: RowCellType[]; rowIndex: number }) {
-  const ref = React.useRef<HTMLTableRowElement | null>(null);
+const Row = React.memo(function Row({
+  cells,
+  rowIndex,
+  rowRef,
+}: {
+  cells: RowCellType[];
+  rowIndex: number;
+  rowRef: React.RefObject<HTMLTableRowElement | null> | undefined;
+}) {
+  const ref = React.useRef<HTMLTableRowElement>(null);
   const dragHandleRef = React.useRef<HTMLButtonElement>(null);
   const { instanceId, sortKey } = React.useContext(TableContext);
   const [state, setState] = React.useState<State>({ type: 'idle' });
   const isDraggable = sortKey === null;
+
+  // Synchronize refs.
+  React.useEffect(() => {
+    if (rowRef) rowRef.current = ref.current;
+  }, [rowRef]);
 
   // cleanup the live region when this component is finished
   React.useEffect(() => {

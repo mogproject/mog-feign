@@ -1,4 +1,5 @@
 import React from 'react';
+import invariant from 'tiny-invariant';
 import { useTranslation } from 'react-i18next';
 import { css } from '@emotion/react';
 
@@ -23,6 +24,7 @@ import RankableTable from '../rankable-table/RankableTable';
 import { reorder } from '@atlaskit/pragmatic-drag-and-drop/reorder';
 import { useAppDispatch, useAppState, useUserGroups } from '../../models/ContextProvider';
 import { useLayoutState } from '../layout/LayoutContext';
+import { triggerPostMoveFlash } from '@atlaskit/pragmatic-drag-and-drop-flourish/trigger-post-move-flash';
 
 const readViewContainerStyles = xcss({
   display: 'flex',
@@ -152,7 +154,11 @@ function DiscordUsers() {
     ],
   };
 
+  const [newUserAdded, setNewUserAdded] = React.useState(false);
+  const lastEntryRef = React.useRef<HTMLTableRowElement>(null);
+
   const rows: RowType[] = discordUsers.map((user, index) => ({
+    ref: index === discordUsers.length - 1 ? lastEntryRef : undefined,
     cells: [
       //------------------------------------------------------------------------
       //    Name
@@ -237,7 +243,9 @@ function DiscordUsers() {
                 {tt('name')}: {discordUsers[removeIndex].name}
               </li>
               <li>ID: {discordUsers[removeIndex].id}</li>
-              <li>{tt('groups')}: {discordUsers[removeIndex].groups.join(', ')}</li>
+              <li>
+                {tt('groups')}: {discordUsers[removeIndex].groups.join(', ')}
+              </li>
             </ul>
           </ModalBody>
           <ModalFooter>
@@ -282,6 +290,7 @@ function DiscordUsers() {
           return { ...prev, discordUsers: newUsers };
         });
 
+        setNewUserAdded(true); // Notify that a new user has been added.
         form.reset(); // clear all fields
       }}
     >
@@ -342,6 +351,25 @@ function DiscordUsers() {
       )}
     </Form>
   );
+
+  //----------------------------------------------------------------------------
+  //    Effect on new users
+  //----------------------------------------------------------------------------
+  React.useEffect(() => {
+    if (newUserAdded && lastEntryRef.current) {
+      lastEntryRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+      });
+      setTimeout(() => {
+        if (lastEntryRef.current) {
+          triggerPostMoveFlash(lastEntryRef.current);
+        }
+      }, 200);
+
+      setNewUserAdded(false); // reset the flag
+    }
+  }, [newUserAdded]);
 
   //----------------------------------------------------------------------------
   //    Output
