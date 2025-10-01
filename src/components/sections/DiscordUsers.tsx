@@ -237,6 +237,7 @@ function DiscordUsers() {
                 {tt('name')}: {discordUsers[removeIndex].name}
               </li>
               <li>ID: {discordUsers[removeIndex].id}</li>
+              <li>{tt('groups')}: {discordUsers[removeIndex].groups.join(', ')}</li>
             </ul>
           </ModalBody>
           <ModalFooter>
