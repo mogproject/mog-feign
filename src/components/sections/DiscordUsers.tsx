@@ -5,7 +5,7 @@ import { css } from '@emotion/react';
 import Form, { ErrorMessage, Field, MessageWrapper } from '@atlaskit/form';
 import TextField from '@atlaskit/textfield';
 import Button, { IconButton } from '@atlaskit/button/new';
-import { HeadType, RowType } from '../forms/rankable-table/types';
+import { HeadType, RowType } from '../rankable-table/types';
 import { Box, Inline, xcss } from '@atlaskit/primitives';
 
 import { DiscordUser } from '../../models/detail/DiscordUser';
@@ -19,7 +19,7 @@ import Modal, { ModalBody, ModalFooter, ModalHeader, ModalTitle, ModalTransition
 // Note: Importing from '@atlaskit/select' breaks creatable select.
 import CreatableSelect from '@atlaskit/select/CreatableSelect';
 import { createOption } from '../forms/select-helper';
-import RankableTable from '../forms/rankable-table/RankableTable';
+import RankableTable from '../rankable-table/RankableTable';
 import { reorder } from '@atlaskit/pragmatic-drag-and-drop/reorder';
 import { useAppDispatch, useAppState, useUserGroups } from '../../models/ContextProvider';
 import { useLayoutState } from '../layout/LayoutContext';
@@ -237,6 +237,7 @@ function DiscordUsers() {
                 {tt('name')}: {discordUsers[removeIndex].name}
               </li>
               <li>ID: {discordUsers[removeIndex].id}</li>
+              <li>{tt('groups')}: {discordUsers[removeIndex].groups.join(', ')}</li>
             </ul>
           </ModalBody>
           <ModalFooter>

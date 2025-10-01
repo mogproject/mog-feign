@@ -49,11 +49,18 @@ const AccordionItem: React.FC<AccordionItemProps> = ({ defaultOpen = true, heade
     maxHeight: (isOpen ? bodyHeight : 0) + 'px',
   });
 
+  // Watch for the content height.
   React.useEffect(() => {
-    if (bodyRef.current) {
-      setBodyHeight(bodyRef.current.scrollHeight);
-    }
-  }, [body, bodyRef.current?.scrollHeight, layout.mainWidth]);
+    if (!bodyRef.current) return;
+
+    const el = bodyRef.current;
+    const observer = new ResizeObserver(() => {
+      setBodyHeight(el.scrollHeight);
+    });
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [bodyRef]);
 
   return (
     <>

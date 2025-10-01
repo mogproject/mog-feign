@@ -1,4 +1,4 @@
-import { SortOrderType } from '../../components/forms/rankable-table/types';
+import { SortOrderType } from '../../components/rankable-table/types';
 
 interface TableSettings {
   sortKey: string | null;

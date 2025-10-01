@@ -20,9 +20,9 @@ import RadioCheckedIcon from '@atlaskit/icon/core/radio-checked';
 import LabeledTextField from '../forms/LabeledTextField';
 import { useAppDispatch, useAppState } from '../../models/ContextProvider';
 import { isValidVoiceChannelURL, NamedChannel } from '../../models/detail/ChannelSettings';
-import { HeadType, RowType } from '../forms/rankable-table/types';
+import { HeadType, RowType } from '../rankable-table/types';
 import EditableText from '../forms/EditableText';
-import RankableTable from '../forms/rankable-table/RankableTable';
+import RankableTable from '../rankable-table/RankableTable';
 import { Hide } from '@atlaskit/primitives/responsive';
 import { useLayoutState } from '../layout/LayoutContext';
 

@@ -13,7 +13,7 @@ import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/ad
 import { autoScrollForElements } from '@atlaskit/pragmatic-drag-and-drop-auto-scroll/element';
 import { triggerPostMoveFlash } from '@atlaskit/pragmatic-drag-and-drop-flourish/trigger-post-move-flash';
 import { extractClosestEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge';
-import { useLayoutState } from '../../layout/LayoutContext';
+import { useLayoutState } from '../layout/LayoutContext';
 import { firstColumnAdditionalPadding, minColumnWidth } from './constants';
 
 //------------------------------------------------------------------------------
@@ -171,9 +171,8 @@ const RankableTable: React.FC<RankableTableProps> = (props) => {
       if (tableWidth >= requiredWidth) return; //ok
 
       ths.forEach((th, i) => {
-        if (i === 0) {
-          th.style.setProperty('--local-resizing-width', `${minColumnWidth + firstColumnAdditionalPadding}px`);
-        } else if (widths[i] > minColumnWidth) {
+        const w = minColumnWidth + (i === 0 ? firstColumnAdditionalPadding : 0);
+        if (widths[i] > w) {
           th.style.removeProperty('--local-resizing-width');
         }
       });
