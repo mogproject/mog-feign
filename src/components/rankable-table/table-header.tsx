@@ -105,6 +105,7 @@ const thStyles = xcss({
   // using border box sizing as that is what we will be applying as the width for `--local-resizing-width`
   boxSizing: 'border-box',
   width: 'var(--local-resizing-width)',
+  flexShrink: '0',
 
   minHeight: '20px',
   verticalAlign: 'middle',
@@ -284,7 +285,7 @@ const TableHeader: React.FC<TableHeaderProps> = ({ cell, index, sortKey, sortOrd
       const header = ref.current;
       invariant(header);
       invariant(cell.defaultWidth);
-      const w = cell.defaultWidth + (index == 0 ? firstColumnAdditionalPadding : 0);
+      const w = cell.defaultWidth + (index === 0 ? firstColumnAdditionalPadding : 0);
       header.style.setProperty('--local-resizing-width', `${w}px`);
     }, []);
   }
