@@ -121,6 +121,7 @@ const en = {
       group_placeholder: 'Groups',
       removal: 'Removing Discord User',
       confirm_removal: 'Do you want to remove the following user?',
+      no_groups: '(None)',
     },
     feign_player_settings: 'Feign Players',
     feign_player_settings_short: 'Feign Players',

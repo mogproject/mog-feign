@@ -91,6 +91,11 @@ function DiscordUsers() {
   const openModal = React.useCallback(() => setIsModalOpen(true), []);
   const closeModal = React.useCallback(() => setIsModalOpen(false), []);
 
+  const groupString = (user: DiscordUser): string => {
+    const ret = user.groups.join(', ');
+    return ret.length === 0 ? t('no_groups') : ret;
+  };
+
   const setEditValue = (index: number, key: string, value: string) => {
     dispatch((prev) => {
       const newUsers = prev.discordUsers.map((user: DiscordUser, i: number) => (i == index ? { ...user, [key]: value } : user));
@@ -244,7 +249,7 @@ function DiscordUsers() {
               </li>
               <li>ID: {discordUsers[removeIndex].id}</li>
               <li>
-                {tt('groups')}: {discordUsers[removeIndex].groups.join(', ')}
+                {tt('groups')}: {groupString(discordUsers[removeIndex])}
               </li>
             </ul>
           </ModalBody>
