@@ -11,10 +11,13 @@ watch:
 	npm run dev
 
 test:
-	npm run test
+	NODE_NO_WARNINGS=1 npm run test
+
+coverage:
+	NODE_NO_WARNINGS=1 npm run coverage
 
 open:
 	open http://localhost:3000/
 
-.PHONY: build install clean watch test open
+.PHONY: build install clean watch test coverage open
 
