@@ -19,7 +19,7 @@ import {
   iconButtonStyles,
   labelStyles,
 } from '../forms/button-group-styles';
-import { FEI_COLORS, NUMBER_OF_FEI_COLORS } from '../../models/app-context';
+import { FEI_COLORS, FEI_COLOR_CODES, NUMBER_OF_FEI_COLORS } from '../../models/app-context';
 
 const containerStyles = xcss({
   minWidth: '220px',
@@ -115,55 +115,14 @@ const fixedSizeLabelStyles = css({
   width: '80px',
 });
 
-const coloredLabelStyles = [
-  css({
-    backgroundColor: '#ffffff',
-  }),
-  css({
-    backgroundColor: '#ff891e',
-    color: '#fcfcfc',
-  }),
-  css({
-    backgroundColor: '#71348d',
-    color: '#fcfcfc',
-  }),
-  css({
-    backgroundColor: '#2a7b0c',
-    color: '#fcfcfc',
-  }),
-  css({
-    backgroundColor: '#4f71d7',
-    color: '#fcfcfc',
-  }),
-  css({
-    backgroundColor: '#b4000b',
-    color: '#fcfcfc',
-  }),
-  css({
-    backgroundColor: '#ffe551',
-  }),
-  css({
-    backgroundColor: '#85ff46',
-  }),
-  css({
-    backgroundColor: '#30d0c0',
-  }),
-  css({
-    backgroundColor: '#ff91b6',
-  }),
-  css({
-    backgroundColor: '#654322',
-    color: '#fcfcfc',
-  }),
-  css({
-    backgroundColor: '#ff00e0',
-    color: '#fcfcfc',
-  }),
-  css({
-    backgroundColor: '#ff4405',
-    color: '#fcfcfc',
-  }),
-];
+const reversedFontColor = '#fcfcfc';
+const coloredLabelStyles = Array.from({ length: NUMBER_OF_FEI_COLORS }, (_, i) => {
+  if ((1 <= i && i <= 5) || i >= 10) {
+    return css({ backgroundColor: FEI_COLOR_CODES[i], color: reversedFontColor });
+  } else {
+    return css({ backgroundColor: FEI_COLOR_CODES[i] });
+  }
+});
 
 const groupSelectStyles = {
   control: (base: any) => ({
