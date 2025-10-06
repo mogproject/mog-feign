@@ -19,3 +19,19 @@ export const FEI_COLORS: string[] = [
 ];
 
 export const NUMBER_OF_FEI_COLORS = FEI_COLORS.length;
+
+export const FEI_COLOR_CODES: string[] = [
+  '#ffffff',
+  '#ff891e',
+  '#71348d',
+  '#2a7b0c',
+  '#4f71d7',
+  '#b4000b',
+  '#ffe551',
+  '#85ff46',
+  '#30d0c0',
+  '#ff91b6',
+  '#654322',
+  '#ff00e0',
+  '#ff4405',
+];
