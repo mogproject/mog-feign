@@ -48,16 +48,16 @@ const defaultAppState: AppState = {
 //    Utilities
 //------------------------------------------------------------------------------
 function loadFromLocalStorage<T>(key: string, loader: (obj: any) => T, defaultValue: T, isJson: boolean): T {
+  const raw = localStorage.getItem(key);
+  if (raw === null) return defaultValue;
+
   try {
-    const raw = localStorage.getItem(key);
-    invariant(raw !== null);
     if (isJson) {
       return loader(JSON.parse(raw));
     } else {
       return loader(raw);
     }
   } catch (err) {
-    console.log(key, err);
     return defaultValue;
   }
 }
@@ -79,12 +79,8 @@ function loadTableSettings(obj: any, keys: string[]): TableSettings {
 //    Channel URL
 //------------------------------------------------------------------------------
 function loadVoiceChannelURL(obj: any): string {
-  try {
-    invariant(typeof obj === 'string');
-    return obj as string;
-  } catch (err) {
-    return defaultAppState.channelURL;
-  }
+  if (typeof obj !== 'string') return defaultAppState.channelURL;
+  return obj as string;
 }
 
 export function saveVoiceChannelURLToLocalStorage(url: string) {
