@@ -28,6 +28,17 @@ const textFieldStyles = css({
   },
 });
 
+const gridStyles = css({
+  display: 'grid',
+  columnGap: token('space.200'),
+  gridTemplateColumns: '2fr 3fr', // default
+
+  // small screen
+  '@media (max-width: 1024px)': {
+    gridTemplateColumns: '1fr',
+  },
+});
+
 const OBSSettings: React.FC = () => {
   const { t: translate, i18n } = useTranslation('translation', { keyPrefix: 'obs' });
   const t = translate as (s: string, o?: Record<string, string | boolean>) => string;
@@ -49,8 +60,10 @@ const OBSSettings: React.FC = () => {
   const validView = (
     <Stack space="space.100">
       <Inline>{t('description')}</Inline>
-      <div css={{ display: 'grid', columnGap: token('space.200'), gridTemplateColumns: '2fr 3fr' }}>
-        <Hide below='md'><Image width="100%" src="assets/img/obs.png" alt="obs" /></Hide>
+      <div css={gridStyles}>
+        <Hide below="md">
+          <Image width="100%" src="assets/img/obs.png" alt="obs" />
+        </Hide>
         <Stack space="space.400">
           {/*
 --------------------------------------------------------------------------------
