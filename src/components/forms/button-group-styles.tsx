@@ -46,7 +46,8 @@ export const compactLabelStyles = css({
 
 export const iconButtonStyles = css({
   cursor: 'pointer',
-  padding: '7px 8px',
+  height: '32px',
+  padding: 'auto 8px',
   borderWidth: '1px',
   borderColor: token('color.border.accent.gray'),
   borderStyle: 'solid',

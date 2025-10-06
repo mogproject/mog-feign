@@ -108,7 +108,7 @@ const OBSSettings: React.FC = () => {
     Custom CSS
 --------------------------------------------------------------------------------*/}
           <Inline alignBlock="center">
-            <span css={[labelStyles, css({ paddingBlock: '7px' })]}>{t('custom_css')}</span>
+            <span css={[labelStyles]}>{t('custom_css')}</span>
 
             <CopyButton
               content={cssContent}
