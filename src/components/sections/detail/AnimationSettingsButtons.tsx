@@ -72,7 +72,7 @@ const AnimationSettingsButtons: React.FC<AnimationSettingsButtonsProps> = ({ idP
           onChange={(checked) => onChange({ ...settings, outline: checked })}
           isNotLastOfGroup
         />
-        <label htmlFor={`${idPrefix}-speaking-outline-color`} css={[labelStyles, buttonGroupNotFirstStyles, buttonGroupNotLastStyles]}>
+        <label htmlFor={`${idPrefix}-speaking-outline-color`} css={[labelStyles, buttonGroupNotFirstStyles]}>
           {tt('color')}
         </label>
 
