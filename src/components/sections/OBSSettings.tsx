@@ -57,7 +57,7 @@ const OBSSettings: React.FC = () => {
     URL
 --------------------------------------------------------------------------------*/}
           <Inline alignBlock="center">
-            <label htmlFor="obs-url" css={[labelStyles, buttonGroupNotLastStyles]}>
+            <label htmlFor="obs-url" css={[labelStyles]}>
               {'URL'}
             </label>
 
@@ -78,7 +78,7 @@ const OBSSettings: React.FC = () => {
     Width
 --------------------------------------------------------------------------------*/}
               <Inline alignBlock="center" xcss={xcss({ width: '100%' })}>
-                <label htmlFor="obs-width" css={[labelStyles, buttonGroupNotLastStyles]}>
+                <label htmlFor="obs-width" css={[labelStyles]}>
                   {t('width')}
                 </label>
 
@@ -91,7 +91,7 @@ const OBSSettings: React.FC = () => {
     Height
 --------------------------------------------------------------------------------*/}
               <Inline alignBlock="center" xcss={xcss({ width: '100%' })}>
-                <label htmlFor="obs-height" css={[labelStyles, buttonGroupNotLastStyles]}>
+                <label htmlFor="obs-height" css={[labelStyles]}>
                   {t('height')}
                 </label>
 
@@ -108,7 +108,7 @@ const OBSSettings: React.FC = () => {
     Custom CSS
 --------------------------------------------------------------------------------*/}
           <Inline alignBlock="center">
-            <span css={[labelStyles, buttonGroupNotLastStyles, css({ paddingBlock: '7px' })]}>{t('custom_css')}</span>
+            <span css={[labelStyles, css({ paddingBlock: '7px' })]}>{t('custom_css')}</span>
 
             <CopyButton
               content={cssContent}

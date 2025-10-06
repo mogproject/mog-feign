@@ -210,6 +210,7 @@ const QuickMenu: React.FC = () => {
   const groupSelection = (
     <Select
       spacing="compact"
+      css={[buttonGroupNotFirstStyles, css({ width: '100%' })]}
       styles={groupSelectStyles}
       inputId={'quick-feign-player-group'}
       options={groups.map((v) => ({ label: v, value: v }))}
@@ -219,7 +220,6 @@ const QuickMenu: React.FC = () => {
       noOptionsMessage={() => t('settings.player.no_groups')}
       value={state.feignPlayers.group === '' ? null : { label: state.feignPlayers.group, value: state.feignPlayers.group }}
       isDisabled={groups.length === 0}
-      css={css({ width: '100%' })}
       onChange={(e: { label: string; value: string }) => {
         dispatch((prev) => ({ ...prev, feignPlayers: { ...prev.feignPlayers, group: e === null ? '' : e.value } }));
       }}
@@ -268,7 +268,7 @@ const QuickMenu: React.FC = () => {
           <Stack space="space.025">
             <Inline spread="space-between">
               <Inline alignBlock="center">
-                <label htmlFor="quick-url-copy" css={[labelStyles, buttonGroupNotLastStyles]}>
+                <label htmlFor="quick-url-copy" css={[labelStyles]}>
                   {'URL'}
                 </label>
 
@@ -281,7 +281,7 @@ const QuickMenu: React.FC = () => {
               </Inline>
 
               <Inline alignBlock="center">
-                <label htmlFor="quick-css-copy" css={[labelStyles, buttonGroupNotLastStyles]}>
+                <label htmlFor="quick-css-copy" css={[labelStyles]}>
                   {t('obs.custom_css')}
                 </label>
 

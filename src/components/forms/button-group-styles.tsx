@@ -21,6 +21,7 @@ const buttonStyles = css({
   zIndex: '1',
 });
 
+// This includes buttonGroupNotLastStyles.
 export const labelStyles = css({
   padding: '5px 8px',
   backgroundColor: token('color.background.input.hovered'),
@@ -29,6 +30,8 @@ export const labelStyles = css({
   borderStyle: 'solid',
   borderRadius: '3px',
   textWrap: 'nowrap',
+  borderTopRightRadius: '0 !important',
+  borderBottomRightRadius: '0 !important',
 });
 
 export const compactLabelStyles = css({

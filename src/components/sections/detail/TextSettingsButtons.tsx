@@ -27,7 +27,7 @@ const TextSettingsButtons: React.FC<TextSettingsButtonsProps> = ({ fontSize, fon
   return (
     <Stack space='space.075'>
       <Inline alignBlock="center">
-        <label htmlFor="username-fontsize" css={[labelStyles, buttonGroupNotLastStyles]}>
+        <label htmlFor="username-fontsize" css={[labelStyles]}>
           {t('size')}
         </label>
         <Textfield
@@ -39,15 +39,13 @@ const TextSettingsButtons: React.FC<TextSettingsButtonsProps> = ({ fontSize, fon
           value={fontSize}
           isCompact
           css={[buttonGroupNotFirstStyles]}
-          // css={[buttonGroupNotFirstStyles, buttonGroupNotLastStyles, { zIndex: '1' }]}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             onChange({ fontSize: parseInt(e.target.value) });
           }}
         />
       </Inline>
       <Inline>
-        <label htmlFor="username-fontcolor" css={[labelStyles, buttonGroupNotLastStyles]}>
-        {/* <label htmlFor="username-fontcolor" css={[labelStyles, buttonGroupNotFirstStyles, buttonGroupNotLastStyles]}> */}
+        <label htmlFor="username-fontcolor" css={[labelStyles]}>
           {tt('color')}
         </label>
         <ColorPicker

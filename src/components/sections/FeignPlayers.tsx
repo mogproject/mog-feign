@@ -9,7 +9,7 @@ import { FEI_COLORS, NUMBER_OF_FEI_COLORS } from '../../models/app-context';
 import Image from '@atlaskit/image';
 import Select from '@atlaskit/select';
 import { token } from '@atlaskit/tokens';
-import { labelStyles } from '../forms/button-group-styles';
+import { buttonGroupNotFirstStyles, labelStyles } from '../forms/button-group-styles';
 
 const gridStyles = css({
   display: 'grid',
@@ -99,6 +99,7 @@ const FeignPlayers: React.FC = () => {
   const groupSelection = (
     <Select
       spacing="compact"
+      css={buttonGroupNotFirstStyles}
       styles={groupSelectStyles}
       inputId={'feign-player-group'}
       options={groups.map((v) => ({ label: v, value: v }))}
