@@ -10,8 +10,11 @@ clean:
 watch:
 	npm run dev
 
+test:
+	npm run test
+
 open:
 	open http://localhost:3000/
 
-.PHONY: build install clean watch open
+.PHONY: build install clean watch test open
 
