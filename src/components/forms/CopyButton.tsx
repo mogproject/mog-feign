@@ -42,7 +42,7 @@ const CopyButton: React.FC<CopyButtonProps> = ({ content, label, disabled, style
           setMessage(t('copy'));
         }, 1000);
       });
-  }, [i18n.resolvedLanguage]);
+  }, [i18n.resolvedLanguage, content]);
 
   return (
     <Tooltip position="top" content={disabled ? '' : message}>
