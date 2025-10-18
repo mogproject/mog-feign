@@ -8,5 +8,7 @@ export default defineConfig({
   test: {
     environment: 'jsdom', // necessary for localStorage
     globals: true,
+    // setupFiles: './src/setupTests.ts',
+    include: ['./src/**/*.test.*'],
   },
 });

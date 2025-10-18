@@ -48,7 +48,10 @@ const Header: React.FC = () => {
     { value: 'ja', label: '日本語' },
     { value: 'en', label: 'English' },
   ];
-  invariant(i18n.resolvedLanguage !== undefined);
+  if (i18n.resolvedLanguage === undefined) {
+    i18n.resolvedLanguage = 'en'; // Fall back to English
+  }
+
   const selected = options.find((opt) => opt.value === i18n.resolvedLanguage);
   invariant(selected !== undefined);
 

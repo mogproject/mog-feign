@@ -1,4 +1,3 @@
-import React from 'react';
 import ReactDOM from 'react-dom/client';
 import '@atlaskit/css-reset';
 import AppProvider from '@atlaskit/app-provider';
