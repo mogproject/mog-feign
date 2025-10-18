@@ -11,6 +11,7 @@ watch:
 	npm run dev
 
 test:
+	npx playwright install 
 	NODE_NO_WARNINGS=1 npx vitest run
 	npx playwright test
 
