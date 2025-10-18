@@ -20,13 +20,16 @@
     "jsx": "react-jsx",
     "jsxImportSource": "@emotion/react",
     "types": [
-      "@types/wicg-file-system-access"
+      "@types/wicg-file-system-access",
+      "node",
+      "vitest/globals"
     ]
   },
   "include": [
     "src"
   ],
   "exclude": [
-    "**/*.test.ts"
+    "**/*.test.ts?",
+    "tests/**"
   ]
 }

@@ -137,7 +137,10 @@ const SaveButton: React.FC = () => {
 
         <Inline space="space.100" alignBlock="center">
           <SplitButton>
-            <Button onClick={() => fileLoader.loadTextFromFile((s) => loadJSONString(s, dispatch, true, true), setLoaderMessage, 'json')}>
+            <Button
+              id="load-all"
+              onClick={() => fileLoader.loadTextFromFile((s) => loadJSONString(s, dispatch, true, true), setLoaderMessage, 'json')}
+            >
               <Inline space="space.100" alignBlock="center">
                 <UploadIcon label="" />
                 {t('load_all')}
