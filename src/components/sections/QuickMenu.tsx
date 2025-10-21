@@ -205,7 +205,7 @@ const QuickMenu: React.FC = () => {
           value={selected}
           options={players}
           placeholder={''}
-          noOptionsMessage={() => t('no_options')}
+          noOptionsMessage={() => t('settings.player.no_options')}
           onChange={(e: { label: string; value: string }) => handleUpdate(color, e === null ? '' : e.value)}
         />
       </Inline>

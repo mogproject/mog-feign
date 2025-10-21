@@ -308,6 +308,7 @@ function DiscordUsers() {
                 <Box xcss={xcss({ width: `${layout.mainWidth >= 600 ? 144 : 120}px`, minHeight: '60px' })}>
                   <TextField
                     {...fieldProps}
+                    id="input-user-name"
                     css={compactTextFieldStyles}
                     placeholder={t('name_placeholder')}
                     autoComplete="off"
@@ -325,6 +326,7 @@ function DiscordUsers() {
                 <Box xcss={xcss({ width: `${layout.mainWidth >= 600 ? 172 : 124}px`, minHeight: '60px' })}>
                   <TextField
                     {...fieldProps}
+                    id="input-user-id"
                     css={compactTextFieldStyles}
                     placeholder={t('id_placeholder')}
                     aria-label="id"
@@ -341,6 +343,7 @@ function DiscordUsers() {
                 {({ fieldProps }) => (
                   <CreatableSelect
                     {...fieldProps}
+                    id="input-user-groups"
                     styles={compactSelectStyles}
                     isMulti
                     isClearable
@@ -362,7 +365,7 @@ function DiscordUsers() {
 
             {/* add button */}
             <Box xcss={xcss({ marginTop: 'space.100' })}>
-              <Button type="submit" appearance="primary" spacing="default">
+              <Button id="input-user-submit" type="submit" appearance="primary" spacing="default">
                 {tt('add')}
               </Button>
             </Box>

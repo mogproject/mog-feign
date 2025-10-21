@@ -8,7 +8,7 @@ clean:
 	rm -rf ./node_modules
 
 watch:
-	npm run dev
+	npm run dev -- --host 0.0.0.0
 
 test:
 	npx playwright install 
