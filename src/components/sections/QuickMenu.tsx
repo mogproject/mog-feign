@@ -24,7 +24,7 @@ import AsideToggleButton from '../layout/AsideToggleButton';
 import { useLayoutState } from '../layout/LayoutContext';
 
 const containerStyles = xcss({
-  minWidth: '220px',
+  width: '284px',
   marginBlockStart: 'space.200',
   marginInlineStart: 'space.100',
   marginInlineEnd: 'space.300',
@@ -35,6 +35,7 @@ const containerStyles = xcss({
   borderStyle: 'solid',
 
   boxShadow: 'elevation.shadow.overlay',
+  transition: 'width 0.3s ease, right 0.3s ease',
 });
 
 const containerTitleStyles = xcss({
@@ -62,6 +63,7 @@ const containerMinimizedStyles = xcss({
   borderStyle: 'solid',
 
   boxShadow: 'elevation.shadow.overlay',
+  transition: 'width 0.3s ease, right 0.3s ease',
 });
 
 const containerMinimizedTitleStyles = xcss({
@@ -234,11 +236,17 @@ const QuickMenu: React.FC = () => {
     );
   };
 
+  const toggleButtonStyles = css({
+    position: 'absolute',
+    top: '24px',
+    right: `${layout.showAside ? 30 : 16}px`,
+  });
+
   return (
     <Stack xcss={layout.showAside ? containerStyles : containerMinimizedStyles}>
       <Inline alignInline="center" alignBlock="center" xcss={layout.showAside ? containerTitleStyles : containerMinimizedTitleStyles}>
         {layout.showAside && <Heading size="small">{t('quick.quick_menu')}</Heading>}
-        <div css={layout.showAside && css({ position: 'absolute', right: '30px' })}>
+        <div css={toggleButtonStyles}>
           <AsideToggleButton
             appearance={layout.showAside ? 'default' : 'subtle'}
             collapseLabel={t('layout.collapse_aside')}
