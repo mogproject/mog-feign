@@ -16,17 +16,21 @@ const Aside: React.FC<AsideProps> = (props) => {
       xcss({
         position: 'sticky',
         overflowX: 'hidden',
-        overflowY: 'auto',
+        overflowY: state.showAside ? 'auto' : 'hidden',
         whiteSpace: 'nowrap',
 
         top: '0',
-        right: '0',
-        width: `${state.asideWidth}px`,
+        right: state.showAside ? '0' : '16px',
+        width: `${state.showAside ? state.asideWidth : 48}px`,
+
         paddingBlockEnd: 'space.100',
         flexShrink: '0',
         zIndex: '90' as any,
+
+        // Animation
+        transition: 'width 0.3s ease',
       }),
-    [state.topNavHeight, state.asideWidth]
+    [state.topNavHeight, state.asideWidth, state.showAside, state.windowWidth]
   );
 
   return (

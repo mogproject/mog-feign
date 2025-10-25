@@ -12,11 +12,11 @@ const Main: React.FC<MainProps> = (props) => {
   const styles = React.useMemo(
     () =>
       css({
-        marginInline: 'auto',
+        marginInline: `${state.mainMargin}px`,
         width: state.mainWidth,
-        transition: 'width 0.3s ease',
+        transition: 'width 0.3s ease, margin-inline 0.3s ease',
       }),
-    [state.mainWidth]
+    [state.mainWidth, state.mainMargin]
   );
   return <div css={[styles]}>{props.children}</div>;
 };

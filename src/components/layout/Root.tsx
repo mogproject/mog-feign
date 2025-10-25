@@ -98,7 +98,7 @@ const RootInner: React.FC<RootInnerProps> = (props: RootInnerProps) => {
             <div ref={scrollContainerRef} css={scrollContainerStyles}>
               <Inline>
                 <Main>{props.mainContent}</Main>
-                {state.showAside && <Aside>{props.asideContent}</Aside>}
+                <Aside>{props.asideContent}</Aside>
               </Inline>
               <div css={footerStyles}>{props.footerContent}</div>
             </div>

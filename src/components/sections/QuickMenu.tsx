@@ -20,6 +20,8 @@ import {
   labelStyles,
 } from '../forms/button-group-styles';
 import { FEI_COLORS, FEI_COLOR_CODES, NUMBER_OF_FEI_COLORS } from '../../models/app-context';
+import AsideToggleButton from '../layout/AsideToggleButton';
+import { useLayoutState } from '../layout/LayoutContext';
 
 const containerStyles = xcss({
   minWidth: '220px',
@@ -45,6 +47,25 @@ const containerTitleStyles = xcss({
   borderBlockEndStyle: 'solid',
   borderBlockEndWidth: '1px',
   borderBlockEndColor: 'color.border',
+});
+
+const containerMinimizedStyles = xcss({
+  backgroundColor: 'color.background.accent.blue.subtlest',
+  width: '40px',
+  height: '40px',
+  margin: '0',
+  marginBlockStart: 'space.200',
+
+  borderRadius: '12px',
+  borderWidth: '1px',
+  borderColor: 'color.border.input',
+  borderStyle: 'solid',
+
+  boxShadow: 'elevation.shadow.overlay',
+});
+
+const containerMinimizedTitleStyles = xcss({
+  paddingBlock: 'space.100',
 });
 
 const containerContentStyles = xcss({
@@ -138,6 +159,7 @@ const QuickMenu: React.FC = () => {
   const state = useAppState();
   const groups = useUserGroups();
   const dispatch = useAppDispatch();
+  const layout = useLayoutState();
 
   const players = state.discordUsers.flatMap((u) =>
     state.feignPlayers.group === '' || u.groups.includes(state.feignPlayers.group) ? [{ label: u.name, value: u.id }] : []
@@ -213,69 +235,78 @@ const QuickMenu: React.FC = () => {
   };
 
   return (
-    <Stack xcss={containerStyles}>
-      <Inline alignInline="center" xcss={containerTitleStyles}>
-        <Heading size="small">{t('quick.quick_menu')}</Heading>
+    <Stack xcss={layout.showAside ? containerStyles : containerMinimizedStyles}>
+      <Inline alignInline="center" alignBlock="center" xcss={layout.showAside ? containerTitleStyles : containerMinimizedTitleStyles}>
+        {layout.showAside && <Heading size="small">{t('quick.quick_menu')}</Heading>}
+        <div css={layout.showAside && css({ position: 'absolute', right: '30px' })}>
+          <AsideToggleButton
+            appearance={layout.showAside ? 'default' : 'subtle'}
+            collapseLabel={t('layout.collapse_aside')}
+            expandLabel={t('layout.expand_aside')}
+          />
+        </div>
       </Inline>
 
-      <Stack space="space.300" xcss={containerContentStyles}>
-        <Stack space="space.100">
-          <Text size="medium" weight="bold">
-            {t('obs.obs_settings')}
-          </Text>
+      {layout.showAside && (
+        <Stack space="space.300" xcss={containerContentStyles}>
+          <Stack space="space.100">
+            <Text size="medium" weight="bold">
+              {t('obs.obs_settings')}
+            </Text>
 
-          <Stack space="space.025">
-            <Inline spread="space-between">
-              <Inline alignBlock="center">
-                <label htmlFor="quick-url-copy" css={[labelStyles]}>
-                  {'URL'}
-                </label>
+            <Stack space="space.025">
+              <Inline spread="space-between">
+                <Inline alignBlock="center">
+                  <label htmlFor="quick-url-copy" css={[labelStyles]}>
+                    {'URL'}
+                  </label>
 
-                <CopyButton
-                  id="quick-url-copy"
-                  content={obsURL}
-                  disabled={channelID === ''}
-                  style={css([iconButtonStyles, buttonGroupNotFirstStyles])}
-                />
+                  <CopyButton
+                    id="quick-url-copy"
+                    content={obsURL}
+                    disabled={channelID === ''}
+                    style={css([iconButtonStyles, buttonGroupNotFirstStyles])}
+                  />
+                </Inline>
+
+                <Inline alignBlock="center">
+                  <label htmlFor="quick-css-copy" css={[labelStyles]}>
+                    {t('obs.custom_css')}
+                  </label>
+
+                  <CopyButton
+                    id="quick-css-copy"
+                    content={cssContent}
+                    disabled={!isValid}
+                    style={css([iconButtonStyles, buttonGroupNotFirstStyles])}
+                  />
+                </Inline>
               </Inline>
+              <Box xcss={xcss({ overflowY: 'clip', textOverflow: 'ellipsis', width: '240px' })}>
+                <Text size="small" color="color.text.subtlest">
+                  {channelName?.name || ''}
+                </Text>
+              </Box>
+            </Stack>
+          </Stack>
 
-              <Inline alignBlock="center">
-                <label htmlFor="quick-css-copy" css={[labelStyles]}>
-                  {t('obs.custom_css')}
-                </label>
-
-                <CopyButton
-                  id="quick-css-copy"
-                  content={cssContent}
-                  disabled={!isValid}
-                  style={css([iconButtonStyles, buttonGroupNotFirstStyles])}
-                />
-              </Inline>
+          <Stack space="space.100">
+            <Text size="medium" weight="bold">
+              {t('settings.feign_player_settings')}
+            </Text>
+            <Inline alignBlock="center">
+              <span css={[labelStyles]}>{t('group')}</span>
+              {groupSelection}
             </Inline>
-            <Box xcss={xcss({ overflowY: 'clip', textOverflow: 'ellipsis', width: '240px' })}>
-              <Text size="small" color="color.text.subtlest">
-                {channelName?.name || ''}
-              </Text>
-            </Box>
+
+            <Stack space="space.050">
+              {Array(13)
+                .fill(0)
+                .map((_, i) => feignPlayer(i))}
+            </Stack>
           </Stack>
         </Stack>
-
-        <Stack space="space.100">
-          <Text size="medium" weight="bold">
-            {t('settings.feign_player_settings')}
-          </Text>
-          <Inline alignBlock="center">
-            <span css={[labelStyles]}>{t('group')}</span>
-            {groupSelection}
-          </Inline>
-
-          <Stack space="space.050">
-            {Array(13)
-              .fill(0)
-              .map((_, i) => feignPlayer(i))}
-          </Stack>
-        </Stack>
-      </Stack>
+      )}
     </Stack>
   );
 };
