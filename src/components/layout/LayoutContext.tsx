@@ -49,8 +49,9 @@ export function useLayoutDispatch(): React.Dispatch<LayoutAction> {
 }
 
 function getMainWidth(windowWidth: number, sideNavWidth: number, asideWidth: number): number {
+  const scrollBarBuffer = 15;
   const sideWidth = windowWidth < 1280 ? 0 : sideNavWidth + asideWidth;
-  return Math.min(1200, windowWidth - sideWidth);
+  return Math.min(1200, windowWidth - sideWidth - scrollBarBuffer);
 }
 
 // Context provider.
@@ -82,8 +83,6 @@ export function LayoutContextProvider(props: LayoutContextProviderProps) {
   React.useEffect(() => {
     const observer = new ResizeObserver(() => {
       const windowWidth = document.documentElement.clientWidth;
-      if (windowWidth === window.innerWidth) return;
-
       dispatch((prev: LayoutState) => {
         return {
           ...prev,

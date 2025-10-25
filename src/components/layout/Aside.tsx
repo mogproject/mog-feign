@@ -15,17 +15,16 @@ const Aside: React.FC<AsideProps> = (props) => {
     () =>
       xcss({
         position: 'sticky',
-        // position: 'fixed',
         overflowX: 'hidden',
         overflowY: 'auto',
         whiteSpace: 'nowrap',
 
-        top: `${state.topNavHeight}px`,
+        top: '0',
         right: '0',
-        height: `calc(100vh - ${state.topNavHeight + 1}px)`,
         width: `${state.asideWidth}px`,
+        paddingBlockEnd: 'space.100',
         flexShrink: '0',
-        zIndex: '90',
+        zIndex: '90' as any,
       }),
     [state.topNavHeight, state.asideWidth]
   );

@@ -14,7 +14,7 @@ const SideNav: React.FC<SideNavProps> = (props) => {
   const navStyles = React.useMemo(
     () =>
       xcss({
-        position: 'sticky',
+        position: 'relative',
         // zIndex: '0',
 
         whiteSpace: 'nowrap',
@@ -22,10 +22,9 @@ const SideNav: React.FC<SideNavProps> = (props) => {
         overflowY: 'auto',
 
         // Position
-        height: `calc(100vh - ${state.topNavHeight + 1}px)`,
-        top: `${state.topNavHeight}px`,
+        minHeight: '0',
+        height: '100%',
         width: `${state.sideNavWidth}px`,
-        flexShrink: '0',
 
         // Animation
         transition: 'width 0.3s ease',
