@@ -75,7 +75,7 @@ const AccordionItem: React.FC<AccordionItemProps> = ({ defaultOpen = true, heade
           alignInline="center"
           spread="space-between"
           xcss={xcss({
-            paddingBlock: 'space.050',
+            paddingBlock: 'space.0',
             paddingInline: 'space.150',
           })}
         >

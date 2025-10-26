@@ -8,10 +8,12 @@ clean:
 	rm -rf ./node_modules
 
 watch:
-	npm run dev
+	npm run dev -- --host 0.0.0.0
 
 test:
-	NODE_NO_WARNINGS=1 npm run test
+	npx playwright install 
+	NODE_NO_WARNINGS=1 npx vitest run
+	npx playwright test
 
 coverage:
 	NODE_NO_WARNINGS=1 npm run coverage

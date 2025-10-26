@@ -4,7 +4,7 @@ import { css } from '@emotion/react';
 import { useLayoutState } from './LayoutContext';
 
 const topNavStyles = css({
-  position: 'fixed',
+  position: 'sticky',
   top: 0,
   width: '100%',
   zIndex: 100,

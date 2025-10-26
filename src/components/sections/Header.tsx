@@ -48,7 +48,10 @@ const Header: React.FC = () => {
     { value: 'ja', label: '日本語' },
     { value: 'en', label: 'English' },
   ];
-  invariant(i18n.resolvedLanguage !== undefined);
+  if (i18n.resolvedLanguage === undefined) {
+    i18n.resolvedLanguage = 'en'; // Fall back to English
+  }
+
   const selected = options.find((opt) => opt.value === i18n.resolvedLanguage);
   invariant(selected !== undefined);
 
@@ -56,7 +59,7 @@ const Header: React.FC = () => {
   return (
     <Inline xcss={topBarStyles} spread={'space-between'} alignBlock={'center'}>
       <Inline alignBlock="center">
-        <SideNavToggleButton collapseLabel={t('layout.collapse_sidebar')} expandLabel={t('layout.expand_sidebar')} />
+        <SideNavToggleButton id="side-nav-toggle" collapseLabel={t('layout.collapse_sidebar')} expandLabel={t('layout.expand_sidebar')} />
 
         <Inline space="space.050" alignBlock="center">
           <LinkButton appearance="subtle" href="#" shouldFitContainer={false}>

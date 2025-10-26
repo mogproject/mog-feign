@@ -49,6 +49,8 @@ const ja = {
     home_page: 'ホーム',
     expand_sidebar: 'サイドバーを表示',
     collapse_sidebar: 'サイドバーを非表示',
+    expand_aside: 'クイックメニューを表示',
+    collapse_aside: 'クイックメニューを最小化',
   },
 
   // Colors.

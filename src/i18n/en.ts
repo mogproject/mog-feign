@@ -49,6 +49,8 @@ const en = {
     home_page: 'Home page',
     expand_sidebar: 'Expand sidebar',
     collapse_sidebar: 'Collapse sidebar',
+    expand_aside: 'Expand Quick Menu',
+    collapse_aside: 'Minimize Quick Menu',
   },
 
   // Colors.

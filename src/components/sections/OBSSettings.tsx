@@ -1,7 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { css } from '@emotion/react';
-import invariant from 'tiny-invariant';
 
 import { token } from '@atlaskit/tokens';
 import { Inline, Stack, Text, xcss } from '@atlaskit/primitives';
@@ -82,7 +81,12 @@ const OBSSettings: React.FC = () => {
               isReadOnly
             />
 
-            <CopyButton content={obsURL} disabled={channelID === ''} style={css([iconButtonStyles, buttonGroupNotFirstStyles])} />
+            <CopyButton
+              id="main-url-copy"
+              content={obsURL}
+              disabled={channelID === ''}
+              style={css([iconButtonStyles, buttonGroupNotFirstStyles])}
+            />
           </Inline>
           <Stack space="space.100">
             <Inline spread="space-between" space="space.400">
@@ -127,6 +131,7 @@ const OBSSettings: React.FC = () => {
               content={cssContent}
               style={css([iconButtonStyles, buttonGroupNotFirstStyles, buttonGroupNotLastStyles])}
               label={t('copy_to_clipboard')}
+              id="main-css-copy"
             />
 
             <button

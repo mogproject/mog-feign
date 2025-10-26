@@ -1,23 +1,14 @@
 import React from 'react';
 import { Global, css } from '@emotion/react';
 import { LayoutContextProvider, useLayoutState } from './LayoutContext';
-import { Box, Inline, Stack, xcss } from '@atlaskit/primitives';
+import { Inline, Stack, xcss } from '@atlaskit/primitives';
 import TopNav from './TopNav';
 import SideNav from './SideNav';
 import Main from './Main';
 import Aside from './Aside';
 import { token } from '@atlaskit/tokens';
 
-const rightPaneStyles = xcss({
-  flex: '1',
-  height: '100%',
-  position: 'relative',
-});
-
 const footerStyles = css({
-  position: 'absolute',
-  bottom: '0',
-  left: '0',
   width: '100%',
   borderBlockStart: `1px solid ${token('color.border')}`,
   backgroundColor: '#ffffff',
@@ -36,32 +27,84 @@ const RootInner: React.FC<RootInnerProps> = (props: RootInnerProps) => {
   const state = useLayoutState();
   const globalScrollStyles = React.useMemo(
     () =>
-      css({
-        html: {
-          // Adjust scroll offset.
-          scrollPaddingTop: `calc(${state.topNavHeight}px + ${token('space.100')})`,
-
-          // Scroll behavior.
-          scrollBehavior: 'smooth',
-        },
+      css`
+        html,
+        body {
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+          margin: 0;
+          padding: 0;
+        }
+      `,
+    [state.topNavHeight]
+  );
+  const rightPaneStyles = React.useMemo(
+    () =>
+      xcss({
+        flex: '1',
+        height: '100%',
+        minHeight: '0',
+        overflow: 'hidden',
       }),
     [state.topNavHeight]
   );
+  const scrollContainerStyles = css({
+    minHeight: '0',
+    scrollPaddingTop: '14px',
+    overflowX: 'hidden',
+    overflowY: 'auto',
+    scrollBehavior: 'smooth',
+    overscrollBehavior: 'contain',
+    WebkitOverflowScrolling: 'touch',
+    contain: 'layout paint', // Workaround for Chrome; prevent repaint when scrolling
+  });
+
+  // Special treatment for '/#'
+  const scrollContainerRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    const scrollTo = () => {
+      if ((window.location.hash === '' || window.location.hash === '#') && scrollContainerRef.current) {
+        scrollContainerRef.current.scrollTo({ top: 0 });
+      }
+    };
+
+    scrollTo();
+
+    window.addEventListener('hashchange', scrollTo);
+
+    return () => {
+      window.removeEventListener('hashchange', scrollTo);
+    };
+  }, []);
 
   return (
     <>
       <Global styles={globalScrollStyles} />
-      <TopNav>{props.topNavContent}</TopNav>
-      <Inline space="space.0" alignBlock="start" xcss={xcss({marginTop: `${state.topNavHeight}px`})}>
-        {state.showSideNav && <SideNav>{props.sideNavContent}</SideNav>}
-        <Stack xcss={rightPaneStyles}>
-          <Inline>
-            <Main>{props.mainContent}</Main>
-            {state.showAside && <Aside>{props.asideContent}</Aside>}
-          </Inline>
-          <div css={footerStyles}>{props.footerContent}</div>
-        </Stack>
-      </Inline>
+      <div>
+        <TopNav>{props.topNavContent}</TopNav>
+        <Inline
+          space="space.0"
+          alignBlock="start"
+          xcss={xcss({
+            minHeight: '0',
+            height: `calc(100vh - ${state.topNavHeight + 1}px)`,
+            overflow: 'hidden',
+          })}
+        >
+          {state.showSideNav && <SideNav>{props.sideNavContent}</SideNav>}
+          <Stack xcss={rightPaneStyles}>
+            <div ref={scrollContainerRef} css={scrollContainerStyles}>
+              <Inline>
+                <Main>{props.mainContent}</Main>
+                <Aside>{props.asideContent}</Aside>
+              </Inline>
+              <div css={footerStyles}>{props.footerContent}</div>
+            </div>
+          </Stack>
+        </Inline>
+      </div>
     </>
   );
 };

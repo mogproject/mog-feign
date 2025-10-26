@@ -26,3 +26,9 @@ yarn-error.log*
 # build dir
 /dist
 
+# test results
+/test-results
+
+# screenshot
+screenshot.png
+

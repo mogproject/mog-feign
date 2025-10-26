@@ -2,37 +2,39 @@ import React from 'react';
 
 import { IconButton, IconButtonProps } from '@atlaskit/button/new';
 import { type NewCoreIconProps } from '@atlaskit/icon';
-import SidebarCollapseIcon from '@atlaskit/icon/core/sidebar-collapse';
-import SidebarExpandIcon from '@atlaskit/icon/core/sidebar-expand';
 import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
 import { Inline, xcss } from '@atlaskit/primitives';
 import { useLayoutState, useLayoutDispatch } from './LayoutContext';
+
+import MinimizeIcon from '@atlaskit/icon/core/minimize';
+import MaximizeIcon from '@atlaskit/icon/core/maximize';
 
 const silentIconStyles = xcss({
   display: 'contents',
   pointerEvents: 'none',
 });
 
-type SideNavToggleButtonProps = {
+type AsideToggleButtonProps = {
   id: string;
+  appearance?: 'default' | 'primary' | 'discovery' | 'subtle' | undefined;
   collapseLabel: string;
   expandLabel: string;
 };
 
-const SideNavToggleButton: React.FC<SideNavToggleButtonProps> = (props) => {
+const AsideToggleButton: React.FC<AsideToggleButtonProps> = (props) => {
   const state = useLayoutState();
   const dispatch = useLayoutDispatch();
 
   const icon = (props: NewCoreIconProps) => (
-    <Inline xcss={silentIconStyles}>{state.sideNavExpanded ? <SidebarCollapseIcon {...props} /> : <SidebarExpandIcon {...props} />}</Inline>
+    <Inline xcss={silentIconStyles}>{state.showAside ? <MinimizeIcon {...props} /> : <MaximizeIcon {...props} />} </Inline>
   );
 
   const handleClick = React.useCallback(
     (event: React.MouseEvent<HTMLButtonElement>, analyticsEvent: UIAnalyticsEvent) => {
       if (dispatch === undefined) return;
-      dispatch((prev) => ({ ...prev, sideNavExpanded: !prev.sideNavExpanded }));
+      dispatch((prev) => ({ ...prev, showAside: !prev.showAside }));
     },
-    [dispatch, state.sideNavExpanded]
+    [dispatch, state.showAside]
   );
   const toggleButtonTooltipOptions: IconButtonProps['tooltip'] = {
     // We're disabling pointer events on the tooltip to prevent it from blocking mouse events, so that the side nav flyout stays open
@@ -40,19 +42,18 @@ const SideNavToggleButton: React.FC<SideNavToggleButtonProps> = (props) => {
     ignoreTooltipPointerEvents: true,
   };
 
-  return state.showSideNav ? (
+  return (
     <IconButton
       id={props.id}
-      appearance="subtle"
-      label={state.sideNavExpanded ? props.collapseLabel : props.expandLabel}
+      appearance={props.appearance}
+      label={state.showAside ? props.collapseLabel : props.expandLabel}
       icon={icon}
+      spacing="compact"
       onClick={handleClick}
       isTooltipDisabled={false}
       tooltip={toggleButtonTooltipOptions}
     />
-  ) : (
-    <></>
   );
 };
 
-export default SideNavToggleButton;
+export default AsideToggleButton;
