@@ -9,7 +9,7 @@ import { buildFeignImageCss } from '../src/models/FeignImageCss';
 //==============================================================================
 //    Utilities
 //==============================================================================
-async function setUpPage(page: Page, fileNames: string[]) {
+async function setUpPage(page: Page, fileNames: string[], windowWidth: number) {
   const filePaths = fileNames.map((name) => path.resolve(__dirname, `./data/${name}`));
   const fileContents = filePaths.map((path) => fs.readFileSync(path, 'utf-8'));
 
@@ -55,7 +55,7 @@ async function setUpPage(page: Page, fileNames: string[]) {
     console.log(`[BROWSER] ${text}`);
   });
 
-  await page.setViewportSize({ width: 1300, height: 3400 });
+  await page.setViewportSize({ width: windowWidth, height: 3400 });
   await page.goto('/');
   await page.evaluate(() => (window as any).__setUpMocks__());
 }
@@ -104,11 +104,25 @@ async function verifyResult(page: Page, result: Result) {
   expect(trimFirstLine(result2)).toBe(expectCss);
 }
 
+async function verifyBoxes(page: Page, mainX: number, mainWidth: number, asideX: number, asideWidth: number) {
+  const mainBox = await page.locator('#main-content').boundingBox();
+  expect(mainBox).not.toBeNull();
+
+  const asideBox = await page.locator('#aside-content').boundingBox();
+  expect(asideBox).not.toBeNull();
+
+  expect(mainBox?.x).toBeCloseTo(mainX);
+  expect(mainBox?.width).toBeCloseTo(mainWidth);
+
+  expect(asideBox?.x).toBeCloseTo(asideX);
+  expect(asideBox?.width).toBeCloseTo(asideWidth);
+}
+
 //==============================================================================
 //    Tests
 //==============================================================================
 test('Load setting files', async ({ page }) => {
-  await setUpPage(page, ['test01.json', 'test02.json']);
+  await setUpPage(page, ['test01.json', 'test02.json'], 1300);
 
   //----------------------------------------------------------------------------
   await page.click('#load-all');
@@ -178,7 +192,7 @@ test('Load setting files', async ({ page }) => {
 });
 
 test('Set up from scratch', async ({ page }) => {
-  await setUpPage(page, []);
+  await setUpPage(page, [], 1300);
   await expect(page.locator('#main-url-copy')).toHaveCount(0);
   await expect(page.locator('#main-css-copy')).toHaveCount(0);
   await expect(page.locator('#quick-url-copy')).toBeDisabled();
@@ -257,5 +271,112 @@ test('Set up from scratch', async ({ page }) => {
   };
 
   await verifyResult(page, expected);
+  // await page.screenshot({ path: 'screenshot.png' });
+});
+
+test('Window layout with small screen', async ({ page }) => {
+  await setUpPage(page, [], 1200);
+
+  // Side nav should be hidden.
+  await expect(page.locator('#side-nav-toggle')).toHaveCount(0);
+
+  // Aside should be shown but minimized.
+  const quickMenuToggle = page.locator('#quick-menu-toggle');
+  await expect(quickMenuToggle).toHaveCount(1);
+  await verifyBoxes(page, 0, 1185, 1120, 56);
+
+  // Expand aside.
+  await quickMenuToggle.click();
+  await page.waitForTimeout(1000);
+  await verifyBoxes(page, 0, 1185, 890, 300);
+
+  // Minimize aside.
+  await quickMenuToggle.click();
+  await page.waitForTimeout(1000);
+  await verifyBoxes(page, 0, 1185, 1120, 56);
+
+  // Resize window.
+  await page.setViewportSize({ width: 1300, height: 3400 });
+  await page.waitForTimeout(1000);
+
+  // Now, side nav should be shown.
+  await expect(page.locator('#side-nav-toggle')).toHaveCount(1);
+  await verifyBoxes(page, 148, 1137, 1220, 56);
+
+  // Make it even larger.
+  await page.setViewportSize({ width: 1400, height: 3400 });
+  await page.waitForTimeout(1000);
+  await verifyBoxes(page, 166.5, 1200, 1320, 56);
+
+  // await page.screenshot({ path: 'screenshot.png' });
+});
+
+test('Window layout with large screen', async ({ page }) => {
+  await setUpPage(page, [], 1300);
+
+  // Side nav should be shown.
+  const sideNavToggle = page.locator('#side-nav-toggle');
+  await expect(sideNavToggle).toHaveCount(1);
+
+  // Aside should be shown.
+  const quickMenuToggle = page.locator('#quick-menu-toggle');
+  await expect(quickMenuToggle).toHaveCount(1);
+  await verifyBoxes(page, 148, 837, 985, 300);
+
+  // Collapse side nav.
+  await sideNavToggle.click();
+  await page.waitForTimeout(1000);
+  await verifyBoxes(page, 0, 985, 985, 300);
+
+  // Minimize aside.
+  await quickMenuToggle.click();
+  await page.waitForTimeout(1000);
+  await verifyBoxes(page, 42.5, 1200, 1220, 56);
+
+  // Expand side nav.
+  await sideNavToggle.click();
+  await page.waitForTimeout(1000);
+  await verifyBoxes(page, 148, 1137, 1220, 56);
+
+  // Expand aside.
+  await quickMenuToggle.click();
+  await page.waitForTimeout(1000);
+  await verifyBoxes(page, 148, 837, 985, 300);
+
+  // Make it even larger.
+  await page.setViewportSize({ width: 1800, height: 3400 });
+  await page.waitForTimeout(1000);
+  await verifyBoxes(page, 216.5, 1200, 1485, 300);
+
+  // Minimize aside.
+  await quickMenuToggle.click();
+  await page.waitForTimeout(1000);
+  await verifyBoxes(page, 366.5, 1200, 1720, 56);
+
+  // Collapse side nav.
+  await sideNavToggle.click();
+  await page.waitForTimeout(1000);
+  await verifyBoxes(page, 292.5, 1200, 1720, 56);
+
+  // Expand aside.
+  await quickMenuToggle.click();
+  await page.waitForTimeout(1000);
+  await verifyBoxes(page, 142.5, 1200, 1485, 300);
+
+  // Expand side nav.
+  await sideNavToggle.click();
+  await page.waitForTimeout(1000);
+  await verifyBoxes(page, 216.5, 1200, 1485, 300);
+
+  // Make it smaller.
+  await page.setViewportSize({ width: 1200, height: 3400 });
+  await page.waitForTimeout(1000);
+  await verifyBoxes(page, 0, 1185, 890, 300);
+
+  // Minimze aside.
+  await quickMenuToggle.click();
+  await page.waitForTimeout(1000);
+  await verifyBoxes(page, 0, 1185, 1120, 56);
+
   // await page.screenshot({ path: 'screenshot.png' });
 });

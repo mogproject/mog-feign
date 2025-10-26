@@ -59,7 +59,7 @@ const Header: React.FC = () => {
   return (
     <Inline xcss={topBarStyles} spread={'space-between'} alignBlock={'center'}>
       <Inline alignBlock="center">
-        <SideNavToggleButton collapseLabel={t('layout.collapse_sidebar')} expandLabel={t('layout.expand_sidebar')} />
+        <SideNavToggleButton id="side-nav-toggle" collapseLabel={t('layout.collapse_sidebar')} expandLabel={t('layout.expand_sidebar')} />
 
         <Inline space="space.050" alignBlock="center">
           <LinkButton appearance="subtle" href="#" shouldFitContainer={false}>

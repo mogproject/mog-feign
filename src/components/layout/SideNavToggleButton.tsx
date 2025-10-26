@@ -14,6 +14,7 @@ const silentIconStyles = xcss({
 });
 
 type SideNavToggleButtonProps = {
+  id: string;
   collapseLabel: string;
   expandLabel: string;
 };
@@ -41,6 +42,7 @@ const SideNavToggleButton: React.FC<SideNavToggleButtonProps> = (props) => {
 
   return state.showSideNav ? (
     <IconButton
+      id={props.id}
       appearance="subtle"
       label={state.sideNavExpanded ? props.collapseLabel : props.expandLabel}
       icon={icon}

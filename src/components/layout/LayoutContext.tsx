@@ -91,7 +91,6 @@ type LayoutContextProviderProps = {
 
 export function LayoutContextProvider(props: LayoutContextProviderProps) {
   const initialWindowWidth = document.documentElement.clientWidth;
-  // console.log(window.innerWidth, initialWindowWidth);
 
   const [state, dispatch] = React.useReducer(
     (s, a) => a(s),

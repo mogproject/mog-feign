@@ -15,6 +15,7 @@ const silentIconStyles = xcss({
 });
 
 type AsideToggleButtonProps = {
+  id: string;
   appearance?: 'default' | 'primary' | 'discovery' | 'subtle' | undefined;
   collapseLabel: string;
   expandLabel: string;
@@ -43,6 +44,7 @@ const AsideToggleButton: React.FC<AsideToggleButtonProps> = (props) => {
 
   return (
     <IconButton
+      id={props.id}
       appearance={props.appearance}
       label={state.showAside ? props.collapseLabel : props.expandLabel}
       icon={icon}

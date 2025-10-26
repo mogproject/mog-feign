@@ -30,11 +30,11 @@ const Aside: React.FC<AsideProps> = (props) => {
         // Animation
         transition: 'width 0.3s ease',
       }),
-    [state.topNavHeight, state.asideWidth, state.showAside, state.windowWidth]
+    [state.asideWidth, state.showAside]
   );
 
   return (
-    <Box as="aside" xcss={asideStyles}>
+    <Box as="aside" id="aside-content" xcss={asideStyles}>
       {props.children}
     </Box>
   );

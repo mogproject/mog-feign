@@ -12,13 +12,18 @@ const Main: React.FC<MainProps> = (props) => {
   const styles = React.useMemo(
     () =>
       css({
+        flexShrink: '0', // Needed for Chromium
         marginInline: `${state.mainMargin}px`,
         width: state.mainWidth,
         transition: 'width 0.3s ease, margin-inline 0.3s ease',
       }),
     [state.mainWidth, state.mainMargin]
   );
-  return <div css={[styles]}>{props.children}</div>;
+  return (
+    <div id="main-content" css={[styles]}>
+      {props.children}
+    </div>
+  );
 };
 
 export default Main;

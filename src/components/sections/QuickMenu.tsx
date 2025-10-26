@@ -249,6 +249,7 @@ const QuickMenu: React.FC = () => {
         {layout.showAside && <Heading size="small">{t('quick.quick_menu')}</Heading>}
         <div css={toggleButtonStyles}>
           <AsideToggleButton
+            id="quick-menu-toggle"
             appearance={layout.showAside ? 'default' : 'subtle'}
             collapseLabel={t('layout.collapse_aside')}
             expandLabel={t('layout.expand_aside')}
