@@ -16,7 +16,7 @@ Available on: https://feign.mogproject.com
 
 ## Snapshot
 
-![snapshot](https://github.com/user-attachments/assets/afb249e1-5152-4ac7-8737-fd128ea4cbf7)
+![snapshot](https://feign.mogproject.com/assets/img/snapshot.png)
 
 ## Special Thanks
 
