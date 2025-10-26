@@ -26,8 +26,7 @@ import { useLayoutState } from '../layout/LayoutContext';
 const containerStyles = xcss({
   width: '284px',
   marginBlockStart: 'space.200',
-  marginInlineStart: 'space.100',
-  marginInlineEnd: 'space.300',
+  marginInline: 'space.100',
 
   borderRadius: '12px',
   borderWidth: '1px',
@@ -35,7 +34,7 @@ const containerStyles = xcss({
   borderStyle: 'solid',
 
   boxShadow: 'elevation.shadow.overlay',
-  transition: 'width 0.3s ease, right 0.3s ease',
+  transition: 'width 0.3s ease',
 });
 
 const containerTitleStyles = xcss({
@@ -56,6 +55,7 @@ const containerMinimizedStyles = xcss({
   height: '40px',
   margin: '0',
   marginBlockStart: 'space.200',
+  marginInline: 'space.100',
 
   borderRadius: '12px',
   borderWidth: '1px',
@@ -63,7 +63,7 @@ const containerMinimizedStyles = xcss({
   borderStyle: 'solid',
 
   boxShadow: 'elevation.shadow.overlay',
-  transition: 'width 0.3s ease, right 0.3s ease',
+  transition: 'width 0.3s ease',
 });
 
 const containerMinimizedTitleStyles = xcss({
@@ -240,6 +240,7 @@ const QuickMenu: React.FC = () => {
     position: 'absolute',
     top: '24px',
     right: `${layout.showAside ? 30 : 16}px`,
+    transition: 'right 0.3s ease',
   });
 
   return (

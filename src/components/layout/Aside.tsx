@@ -20,8 +20,8 @@ const Aside: React.FC<AsideProps> = (props) => {
         whiteSpace: 'nowrap',
 
         top: '0',
-        right: state.showAside ? '0' : '16px',
-        width: `${state.showAside ? state.asideWidth : 48}px`,
+        right: state.showAside ? '10px' : '24px',
+        width: state.showAside ? `${state.asideWidth}px` : '56px',
 
         paddingBlockEnd: 'space.100',
         flexShrink: '0',
