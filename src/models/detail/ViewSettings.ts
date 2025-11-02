@@ -143,7 +143,7 @@ const defaultFeiSettings: FeiSettings = {
     flash: true,
     flashColor: '#ffffff',
     outline: false,
-    outlineColor: '#3ba53b',
+    outlineColor: '#ffffff',
   },
   interval: 0,
 };
@@ -151,13 +151,13 @@ const defaultFeiSettings: FeiSettings = {
 const defaultAvatarSettings: AvatarSettings = {
   show: true,
   front: true,
-  shape: AvatarShape.Circle,
+  shape: AvatarShape.RoundedRectangle,
   speaking: {
     jump: false,
     flash: false,
     flashColor: '#ffffff',
     outline: true,
-    outlineColor: '#3ba53b',
+    outlineColor: '#ffffff',
   },
   offsetY: 0,
 };
