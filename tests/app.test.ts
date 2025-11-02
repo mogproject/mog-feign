@@ -56,7 +56,7 @@ async function setUpPage(page: Page, fileNames: string[], windowWidth: number) {
   });
 
   await page.setViewportSize({ width: windowWidth, height: 3400 });
-  await page.goto('/');
+  await page.goto('/', { waitUntil: 'networkidle' });
   await page.evaluate(() => (window as any).__setUpMocks__());
 }
 
@@ -134,13 +134,7 @@ test('Load setting files', async ({ page }) => {
     view: new ViewSettings(
       {
         mirror: true,
-        speaking: {
-          jump: true,
-          flash: true,
-          flashColor: '#ffffff',
-          outline: false,
-          outlineColor: '#3ba53b',
-        },
+        speaking: { jump: true, flash: true, flashColor: '#ffffff', outline: false, outlineColor: '#3ba53b' },
         interval: 0,
       },
       {
@@ -167,13 +161,7 @@ test('Load setting files', async ({ page }) => {
     view: new ViewSettings(
       {
         mirror: true,
-        speaking: {
-          jump: true,
-          flash: true,
-          flashColor: '#ffffff',
-          outline: false,
-          outlineColor: '#3ba53b',
-        },
+        speaking: { jump: true, flash: true, flashColor: '#ffffff', outline: false, outlineColor: '#3ba53b' },
         interval: 0,
       },
       {
@@ -249,20 +237,14 @@ test('Set up from scratch', async ({ page }) => {
     view: new ViewSettings(
       {
         mirror: true,
-        speaking: {
-          jump: true,
-          flash: true,
-          flashColor: '#ffffff',
-          outline: false,
-          outlineColor: '#3ba53b',
-        },
+        speaking: { jump: true, flash: true, flashColor: '#ffffff', outline: false, outlineColor: '#ffffff' },
         interval: 7,
       },
       {
         show: true,
         front: true,
-        shape: 0,
-        speaking: { jump: false, flash: false, flashColor: '#ffffff', outline: true, outlineColor: '#3ba53b' },
+        shape: 1,
+        speaking: { jump: false, flash: false, flashColor: '#ffffff', outline: true, outlineColor: '#ffffff' },
         offsetY: 0,
       },
       { show: true, fontSize: 20, fontColor: '#ffffff', backgroundColor: '#1e2124', offsetY: 0 },

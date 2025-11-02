@@ -64,7 +64,7 @@ function appReducer(state: AppState, action: AppAction): AppState {
 
 export function ContextProvider({ children }: { children: React.ReactNode }) {
   // Load from local storage.
-  const initialState = loadAllFromLocalStorage();
+  const initialState = React.useMemo(() => loadAllFromLocalStorage(), []);
   const [state, dispatch] = React.useReducer(appReducer, initialState);
 
   // Effects; save to local storage.
