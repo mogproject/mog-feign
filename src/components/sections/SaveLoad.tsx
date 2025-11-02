@@ -107,7 +107,6 @@ const SaveButton: React.FC = () => {
           </Button>
 
           <DropdownMenu<HTMLButtonElement>
-            shouldRenderToParent
             trigger={({ triggerRef, ...triggerProps }) => (
               <IconButton ref={triggerRef} {...triggerProps} icon={ChevronDownIcon} label="More link work item options" />
             )}
@@ -148,7 +147,6 @@ const SaveButton: React.FC = () => {
             </Button>
 
             <DropdownMenu<HTMLButtonElement>
-              shouldRenderToParent
               trigger={({ triggerRef, ...triggerProps }) => (
                 <IconButton ref={triggerRef} {...triggerProps} icon={ChevronDownIcon} label="" />
               )}
