@@ -178,7 +178,7 @@ const DiscordChannels: React.FC = () => {
       { key: 'url', content: <span>URL</span>, isSortable: true },
       { key: 'createdAt', content: t('created_at'), isSortable: true, defaultWidth: 180 },
       { key: 'select', content: t('select'), isSortable: false, defaultWidth: 50 },
-      { key: 'select', content: tt('remove'), isSortable: false, defaultWidth: 50 },
+      { key: 'remove', content: tt('remove'), isSortable: false, defaultWidth: 50 },
     ],
   };
   const rows: RowType[] = namedChannels.map((channel, index) => ({
