@@ -180,7 +180,7 @@ const ViewSettingsPane: React.FC = () => {
             />
 
             <div css={css({ textAlign: 'end', alignContent: 'center' })}>
-              <Text size="small" weight="bold">
+              <Text size="small" weight="bold" color="color.text.subtle">
                 {t('facing')}
               </Text>
             </div>
@@ -203,7 +203,7 @@ const ViewSettingsPane: React.FC = () => {
             />
 
             <div css={css({ marginTop: '4px', textAlign: 'end' })}>
-              <Text size="small" weight="bold" align="end">
+              <Text size="small" weight="bold" color="color.text.subtle" align="end">
                 {t('speaking_behavior')}
               </Text>
             </div>
@@ -250,7 +250,7 @@ const ViewSettingsPane: React.FC = () => {
             />
 
             <div css={css({ textAlign: 'end', alignContent: 'center' })}>
-              <Text size="small" weight="bold">
+              <Text size="small" weight="bold" color="color.text.subtle">
                 {t('shape')}
               </Text>
             </div>
@@ -264,7 +264,7 @@ const ViewSettingsPane: React.FC = () => {
             />
 
             <div css={css({ marginTop: '4px', textAlign: 'end' })}>
-              <Text size="small" weight="bold" align="end">
+              <Text size="small" weight="bold" color="color.text.subtle" align="end">
                 {t('speaking_behavior')}
               </Text>
             </div>
@@ -300,7 +300,7 @@ const ViewSettingsPane: React.FC = () => {
               onChange={(value: number) => updateUsernameSettings({ offsetY: value })}
             />
             <div css={css({ textAlign: 'end', alignContent: 'start', marginTop: '6px' })}>
-              <Text size="small" weight="bold">
+              <Text size="small" weight="bold" color="color.text.subtle">
                 {t('font')}
               </Text>
             </div>
