@@ -41,6 +41,12 @@ const gridStyles = css({
   },
 });
 
+const labelStyles = css({
+  label: {
+    fontWeight: 700,
+  },
+});
+
 const ViewSettingsPane: React.FC = () => {
   const { t: translate } = useTranslation('translation', { keyPrefix: 'settings.overlay' });
   const t = translate as (s: string, o?: Record<string, string | boolean>) => string;
@@ -154,7 +160,7 @@ const ViewSettingsPane: React.FC = () => {
 --------------------------------------------------------------------------------
          */}
         <Inline alignBlock="center">
-          <div css={[toggleLabelStyles]}>
+          <div css={[toggleLabelStyles, labelStyles]}>
             <Label htmlFor="show-my-avatar-first">{t('show_my_avatar_first')}</Label>
           </div>
           <Toggle
@@ -169,7 +175,7 @@ const ViewSettingsPane: React.FC = () => {
          */}
         <div css={gridStyles}>
           <SettingsCard title={t('feign_characters')}>
-            <div css={[toggleLabelStyles, css({ textAlign: 'end' })]}>
+            <div css={[toggleLabelStyles, labelStyles, css({ textAlign: 'end' })]}>
               <Label htmlFor="show-fei">{tt('show')}</Label>
             </div>
             <Toggle
@@ -191,7 +197,7 @@ const ViewSettingsPane: React.FC = () => {
               onChange={(index) => updateFeiSettings({ mirror: index === 0 })}
             />
 
-            <div css={css({ textAlign: 'end', alignContent: 'center' })}>
+            <div css={[labelStyles, css({ textAlign: 'end', alignContent: 'center' })]}>
               <Label htmlFor="fei-interval">{t('interval')}</Label>
             </div>
             <CompactRange
@@ -218,7 +224,7 @@ const ViewSettingsPane: React.FC = () => {
 --------------------------------------------------------------------------------
          */}
           <SettingsCard title={t('discord_avatar')}>
-            <div css={[toggleLabelStyles, css({ textAlign: 'end' })]}>
+            <div css={[toggleLabelStyles, labelStyles, css({ textAlign: 'end' })]}>
               <Label htmlFor="show-avatar">{tt('show')}</Label>
             </div>
             <Toggle
@@ -228,7 +234,7 @@ const ViewSettingsPane: React.FC = () => {
               onChange={() => updateAvatarSettings({ show: !state.viewSettings.avatar.show })}
             />
 
-            <div css={css({ textAlign: 'end', alignContent: 'center' })}>
+            <div css={[labelStyles, css({ textAlign: 'end', alignContent: 'center' })]}>
               <Label htmlFor="avatar-offset">{t('vertical_offset')}</Label>
             </div>
             <CompactRange
@@ -239,7 +245,7 @@ const ViewSettingsPane: React.FC = () => {
               onChange={(value: number) => updateAvatarSettings({ offsetY: value })}
             />
 
-            <div css={[toggleLabelStyles, css({ textAlign: 'end' })]}>
+            <div css={[toggleLabelStyles, labelStyles, css({ textAlign: 'end' })]}>
               <Label htmlFor="show-avatar-front">{t('show_front')}</Label>
             </div>
             <Toggle
@@ -279,7 +285,7 @@ const ViewSettingsPane: React.FC = () => {
 --------------------------------------------------------------------------------
          */}
           <SettingsCard title={t('username')}>
-            <div css={[toggleLabelStyles, css({ textAlign: 'end' })]}>
+            <div css={[toggleLabelStyles, labelStyles, css({ textAlign: 'end' })]}>
               <Label htmlFor="show-username">{tt('show')}</Label>
             </div>
             <Toggle
@@ -289,7 +295,7 @@ const ViewSettingsPane: React.FC = () => {
               onChange={() => updateUsernameSettings({ show: !state.viewSettings.username.show })}
             />
 
-            <div css={css({ textAlign: 'end', alignContent: 'center' })}>
+            <div css={[labelStyles, css({ textAlign: 'end', alignContent: 'center' })]}>
               <Label htmlFor="username-offset">{t('vertical_offset')}</Label>
             </div>
             <CompactRange

@@ -13,7 +13,6 @@ export const toggleLabelStyles = css({
   label: {
     userSelect: 'none',
     cursor: 'pointer',
-    fontWeight: 700,
   },
 });
 
