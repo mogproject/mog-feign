@@ -88,7 +88,7 @@ const Preview = () => {
       </div>
 
       <style>{useCustomCss()}</style>
-      <style>{buildFeignImageCss()}</style>
+      <style>{state.viewSettings.fei.show && buildFeignImageCss()}</style>
     </Stack>
   );
 

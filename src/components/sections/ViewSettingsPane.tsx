@@ -169,6 +169,16 @@ const ViewSettingsPane: React.FC = () => {
          */}
         <div css={gridStyles}>
           <SettingsCard title={t('feign_characters')}>
+            <div css={[toggleLabelStyles, css({ textAlign: 'end' })]}>
+              <Label htmlFor="show-fei">{tt('show')}</Label>
+            </div>
+            <Toggle
+              id="show-fei"
+              size="regular"
+              isChecked={state.viewSettings.fei.show}
+              onChange={() => updateFeiSettings({ show: !state.viewSettings.fei.show })}
+            />
+
             <div css={css({ textAlign: 'end', alignContent: 'center' })}>
               <Text size="small" weight="bold">
                 {t('facing')}

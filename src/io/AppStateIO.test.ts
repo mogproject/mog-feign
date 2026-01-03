@@ -24,6 +24,7 @@ describe('AppStateIO.loadAllFromLocalStorage', () => {
       feignPlayers: { group: '', players: new Map<string, string[]>([['', Array(13).fill('')]]) },
       viewSettings: {
         fei: {
+          show: true,
           mirror: true,
           speaking: {
             jump: true,
@@ -112,6 +113,7 @@ describe('AppStateIO.loadAllFromLocalStorage', () => {
       },
       viewSettings: {
         fei: {
+          show: true,
           mirror: true,
           speaking: {
             jump: true,
@@ -238,6 +240,134 @@ describe('AppStateIO.loadAllFromLocalStorage', () => {
       },
       viewSettings: {
         fei: {
+          show: true,
+          mirror: true,
+          speaking: {
+            jump: true,
+            flash: true,
+            flashColor: '#ffffff',
+            outline: false,
+            outlineColor: '#3ba53b',
+          },
+          interval: 0,
+        },
+        avatar: {
+          show: true,
+          front: true,
+          shape: AvatarShape.Circle,
+          speaking: {
+            jump: false,
+            flash: false,
+            flashColor: '#ffffff',
+            outline: true,
+            outlineColor: '#3ba53b',
+          },
+          offsetY: 0,
+        },
+        username: {
+          show: true,
+          fontSize: 20,
+          fontColor: '#ffffff',
+          backgroundColor: '#1e2124',
+          offsetY: 0,
+        },
+        streamer: {
+          showStreamerFirst: false,
+        },
+      },
+      isSpeaking: Array(7).fill(false),
+    });
+  });
+
+  it('should load from v1.1.0', () => {
+    localStorage.setItem(
+      'discord_users',
+      '[{"id":"1","name":"ユーザー01","groups":["あいうえお村"]},{"id":"2","name":"ユーザー02","groups":["あいうえお村"]},{"id":"3","name":"ユーザー03","groups":["あいうえお村","かきくけこ村"]},{"id":"4","name":"ユーザー04","groups":["かきくけこ村"]},{"id":"5","name":"ユーザー05","groups":["かきくけこ村"]},{"id":"6","name":"ユーザー06","groups":["あいうえお村","さしすせそ村"]},{"id":"7","name":"ユーザー07","groups":["かきくけこ村"]},{"id":"8","name":"ユーザー08","groups":["かきくけこ村","あいうえお村"]},{"id":"9","name":"ユーザー09","groups":["さしすせそ村"]},{"id":"10","name":"ユーザー10","groups":["あいうえお村"]},{"id":"11","name":"ユーザー11","groups":["あいうえお村","かきくけこ村","さしすせそ村"]},{"id":"12","name":"ユーザー12","groups":["さしすせそ村"]},{"id":"13","name":"ユーザー13","groups":["さしすせそ村"]},{"id":"14","name":"ユーザー14","groups":["かきくけこ村","さしすせそ村"]},{"id":"15","name":"ユーザー15","groups":["かきくけこ村"]}]'
+    );
+    localStorage.setItem('discord_users_table', '{"sortKey":null,"sortOrder":null}');
+    localStorage.setItem(
+      'feign_players',
+      '{"group":"あいうえお村","players":{"":["","","","","","4","","","","","","",""],"あいうえお村":["8","","","3","2","1","","","","11","","6","10"],"かきくけこ村":["","","4","","","","","","","11","","",""],"さしすせそ村":["","","","","","","","","","","","",""]}}'
+    );
+    localStorage.setItem(
+      'named_channels',
+      '[{"name":"あいうえお村","url":"https://discord.com/channels/1/1","createdAt":1759221404555},{"name":"あいうえお村 (1/1突発)","url":"https://discord.com/channels/1/2","createdAt":1759221468066},{"name":"かきくけこ村","url":"https://discord.com/channels/2/2","createdAt":1759221486887},{"name":"さしすせそ村","url":"https://discord.com/channels/3/3","createdAt":1759221502986}]'
+    );
+    localStorage.setItem('named_channels_table', '{"sortKey":"createdAt","sortOrder":"DESC"}');
+    localStorage.setItem(
+      'view_avatar',
+      '{"show":true,"front":true,"shape":0,"speaking":{"jump":false,"flash":false,"flashColor":"#ffffff","outline":true,"outlineColor":"#3ba53b"},"offsetY":0}'
+    );
+    localStorage.setItem(
+      'view_fei',
+      '{"show":false,"mirror":true,"speaking":{"jump":true,"flash":true,"flashColor":"#ffffff","outline":false,"outlineColor":"#3ba53b"},"interval":0}'
+    );
+    localStorage.setItem('view_streamer', '{"showStreamerFirst":false}');
+    localStorage.setItem('view_username', '{"show":true,"fontSize":20,"fontColor":"#ffffff","backgroundColor":"#1e2124","offsetY":0}');
+    localStorage.setItem('voice_channel_url', 'https://discord.com/channels/1/1');
+
+    const state = loadAllFromLocalStorage();
+    expect(state).toEqual({
+      channelURL: 'https://discord.com/channels/1/1',
+      namedChannels: [
+        {
+          createdAt: 1759221404555,
+          name: 'あいうえお村',
+          url: 'https://discord.com/channels/1/1',
+        },
+        {
+          createdAt: 1759221468066,
+          name: 'あいうえお村 (1/1突発)',
+          url: 'https://discord.com/channels/1/2',
+        },
+        {
+          createdAt: 1759221486887,
+          name: 'かきくけこ村',
+          url: 'https://discord.com/channels/2/2',
+        },
+        {
+          createdAt: 1759221502986,
+          name: 'さしすせそ村',
+          url: 'https://discord.com/channels/3/3',
+        },
+      ],
+      namedChannelsTableSettings: {
+        sortKey: 'createdAt',
+        sortOrder: 'DESC',
+      },
+      discordUsers: [
+        { groups: ['あいうえお村'], id: '1', name: 'ユーザー01' },
+        { groups: ['あいうえお村'], id: '2', name: 'ユーザー02' },
+        { groups: ['あいうえお村', 'かきくけこ村'], id: '3', name: 'ユーザー03' },
+        { groups: ['かきくけこ村'], id: '4', name: 'ユーザー04' },
+        { groups: ['かきくけこ村'], id: '5', name: 'ユーザー05' },
+        { groups: ['あいうえお村', 'さしすせそ村'], id: '6', name: 'ユーザー06' },
+        { groups: ['かきくけこ村'], id: '7', name: 'ユーザー07' },
+        { groups: ['かきくけこ村', 'あいうえお村'], id: '8', name: 'ユーザー08' },
+        { groups: ['さしすせそ村'], id: '9', name: 'ユーザー09' },
+        { groups: ['あいうえお村'], id: '10', name: 'ユーザー10' },
+        { groups: ['あいうえお村', 'かきくけこ村', 'さしすせそ村'], id: '11', name: 'ユーザー11' },
+        { groups: ['さしすせそ村'], id: '12', name: 'ユーザー12' },
+        { groups: ['さしすせそ村'], id: '13', name: 'ユーザー13' },
+        { groups: ['かきくけこ村', 'さしすせそ村'], id: '14', name: 'ユーザー14' },
+        { groups: ['かきくけこ村'], id: '15', name: 'ユーザー15' },
+      ],
+      discordUsersTableSettings: {
+        sortKey: null,
+        sortOrder: null,
+      },
+      feignPlayers: {
+        group: 'あいうえお村',
+        players: new Map<string, string[]>([
+          ['', ['', '', '', '', '', '4', '', '', '', '', '', '', '']],
+          ['あいうえお村', ['8', '', '', '3', '2', '1', '', '', '', '11', '', '6', '10']],
+          ['かきくけこ村', ['', '', '4', '', '', '', '', '', '', '11', '', '', '']],
+          ['さしすせそ村', ['', '', '', '', '', '', '', '', '', '', '', '', '']],
+        ]),
+      },
+      viewSettings: {
+        fei: {
+          show: false,
           mirror: true,
           speaking: {
             jump: true,

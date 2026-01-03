@@ -45,7 +45,8 @@ const OBSSettings: React.FC = () => {
 
   const state = useAppState();
   const isValid = state.feignPlayers.players.get(state.feignPlayers.group)?.some((user) => user !== '');
-  const cssContent = useCustomCss() + '\n' + buildFeignImageCss();
+  const imageCss = state.viewSettings.fei.show ? '\n' + buildFeignImageCss() : '';
+  const cssContent = useCustomCss() + imageCss;
 
   const [serverID, channelID] = retrieveChannelIDs(state.channelURL);
   const obsURL = createUrl(serverID, channelID, state.viewSettings.streamer.showStreamerFirst);
