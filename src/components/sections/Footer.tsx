@@ -132,7 +132,7 @@ const Footer: React.FC = () => {
               Special Thanks
             </span>
             <span>-</span>
-            <span>Feign CSS Generator &copy; 2024-2025</span>
+            <span>Feign CSS Generator &copy; 2024-2026</span>
             {createLink('mogproject', 'https://mogproject.com')}
           </Inline>
         </Inline>

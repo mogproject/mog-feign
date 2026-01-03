@@ -217,6 +217,10 @@ function validateAnimationSettings(obj: any) {
 function loadFeiSettings(obj: any): FeiSettings {
   try {
     invariant(typeof obj === 'object');
+    if (typeof obj.show !== 'boolean') {
+      // v1.1.0-
+      obj.show = defaultAppState.viewSettings.fei.show;
+    }
     invariant(typeof obj.mirror === 'boolean');
     validateAnimationSettings(obj.speaking);
     invariant(typeof obj.interval === 'number');

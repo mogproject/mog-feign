@@ -73,7 +73,8 @@ function trimFirstLine(s: string) {
 }
 
 async function verifyResult(page: Page, result: Result) {
-  const expectCss = trimFirstLine(buildCSS(result.players, result.view) + '\n' + buildFeignImageCss());
+  const imageCSS = result.view.fei.show ? '\n' + buildFeignImageCss() : '';
+  const expectCss = trimFirstLine(buildCSS(result.players, result.view) + imageCSS);
 
   // URL (main)
   await expect(page.locator('#obs-url')).toHaveValue(result.url);
@@ -122,7 +123,7 @@ async function verifyBoxes(page: Page, mainX: number, mainWidth: number, asideX:
 //    Tests
 //==============================================================================
 test('Load setting files', async ({ page }) => {
-  await setUpPage(page, ['test01.json', 'test02.json'], 1300);
+  await setUpPage(page, ['test01.json', 'test02.json', 'test03.json', 'test04.json'], 1300);
 
   //----------------------------------------------------------------------------
   await page.click('#load-all');
@@ -133,6 +134,7 @@ test('Load setting files', async ({ page }) => {
     players: ['8', '', '', '3', '2', '1', '', '', '', '11', '', '6', '10'],
     view: new ViewSettings(
       {
+        show: true,
         mirror: true,
         speaking: { jump: true, flash: true, flashColor: '#ffffff', outline: false, outlineColor: '#3ba53b' },
         interval: 0,
@@ -148,7 +150,6 @@ test('Load setting files', async ({ page }) => {
       { showStreamerFirst: false }
     ),
   };
-
   await verifyResult(page, expected1);
 
   //----------------------------------------------------------------------------
@@ -160,6 +161,7 @@ test('Load setting files', async ({ page }) => {
     players: ['9', '10', '2', '8', '13', '14', '3', '4', '6', '5', '1', '15', '7'],
     view: new ViewSettings(
       {
+        show: true,
         mirror: true,
         speaking: { jump: true, flash: true, flashColor: '#ffffff', outline: false, outlineColor: '#3ba53b' },
         interval: 0,
@@ -175,8 +177,61 @@ test('Load setting files', async ({ page }) => {
       { showStreamerFirst: true }
     ),
   };
-
   await verifyResult(page, expected2);
+
+  //----------------------------------------------------------------------------
+  await page.click('#load-all');
+  const expected3 = {
+    url: 'https://streamkit.discord.com/overlay/voice/1/2?streamer_avatar_first=true',
+    width: 1772,
+    height: 270,
+    players: ['9', '10', '2', '8', '13', '14', '3', '4', '6', '5', '1', '15', '7'],
+    view: new ViewSettings(
+      {
+        show: false,
+        mirror: true,
+        speaking: { jump: true, flash: true, flashColor: '#ffffff', outline: false, outlineColor: '#3ba53b' },
+        interval: 0,
+      },
+      {
+        show: true,
+        front: true,
+        shape: 1,
+        speaking: { jump: false, flash: false, flashColor: '#ffffff', outline: true, outlineColor: '#3ba53b' },
+        offsetY: 0,
+      },
+      { show: true, fontSize: 16, fontColor: '#ffffff', backgroundColor: '#1e2124', offsetY: 0 },
+      { showStreamerFirst: true }
+    ),
+  };
+  await verifyResult(page, expected3);
+
+  //----------------------------------------------------------------------------
+  await page.click('#load-all');
+  const expected4 = {
+    url: 'https://streamkit.discord.com/overlay/voice/1/2',
+    width: 1772,
+    height: 270,
+    players: ['9', '10', '2', '8', '13', '14', '3', '4', '6', '5', '1', '15', '7'],
+    view: new ViewSettings(
+      {
+        show: true,
+        mirror: true,
+        speaking: { jump: true, flash: true, flashColor: '#ffffff', outline: false, outlineColor: '#3ba53b' },
+        interval: 0,
+      },
+      {
+        show: true,
+        front: true,
+        shape: 1,
+        speaking: { jump: true, flash: false, flashColor: '#ffffff', outline: true, outlineColor: '#3ba53b' },
+        offsetY: 0,
+      },
+      { show: true, fontSize: 16, fontColor: '#ffffff', backgroundColor: '#1e2124', offsetY: 0 },
+      { showStreamerFirst: true }
+    ),
+  };
+  await verifyResult(page, expected4);
 });
 
 test('Set up from scratch', async ({ page }) => {
@@ -236,6 +291,7 @@ test('Set up from scratch', async ({ page }) => {
     height: 270,
     view: new ViewSettings(
       {
+        show: true,
         mirror: true,
         speaking: { jump: true, flash: true, flashColor: '#ffffff', outline: false, outlineColor: '#ffffff' },
         interval: 7,

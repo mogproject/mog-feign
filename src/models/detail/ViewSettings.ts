@@ -13,6 +13,7 @@ export interface AnimationSettings {
 }
 
 export interface FeiSettings {
+  show: boolean;
   mirror: boolean;
   speaking: AnimationSettings;
   interval: number; // additional horizontal margin
@@ -137,6 +138,7 @@ export class ViewSettings {
 }
 
 const defaultFeiSettings: FeiSettings = {
+  show: true,
   mirror: true,
   speaking: {
     jump: true,

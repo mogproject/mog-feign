@@ -168,7 +168,8 @@ const QuickMenu: React.FC = () => {
   );
 
   const isValid = state.feignPlayers.players.get(state.feignPlayers.group)?.some((user) => user !== '');
-  const cssContent = useCustomCss() + '\n' + buildFeignImageCss();
+  const imageCss = state.viewSettings.fei.show ? '\n' + buildFeignImageCss() : '';
+  const cssContent = useCustomCss() + imageCss;
 
   const channelName = state.namedChannels.find((channel) => channel.url === state.channelURL);
 

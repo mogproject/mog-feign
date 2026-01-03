@@ -32,68 +32,72 @@ export function buildCSS(feignPlayers: string[], settings: ViewSettings): string
   const now = new Date().toISOString();
   const prefix = `/* CSS built on https://feign.mogproject.com (v${APP_VERSION}). ${now}. */\n\n`;
 
-  const feiBack = [
-    // Character
-    `.voice_state::before {`,
-    `  background-image: var(--feign-icon-bg);`,
-    `  background-size: ${settings.getFeiWidth()}px ${settings.getFeiHeight()}px;`,
-    '  display: inline-block;',
-    '  content: "";',
-    `  width: ${settings.getFeiWidth()}px;`,
-    `  height: ${settings.getFeiHeight()}px;`,
-    `  filter: var(--d-default);`,
-    '  text-align: center;',
-    `  margin-top: ${settings.getFeiMarginTop()}px;`,
-    '  position: absolute;',
-    '  top: 0px;',
-    settings.fei.mirror ? '  -webkit-transform: scaleX(-1);' : '',
-    settings.fei.mirror ? '  transform: scaleX(-1);' : '',
-    '  z-index: 1',
-    '}',
+  const feiBack = settings.fei.show
+    ? [
+        // Character
+        `.voice_state::before {`,
+        `  background-image: var(--feign-icon-bg);`,
+        `  background-size: ${settings.getFeiWidth()}px ${settings.getFeiHeight()}px;`,
+        '  display: inline-block;',
+        '  content: "";',
+        `  width: ${settings.getFeiWidth()}px;`,
+        `  height: ${settings.getFeiHeight()}px;`,
+        `  filter: var(--d-default);`,
+        '  text-align: center;',
+        `  margin-top: ${settings.getFeiMarginTop()}px;`,
+        '  position: absolute;',
+        '  top: 0px;',
+        settings.fei.mirror ? '  -webkit-transform: scaleX(-1);' : '',
+        settings.fei.mirror ? '  transform: scaleX(-1);' : '',
+        '  z-index: 1',
+        '}',
 
-    // Animation
-    `.wrapper_speaking::before {`,
-    `  animation-name: ${animationString(settings.fei.speaking.flash, settings.fei.speaking.jump, '-default', '')};`,
-    '  animation-duration: 750ms;',
-    '  animation-timing-function: ease-in-out;',
-    '  animation-delay: 0s;',
-    '  animation-iteration-count: infinite;',
-    '  animation-direction: alternate;',
-    '  animation-fill-mode: forwards;',
-    `  filter: var(--f-default);`,
-    '}',
-  ];
+        // Animation
+        `.wrapper_speaking::before {`,
+        `  animation-name: ${animationString(settings.fei.speaking.flash, settings.fei.speaking.jump, '-default', '')};`,
+        '  animation-duration: 750ms;',
+        '  animation-timing-function: ease-in-out;',
+        '  animation-delay: 0s;',
+        '  animation-iteration-count: infinite;',
+        '  animation-direction: alternate;',
+        '  animation-fill-mode: forwards;',
+        `  filter: var(--f-default);`,
+        '}',
+      ]
+    : [];
 
-  const feiFront = [
-    `.voice_state::after {`,
-    `  background-image: var(--feign-icon-fg);`,
-    `  background-size: ${settings.getFeiWidth()}px ${settings.getFeiHeight()}px;`,
-    '  display: inline-block;',
-    '  content: "";',
-    `  width: ${settings.getFeiWidth()}px;`,
-    `  height: ${settings.getFeiHeight()}px;`,
-    '  filter: brightness(65%);',
-    '  text-align: center;',
-    `  margin-top: ${settings.getFeiMarginTop()}px;`,
-    '  position: absolute;',
-    '  top: 0px;',
-    settings.fei.mirror ? '  -webkit-transform: scaleX(-1);' : '',
-    settings.fei.mirror ? '  transform: scaleX(-1);' : '',
-    '  z-index: 1',
-    '}',
+  const feiFront = settings.fei.show
+    ? [
+        `.voice_state::after {`,
+        `  background-image: var(--feign-icon-fg);`,
+        `  background-size: ${settings.getFeiWidth()}px ${settings.getFeiHeight()}px;`,
+        '  display: inline-block;',
+        '  content: "";',
+        `  width: ${settings.getFeiWidth()}px;`,
+        `  height: ${settings.getFeiHeight()}px;`,
+        '  filter: brightness(65%);',
+        '  text-align: center;',
+        `  margin-top: ${settings.getFeiMarginTop()}px;`,
+        '  position: absolute;',
+        '  top: 0px;',
+        settings.fei.mirror ? '  -webkit-transform: scaleX(-1);' : '',
+        settings.fei.mirror ? '  transform: scaleX(-1);' : '',
+        '  z-index: 1',
+        '}',
 
-    // Animation
-    `.wrapper_speaking::after {`,
-    `  animation-name: ${animationString(false, settings.fei.speaking.jump, '', '')};`,
-    '  animation-duration: 750ms;',
-    '  animation-timing-function: ease-in-out;',
-    '  animation-delay: 0s;',
-    '  animation-iteration-count: infinite;',
-    '  animation-direction: alternate;',
-    '  animation-fill-mode: forwards;',
-    '  filter: brightness(100%);',
-    '}',
-  ];
+        // Animation
+        `.wrapper_speaking::after {`,
+        `  animation-name: ${animationString(false, settings.fei.speaking.jump, '', '')};`,
+        '  animation-duration: 750ms;',
+        '  animation-timing-function: ease-in-out;',
+        '  animation-delay: 0s;',
+        '  animation-iteration-count: infinite;',
+        '  animation-direction: alternate;',
+        '  animation-fill-mode: forwards;',
+        '  filter: brightness(100%);',
+        '}',
+      ]
+    : [];
 
   function createFlashKeyFrames(anim: AnimationSettings, suffix: string) {
     if (!anim.flash) return [];
@@ -122,7 +126,7 @@ export function buildCSS(feignPlayers: string[], settings: ViewSettings): string
     return [...character, ...animation, ...keyframes];
   }
 
-  const fei = feignPlayers.flatMap((id: string, i: number) => feiSpecific(id, i));
+  const fei = settings.fei.show ? feignPlayers.flatMap((id: string, i: number) => feiSpecific(id, i)) : [];
 
   // shadow settings
   const shadowDefs = [
