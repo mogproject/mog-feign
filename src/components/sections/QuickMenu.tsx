@@ -204,6 +204,7 @@ const QuickMenu: React.FC = () => {
       noOptionsMessage={() => t('settings.player.no_groups')}
       value={state.feignPlayers.group === '' ? null : { label: state.feignPlayers.group, value: state.feignPlayers.group }}
       isDisabled={groups.length === 0}
+      menuPortalTarget={document.body}
       onChange={(e: { label: string; value: string }) => {
         dispatch((prev) => ({ ...prev, feignPlayers: { ...prev.feignPlayers, group: e === null ? '' : e.value } }));
       }}
@@ -231,6 +232,7 @@ const QuickMenu: React.FC = () => {
           options={players}
           placeholder={''}
           noOptionsMessage={() => t('settings.player.no_options')}
+          menuPortalTarget={document.body}
           onChange={(e: { label: string; value: string }) => handleUpdate(color, e === null ? '' : e.value)}
         />
       </Inline>
